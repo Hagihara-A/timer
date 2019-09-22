@@ -32,12 +32,9 @@ export const stopTimer = (index) => {
         }
     }
 }
-export const resetTimer = (index) => {
+export const resetTimer = () => {
     return {
-        type: actionTypes.RESET,
-        payload: {
-            index
-        }
+        type: actionTypes.RESET
     }
 }
 export const finishTimer = (index) => {
@@ -48,23 +45,6 @@ export const finishTimer = (index) => {
         }
     }
 }
-// export const skipTimer = (index) => {
-//     return {
-//         type: actionTypes.SKIP,
-//         payload: {
-//             index
-//         }
-//     }
-// }
-
-// export const timeLimitTimer = (index) => {
-//     return {
-//         type: actionTypes.TIME_LIMIT,
-//         payload: {
-//             index
-//         }
-//     }
-// }
 export const addTimer = (timeLimit) => {
     return {
         type: actionTypes.ADD_TIMER,

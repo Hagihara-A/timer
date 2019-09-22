@@ -11,7 +11,7 @@ class AddTimerForm extends React.Component {
         return (
             <form onSubmit={(e) => this.onSubmit(e)} >
                 <label>
-                    please input new Timer's time limit(seconds):<br />
+                   新しく追加するタイマーの制限時間を入力してください:<br />
                     <input
                         type="number"
                         value={this.state.input}

@@ -6,7 +6,7 @@ export const timerState = {
     END: 'END'
 }
 const allowedAction = {
-    INIT: new Set([AT.START]),
+    INIT: new Set([AT.RESET, AT.START]),
     ELAPSE: new Set([AT.RESET, AT.PAUSE, AT.SKIP, AT.ADD, AT.FINISH]),
     STOP: new Set([AT.RESET, AT.START, AT.SKIP, AT.PAUSE, AT.FINISH]),
     END: new Set([AT.RESET])
@@ -29,15 +29,13 @@ export const rootReducer = (state = initState, action) => {
     const pl = action.payload
     const newTimers = state.timers.slice()
     const maxIdx = state.timers.length - 1
-    
+
     if (pl && pl.hasOwnProperty('index')) {
         if (pl.index > maxIdx ||
             !isValidAction(state.timers[pl.index].timerState, action.type)) {
             return state
         }
     }
-
-
 
     switch (action.type) {
         case AT.ADD:
@@ -59,11 +57,16 @@ export const rootReducer = (state = initState, action) => {
                 timers: newTimers
             }
         case AT.RESET:
-            newTimers[pl.index].timerState = timerState.INIT
-            newTimers[pl.index].time = 0
+            const initTimers = newTimers.map((v) =>
+                ({
+                    ...v,
+                    timerState: timerState.INIT,
+                    time: 0
+                })
+            )
             return {
                 ...state,
-                timers: newTimers
+                timers: initTimers
             }
         case AT.FINISH:
             newTimers[pl.index].timerState = timerState.END

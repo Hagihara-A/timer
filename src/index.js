@@ -5,10 +5,17 @@ import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import TimerListContainer from './containers/TimerListContainer';
 import AddTimerFormContainer from './containers/AddTimerFormContainer';
+import TimerHandleButton from "./containers/buttons/timerHandleButton";
+import  "./App.css";
+import SkipButton from './components/buttons/skipButton';
+import ResetButton from './components/buttons/resetButton';
 
 ReactDOM.render(
     <Provider store={store} >
         <TimerListContainer />
+        <TimerHandleButton />
+        <SkipButton />
+        <ResetButton />
         <AddTimerFormContainer />
     </ Provider>
     , document.getElementById('root'));
