@@ -1,6 +1,6 @@
-import AddTimerForm from "../components/AddTimerForm";
+import AddTimerForm from "../../components/Timer/AddTimerForm";
 import { connect } from "react-redux";
-import { addTimer } from "../actions";
+import { addTimer } from "../../actions";
 
 const stateToProps = state => (
     {}

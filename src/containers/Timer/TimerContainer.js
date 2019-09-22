@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import Timer from '../components/Timer'
-import { addTime, startTimer, finishTimer } from '../actions';
+import { addTime, startTimer, finishTimer } from '../../actions';
+import Timer from '../../components/Timer/Timer';
 
 
 const mapStateToProps = (state, ownProps) => {

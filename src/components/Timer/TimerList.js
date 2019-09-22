@@ -1,5 +1,5 @@
 import React from 'react';
-import TimerContainer from '../containers/TimerContainer';
+import TimerContainer from '../../containers/Timer/TimerContainer';
 
 
 const TimerList = (props) => (

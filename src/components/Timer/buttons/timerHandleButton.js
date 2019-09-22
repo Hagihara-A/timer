@@ -1,5 +1,5 @@
 import React from 'react';
-import { timerState } from '../../reducers';
+import { timerState } from '../../../reducers';
 
 export class TimerHandleButtonInner extends React.Component {
     constructor(props) {

@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
-import { startTimer, stopTimer } from '../../actions';
-import { TimerHandleButtonInner } from '../../components/buttons/timerHandleButton';
-import { getCurrentTimerIdx } from "../../getCurrentTimerIdx";
+import { startTimer, stopTimer } from '../../../actions';
+import { TimerHandleButtonInner } from '../../../components/Timer/buttons/timerHandleButton';
+import { getCurrentTimerIdx } from "../../../getCurrentTimerIdx";
 
 const mapStateToProps = state => {
     const currentTimerIdx = getCurrentTimerIdx(state.timers);

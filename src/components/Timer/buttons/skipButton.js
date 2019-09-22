@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getCurrentTimerIdx } from '../../getCurrentTimerIdx';
-import { finishTimer } from '../../actions';
+import { getCurrentTimerIdx } from '../../../getCurrentTimerIdx';
+import { finishTimer } from '../../../actions';
 
 class SkipButtonInner extends React.Component {
     render() {
