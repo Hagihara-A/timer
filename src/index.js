@@ -3,21 +3,35 @@ import ReactDOM from 'react-dom';
 import { store } from './store';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
-import TimerListContainer from './containers/TimerListContainer';
-import AddTimerFormContainer from './containers/AddTimerFormContainer';
-import TimerHandleButton from "./containers/buttons/timerHandleButton";
-import  "./App.css";
-import SkipButton from './components/buttons/skipButton';
-import ResetButton from './components/buttons/resetButton';
+import "./App.scss";
+import { MuiThemeProvider } from 'material-ui/styles';
+import { createMuiTheme } from '@material-ui/core/styles'
+import TimerSection from './TimerSection';
+import ScheduleSection from './ScheduleSection';
+import { Container } from '@material-ui/core';
+import IntroSection from './components/Intro/IntroSection';
+
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: '#1e88e5',
+        },
+        secondary: {
+            main: '#e57373',
+        },
+    },
+})
 
 ReactDOM.render(
-    <Provider store={store} >
-        <TimerListContainer />
-        <TimerHandleButton />
-        <SkipButton />
-        <ResetButton />
-        <AddTimerFormContainer />
-    </ Provider>
+    <MuiThemeProvider theme={theme}>
+        <Provider store={store} >
+            <Container>
+                <IntroSection />
+                <ScheduleSection />
+                <TimerSection />
+            </Container>
+        </ Provider>
+    </MuiThemeProvider>
     , document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

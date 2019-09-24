@@ -1,12 +1,11 @@
 import React from 'react';
 import { timerState } from '../../reducers';
-
 export default class Timer extends React.Component {
     render() {
         return (
             <span>
                 {/* TODO: remove */}
-                {this.props.timerState}     :
+                {this.props.timerState}:
                 {this.elapsedTime()}
             </span>
         )

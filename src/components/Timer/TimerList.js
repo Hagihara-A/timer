@@ -1,6 +1,6 @@
 import React from 'react';
 import TimerContainer from '../../containers/Timer/TimerContainer';
-
+import List from '@material-ui/core/List'
 
 const TimerList = (props) => (
     <div>
@@ -10,7 +10,7 @@ const TimerList = (props) => (
 
 const renderTimerList = (props) => {
     return (
-        <ul>
+        <List>
             {props.timers.map((value, index) => {
                 return (
                     <li key={index} >
@@ -21,7 +21,7 @@ const renderTimerList = (props) => {
                     </li>)
             })
             }
-        </ul >)
+        </List>)
 }
 
 export default TimerList

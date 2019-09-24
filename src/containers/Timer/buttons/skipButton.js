@@ -2,12 +2,21 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { getCurrentTimerIdx } from '../../../getCurrentTimerIdx';
 import { finishTimer } from '../../../actions';
+import { Button } from '@material-ui/core';
 
 class SkipButtonInner extends React.Component {
-    render() {
-        return <button onClick={(e) => this.onClick(e)}>SKIP</button>
+    constructor(props) {
+        super(props)
+        this.handleClick = this.handleClick.bind(this)
     }
-    onClick(e) {
+    render() {
+        return <Button
+            variant='contained'
+            color='primary'
+            onClick={this.handleClick} >SKIP</Button>
+    }
+
+    handleClick(e) {
         e.preventDefault()
         this.props.skip(this.props.currentTimerIdx)
     }

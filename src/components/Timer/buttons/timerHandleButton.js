@@ -1,5 +1,6 @@
 import React from 'react';
 import { timerState } from '../../../reducers';
+import { Button } from '@material-ui/core';
 
 export class TimerHandleButtonInner extends React.Component {
     constructor(props) {
@@ -7,13 +8,17 @@ export class TimerHandleButtonInner extends React.Component {
         this.state = {
             buttonValue: 'START'
         }
+        this.handleClick = this.handleClick.bind(this)
     }
     render() {
         return (
-            <button onClick={() => this.onClick()}>{this.state.buttonValue}</button>
+            <Button
+                variant='contained'
+                color='primary'
+                onClick={this.handleClick}>{this.state.buttonValue}</Button>
         )
     }
-    onClick() {
+    handleClick() {
         const curIdx = this.props.currentTimerIdx
         if (this.props.timerState === timerState.INIT) {
             this.props.startTimer(curIdx)

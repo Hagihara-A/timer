@@ -1,4 +1,4 @@
-import AddTimerForm from "../../components/Timer/AddTimerForm";
+import AddTimerForm from "../../components/Schedule/AddTimerForm";
 import { connect } from "react-redux";
 import { addTimer } from "../../actions";
 
