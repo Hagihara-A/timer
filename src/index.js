@@ -8,8 +8,8 @@ import { MuiThemeProvider } from 'material-ui/styles';
 import { createMuiTheme } from '@material-ui/core/styles'
 import TimerSection from './TimerSection';
 import ScheduleSection from './ScheduleSection';
-import { Container } from '@material-ui/core';
 import IntroSection from './components/Intro/IntroSection';
+import { Paper } from 'material-ui';
 
 const theme = createMuiTheme({
     palette: {
@@ -25,11 +25,11 @@ const theme = createMuiTheme({
 ReactDOM.render(
     <MuiThemeProvider theme={theme}>
         <Provider store={store} >
-            <Container>
+            <Paper>
                 <IntroSection />
                 <ScheduleSection />
                 <TimerSection />
-            </Container>
+            </Paper>
         </ Provider>
     </MuiThemeProvider>
     , document.getElementById('root'));

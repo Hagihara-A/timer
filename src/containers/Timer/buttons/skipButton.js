@@ -1,8 +1,7 @@
+import { Button } from '@material-ui/core';
 import React from 'react';
 import { connect } from 'react-redux';
-import { getCurrentTimerIdx } from '../../../getCurrentTimerIdx';
 import { finishTimer } from '../../../actions';
-import { Button } from '@material-ui/core';
 
 class SkipButtonInner extends React.Component {
     constructor(props) {
@@ -18,20 +17,14 @@ class SkipButtonInner extends React.Component {
 
     handleClick(e) {
         e.preventDefault()
-        this.props.skip(this.props.currentTimerIdx)
+        this.props.skip()
     }
 }
 
-const mapStateToProps = state => {
-    const currentTimerIdx = getCurrentTimerIdx(state.timers);
-    return {
-        currentTimerIdx
-    }
-}
 
 const mapDispatchToProps = dispatch => ({
-    skip: index => dispatch(finishTimer(index))
+    skip: () => dispatch(finishTimer())
 })
 
-const SkipButton = connect(mapStateToProps, mapDispatchToProps)(SkipButtonInner)
+const SkipButton = connect(null, mapDispatchToProps)(SkipButtonInner)
 export default SkipButton

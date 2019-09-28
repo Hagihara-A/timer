@@ -7,29 +7,22 @@ export const actionTypes = {
     ADD_TIMER: 'ADD_TIMER'
 }
 
-export const addTime = (index, time) => {
+export const addTime = (time) => {
     return {
         type: actionTypes.ADD,
         payload: {
             time,
-            index
         }
     }
 }
 export const startTimer = (index) => {
     return {
         type: actionTypes.START,
-        payload: {
-            index
-        }
     }
 }
 export const stopTimer = (index) => {
     return {
         type: actionTypes.PAUSE,
-        payload: {
-            index
-        }
     }
 }
 export const resetTimer = () => {
@@ -40,9 +33,6 @@ export const resetTimer = () => {
 export const finishTimer = (index) => {
     return {
         type: actionTypes.FINISH,
-        payload: {
-            index
-        }
     }
 }
 export const addTimer = (timeLimit) => {

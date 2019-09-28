@@ -4,21 +4,21 @@ import Timer from '../../components/Timer/Timer';
 
 
 const mapStateToProps = (state, ownProps) => {
-    const idx = ownProps.index
-    const ownTimer = state.timers[idx]
+    const { time, timerState, timeLimit } = ownProps
     return {
-        time: ownTimer.time,
-        timerState: ownTimer.timerState,
-        timeLimit: ownTimer.timeLimit
+        time,
+        timerState,
+        timeLimit
     }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-    const index = ownProps.index
     return {
-        whenElapse: (time) => dispatch(addTime(index, time)),
-        onReachTimeLimit: () => dispatch(finishTimer(index)),
-        whenEnd: () => dispatch(startTimer(index + 1))
+        whenElapse: (time) => dispatch(addTime(time)),
+        onReachTimeLimit: () => {
+            dispatch(finishTimer())
+        },
+        whenEnd: () => dispatch(startTimer())
     }
 }
 

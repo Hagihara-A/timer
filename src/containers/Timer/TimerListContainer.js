@@ -1,5 +1,4 @@
 import { connect } from "react-redux";
-import { startTimer } from '../../actions';
 import TimerList from "../../components/Timer/TimerList";
 
 const mapStateToProps = state => {
@@ -8,15 +7,8 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = dispatch => {
-    return {
-        dispatchStartTimer: (index) => dispatch(startTimer(index)),
-    }
-}
-
 const TimerListContainer = connect(
-    mapStateToProps,
-    mapDispatchToProps
+    mapStateToProps
 )(TimerList)
 
 export default TimerListContainer

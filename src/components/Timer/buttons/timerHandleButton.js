@@ -1,5 +1,4 @@
 import React from 'react';
-import { timerState } from '../../../reducers';
 import { Button } from '@material-ui/core';
 
 export class TimerHandleButtonInner extends React.Component {
@@ -19,16 +18,20 @@ export class TimerHandleButtonInner extends React.Component {
         )
     }
     handleClick() {
-        const curIdx = this.props.currentTimerIdx
-        if (this.props.timerState === timerState.INIT) {
-            this.props.startTimer(curIdx)
-            this.setState({buttonValue: 'PAUSE'})
-        } else if (this.props.timerState === timerState.ELAPSE) {
-            this.props.stopTimer(curIdx)
-            this.setState({buttonValue: 'RESUME'})
-        } else if (this.props.timerState === timerState.STOP) {
-            this.props.startTimer(curIdx)
-            this.setState({buttonValue: 'PAUSE'})
+        console.log(this.props.curTimerIndexes)
+        
+        const curState = this.props.curTimerState
+        console.log(curState);
+        
+        if (curState === 'INIT') {
+            this.props.startTimer()
+            this.setState({ buttonValue: 'PAUSE' })
+        } else if (curState === 'STOP') {
+            this.props.stopTimer()
+            this.setState({ buttonValue: 'RESUME' })
+        } else if (curState === 'ELAPSE') {
+            this.props.startTimer()
+            this.setState({ buttonValue: 'PAUSE' })
         }
     }
 }

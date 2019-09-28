@@ -24,7 +24,6 @@ export default class Timer extends React.Component {
                     }, 1000)
                     return
                 }
-
             case timerState.STOP:
                 clearInterval(this.timerId)
                 return
