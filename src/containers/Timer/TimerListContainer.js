@@ -3,7 +3,7 @@ import TimerList from "../../components/Timer/TimerList";
 
 const mapStateToProps = state => {
     return {
-        timers: state.timers
+        timers: state.get('timers')
     }
 }
 

@@ -15,12 +15,12 @@ export const addTime = (time) => {
         }
     }
 }
-export const startTimer = (index) => {
+export const startTimer = () => {
     return {
         type: actionTypes.START,
     }
 }
-export const stopTimer = (index) => {
+export const stopTimer = () => {
     return {
         type: actionTypes.PAUSE,
     }
@@ -30,7 +30,7 @@ export const resetTimer = () => {
         type: actionTypes.RESET
     }
 }
-export const finishTimer = (index) => {
+export const finishTimer = () => {
     return {
         type: actionTypes.FINISH,
     }

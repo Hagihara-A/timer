@@ -5,7 +5,7 @@ export class TimerHandleButtonInner extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            buttonValue: 'START'
+            buttonValue: 'START',
         }
         this.handleClick = this.handleClick.bind(this)
     }
@@ -14,12 +14,12 @@ export class TimerHandleButtonInner extends React.Component {
             <Button
                 variant='contained'
                 color='primary'
-                onClick={this.handleClick}>{this.state.buttonValue}</Button>
+                onClick={this.handleClick}
+            >{this.state.buttonValue}
+            </Button>
         )
     }
     handleClick() {
-        console.log(this.props.curTimerIndexes)
-        
         const curState = this.props.curTimerState
         console.log(curState);
         
@@ -27,10 +27,10 @@ export class TimerHandleButtonInner extends React.Component {
             this.props.startTimer()
             this.setState({ buttonValue: 'PAUSE' })
         } else if (curState === 'STOP') {
-            this.props.stopTimer()
+            this.props.startTimer()
             this.setState({ buttonValue: 'RESUME' })
         } else if (curState === 'ELAPSE') {
-            this.props.startTimer()
+            this.props.stopTimer()
             this.setState({ buttonValue: 'PAUSE' })
         }
     }

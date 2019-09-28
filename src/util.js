@@ -1,31 +1,17 @@
-import { timerState } from './reducers'
-
-const { ELAPSE, STOP, INIT } = timerState
-
-export function getCurrentTimerIndex(array) {
-    for (let idx in array) {
-        let elem = array[idx]
-
-        if (Array.isArray(elem)) {
+import { List } from 'immutable'
+export function getCurrentTimerIndex(timers) {
+    for (let idx = 0; idx < timers.size; idx++) {
+        let elem = timers.get(idx)
+        if (List.isList(elem)) {
             const childIndex = getCurrentTimerIndex(elem)
-
             if (childIndex) {
-                childIndex.unshift(Number(idx))
-                return childIndex
+                return childIndex.unshift(idx)
             }
-        } else if (elem.timerState === ELAPSE || elem.timerState === STOP || elem.timerState === INIT) {
-            return [Number(idx)]
+        } else {
+            const ts = elem.get('timerState')
+            if (ts === 'ELAPSE' || ts === 'STOP' || ts === 'INIT') {
+                return List([idx])
+            }
         }
     }
-}
-
-export function getElementWithIndex(array, indexes) {
-    let elem = array
-    for (let idx of indexes) {
-        elem = array[idx]
-        if (!elem) {
-            throw new Error('index is out of range')
-        }
-    }
-    return elem
 }
