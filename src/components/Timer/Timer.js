@@ -17,17 +17,16 @@ export default class Timer extends React.Component {
             case ELAPSE:
                 if (this.elapsedTime() >= this.props.timeLimit) {
                     this.props.onReachTimeLimit()
-                    break
                 } else {
                     let startedAt = Date.now()
                     this.timerId = setTimeout(() => {
                         this.props.whenElapse((Date.now() - startedAt) / 1000)
                     }, 1000)
-                    break
                 }
+                break
             case STOP:
                 clearInterval(this.timerId)
-                return
+                break
             case END:
                 clearInterval(this.timerId)
                 this.props.whenEnd()

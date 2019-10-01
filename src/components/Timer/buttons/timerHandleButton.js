@@ -21,8 +21,6 @@ export class TimerHandleButtonInner extends React.Component {
     }
     handleClick() {
         const curState = this.props.curTimerState
-        console.log(curState);
-        
         if (curState === 'INIT') {
             this.props.startTimer()
             this.setState({ buttonValue: 'PAUSE' })

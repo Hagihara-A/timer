@@ -7,7 +7,7 @@ import "./App.scss";
 import { MuiThemeProvider } from 'material-ui/styles';
 import { createMuiTheme } from '@material-ui/core/styles'
 import TimerSection from './TimerSection';
-import ScheduleSection from './ScheduleSection';
+import FormSection from './ScheduleSection';
 import IntroSection from './components/Intro/IntroSection';
 import { Paper } from 'material-ui';
 
@@ -27,7 +27,7 @@ ReactDOM.render(
         <Provider store={store} >
             <Paper>
                 <IntroSection />
-                <ScheduleSection />
+                <FormSection />
                 <TimerSection />
             </Paper>
         </ Provider>

@@ -1,10 +1,10 @@
 import React from 'react';
 import AddTimerFormContainer from './containers/Schedule/AddTimerFormContainer';
 
-const ScheduleSection = () => (
+const FormSection = () => (
     <div>
         <AddTimerFormContainer />
     </div>
 )
 
-export default ScheduleSection
+export default FormSection
