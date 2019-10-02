@@ -97,7 +97,6 @@ it('confirm dispatch: ELAPSE & timeLimit', () => {
             />, container
         )
     })
-    jest.runOnlyPendingTimers()
     expect(mapDispatchToProps.onReachTimeLimit.mock.calls.length).toBe(1)
     expect(mapDispatchToProps.whenElapse.mock.calls.length).toBe(0)
     expect(mapDispatchToProps.whenEnd.mock.calls.length).toBe(0)
@@ -121,7 +120,6 @@ it('confirm dispatch: STOP', () => {
             />, container
         )
     })
-    jest.runOnlyPendingTimers()
     expect(mapDispatchToProps.onReachTimeLimit.mock.calls.length).toBe(0)
     expect(mapDispatchToProps.whenElapse.mock.calls.length).toBe(0)
     expect(mapDispatchToProps.whenEnd.mock.calls.length).toBe(0)
@@ -145,7 +143,6 @@ it('confirm dispatch: END', () => {
             />, container
         )
     })
-    jest.runOnlyPendingTimers()
     expect(mapDispatchToProps.onReachTimeLimit.mock.calls.length).toBe(0)
     expect(mapDispatchToProps.whenElapse.mock.calls.length).toBe(0)
     expect(mapDispatchToProps.whenEnd.mock.calls.length).toBe(1)
