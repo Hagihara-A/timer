@@ -1,6 +1,7 @@
 import { actionTypes as AT } from './actions'
-import { Map, List, fromJS } from 'immutable'
+import { Map, List } from 'immutable'
 import { getCurrentTimerIndex } from './util'
+import { initState } from './initState'
 export const timerState = {
     INIT: 'INIT',
     ELAPSE: 'ELAPSE',
@@ -8,58 +9,7 @@ export const timerState = {
     END: 'END'
 }
 const { INIT, ELAPSE, STOP, END } = timerState
-const initState = fromJS({
-    timers: [
-        {
-            time: 0,
-            timerState: INIT,
-            timeLimit: 3
-        },
-        [
-            {
-                time: 0,
-                timerState: INIT,
-                timeLimit: 2
-            },
-            {
-                time: 0,
-                timerState: INIT,
-                timeLimit: 2
-            },
-        ],
-        {
-            time: 0,
-            timerState: INIT,
-            timeLimit: 5
-        },
-        [
-            {
-                time: 0,
-                timerState: INIT,
-                timeLimit: 2
-            },
-            {
-                time: 0,
-                timerState: INIT,
-                timeLimit: 2
-            },
-            [
-                {
-                    time: 0,
-                    timerState: INIT,
-                    timeLimit: 3
-                },
-                {
-                    time: 0,
-                    timerState: INIT,
-                    timeLimit: 3
-                },
 
-            ],
-
-        ],
-    ]
-})
 const initTimer = (elem) => {
     return elem.set('time', 0).set('timerState', INIT)
 }
