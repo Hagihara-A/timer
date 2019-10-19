@@ -1,32 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Paper from '@material-ui/core/Paper'
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button'
 import Tree, { mutateTree, moveItemOnTree } from '@atlaskit/tree'
 import { initState } from '../../initState';
+import { parseTreeData } from '../../util';
 
-
-const parseTreeData = treeData => {
-    const rootId = treeData.rootId
-    const rootItem = treeData.items[rootId]
-
-    const parseChildItem = (treeData, item) => {
-
-        const childrenData = []
-        if (item.children.length > 0) {
-            for (const childId of item.children) {
-                let childItem = treeData.items[childId]
-                childrenData.push(parseChildItem(treeData, childItem))
-            }
-            return childrenData
-        } else {
-            return item.data
-        }
+const getIcon = (item, onExpand, onCollapse) => {
+    if (item.children && item.children.length > 0) {
+        return (item.isExpanded ? (
+            <span onClick={() => onCollapse(item.id)}>&nbsp; - &nbsp;</span>
+        ) : (
+                <span onClick={() => onExpand(item.id)}>&nbsp; + &nbsp;</span>
+            ));
     }
-    return parseChildItem(treeData, rootItem)
+    return <span>&nbsp;&bull; &nbsp;</span>
 }
 
-const AddTimerForm = ({ onSubmit }) => {
+const renderItem = ({ item, onExpand, onCollapse, provided }) => {
+    return (
+        <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+        >
+            <span> {getIcon(item, onExpand, onCollapse)}</span>
+            <span>{item.data && item.data.title ? 'title :' + item.data.title : 'time limit :' + item.data.timeLimit}</span>
+        </div>
+    )
+}
+
+const AddTimerForm = ({ onSubmit, setTimers }) => {
     const [tree, setTree] = useState(initState.get('tree').toJS())
 
     const onCollapse = itemId => {
@@ -37,34 +41,17 @@ const AddTimerForm = ({ onSubmit }) => {
             mutateTree(tree, itemId, { isExpanded: true })
         )
     }
-    const getIcon = (item, onExpand, onCollapse) => {
-        if (item.children && item.children.length > 0) {
-            return (item.isExpanded ? (
-                <span onClick={() => onCollapse(item.id)}>&nbsp; - &nbsp;</span>
-            ) : (
-                    <span onClick={() => onExpand(item.id)}>&nbsp; + &nbsp;</span>
-                ));
-        }
-        return <span>&nbsp;&bull; &nbsp;</span>
-    }
     const onDragEnd = (source, destination) => {
         if (!destination) return
         setTree(
             moveItemOnTree(tree, source, destination)
         )
     }
-    const renderItem = ({ item, onExpand, onCollapse, provided }) => {
-        return (
-            <div
-                ref={provided.innerRef}
-                {...provided.draggableProps}
-                {...provided.dragHandleProps}
-            >
-                <span> {getIcon(item, onExpand, onCollapse)}</span>
-                <span>{item.data && item.data.title ? 'title :' + item.data.title : 'time limit :' + item.data.timeLimit}</span>
-            </div>
-        )
-    }
+
+    useEffect(() => {
+        setTimers(parseTreeData(tree))
+    })
+
     return (
         <Paper>
             <form >

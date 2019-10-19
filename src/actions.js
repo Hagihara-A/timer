@@ -4,7 +4,8 @@ export const actionTypes = {
     PAUSE: 'PAUSE',
     RESET: 'RESET',
     FINISH: 'FINISH',
-    ADD_TIMER: 'ADD_TIMER'
+    ADD_TIMER: 'ADD_TIMER',
+    SET_TIMERS: 'SET_TIMERS'
 }
 
 export const addTime = (time) => {
@@ -40,6 +41,14 @@ export const addTimer = (timeLimit) => {
         type: actionTypes.ADD_TIMER,
         payload: {
             timeLimit
+        }
+    }
+}
+export const setTimers = (timers) => {
+    return {
+        type: actionTypes.SET_TIMERS,
+        payload: {
+            timers
         }
     }
 }

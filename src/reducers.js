@@ -1,5 +1,5 @@
 import { actionTypes as AT } from './actions'
-import { Map, List } from 'immutable'
+import { Map, List, fromJS } from 'immutable'
 import { getCurrentTimerIndex } from './util'
 import { initState } from './initState'
 export const timerState = {
@@ -24,6 +24,9 @@ export const initTimersRecursive = (timers) => {
 }
 export const rootReducer = (state = initState, action) => {
     const idx = getCurrentTimerIndex(state.get('timers'))
+    if (action.type === AT.SET_TIMERS) {
+        return state.set('timers', fromJS(action.payload.timers))
+    }
     if (idx) {
         const idxToTime = ['timers', ...idx, 'time']
         const idxToTs = ['timers', ...idx, 'timerState']

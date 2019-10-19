@@ -1,13 +1,14 @@
 import AddTimerForm from "../../components/Form/AddTimerForm";
 import { connect } from "react-redux";
-import { addTimer } from "../../actions";
+import { addTimer, setTimers } from "../../actions";
 
 const stateToProps = state => (
     {}
 )
 const dispatchToProps = dispatch => (
     {
-        onSubmit: (timeLimit) => dispatch(addTimer(timeLimit))
+        onSubmit: (timeLimit) => dispatch(addTimer(timeLimit)),
+        setTimers: timers => dispatch(setTimers(timers))
     }
 )
 const AddTimerFormContainer = connect(stateToProps, dispatchToProps)(AddTimerForm)

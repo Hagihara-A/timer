@@ -1,57 +1,7 @@
 import { fromJS } from "immutable"
 
-const INIT = 'INIT'
 export const initState = fromJS({
-    timers: [
-        {
-            time: 0,
-            timerState: INIT,
-            timeLimit: 3
-        },
-        [
-            {
-                time: 0,
-                timerState: INIT,
-                timeLimit: 2
-            },
-            {
-                time: 0,
-                timerState: INIT,
-                timeLimit: 2
-            },
-        ],
-        {
-            time: 0,
-            timerState: INIT,
-            timeLimit: 5
-        },
-        [
-            {
-                time: 0,
-                timerState: INIT,
-                timeLimit: 2
-            },
-            {
-                time: 0,
-                timerState: INIT,
-                timeLimit: 2
-            },
-            [
-                {
-                    time: 0,
-                    timerState: INIT,
-                    timeLimit: 3
-                },
-                {
-                    time: 0,
-                    timerState: INIT,
-                    timeLimit: 3
-                },
-
-            ],
-
-        ],
-    ],
+    timers: [],
     tree: {
         rootId: 'root',
         items: {
