@@ -18,3 +18,28 @@ export function getCurrentTimerIndex(timers) {
     }
     return null
 }
+
+export const parseTreeData = treeData => {
+    const parseChild = (treeData, item) => {
+        const childrenData = []
+        if (item.children.length > 0) {
+            for (const childId of item.children) {
+                const childItem = treeData.items[childId]
+                const childData = parseChild(treeData, childItem)
+                childrenData.push(childData)
+            }
+            return childrenData
+        } else if (item.data.timeLimit) {
+            return {
+                time: 0,
+                timerState: 'INIT',
+                timeLimit: item.data.timeLimit
+            }
+        }
+    }
+
+    const rootId = treeData.rootId
+    const rootItem = treeData.items[rootId]
+
+    return parseChild(treeData, rootItem)
+}
