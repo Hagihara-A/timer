@@ -28,7 +28,7 @@ export const parseTreeData = treeData => {
                 const childData = parseChild(treeData, childItem)
                 childrenData.push(childData)
             }
-            return childrenData
+            return childrenData.filter(v => v) //remove undefined(in case of child doesn't have children nor timeLimit)
         } else if (item.data.timeLimit) {
             return {
                 time: 0,
