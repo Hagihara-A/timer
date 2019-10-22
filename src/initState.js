@@ -32,7 +32,7 @@ export const initState = fromJS({
                 isExpanded: true,
                 isChildrenLoading: false,
                 data: {
-                    title: 'second'
+                    title: 'first'
                 }
             },
             '1-0': {
