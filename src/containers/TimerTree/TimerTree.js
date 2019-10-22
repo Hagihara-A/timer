@@ -1,4 +1,4 @@
-import AddTimerForm from "../../components/Form/AddTimerForm";
+import TreeRenderer from "../../components/Tree/TreeRenderer";
 import { connect } from "react-redux";
 import { addTimer, setTimers } from "../../actions";
 
@@ -11,5 +11,5 @@ const dispatchToProps = dispatch => (
         setTimers: timers => dispatch(setTimers(timers))
     }
 )
-const AddTimerFormContainer = connect(stateToProps, dispatchToProps)(AddTimerForm)
-export default AddTimerFormContainer
+const TimerTree = connect(stateToProps, dispatchToProps)(TreeRenderer)
+export default TimerTree
