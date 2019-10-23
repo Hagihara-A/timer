@@ -1,14 +1,15 @@
 import Tree, { moveItemOnTree, mutateTree } from '@atlaskit/tree';
 import Paper from '@material-ui/core/Paper';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { initState } from '../../initState';
+import useDeepCompareEffect from 'use-deep-compare-effect';
+import AddNewTimer from '../../containers/TimerTree/AddNewTimer';
 import { parseTreeData } from '../../util';
 
 const ItemContainerOuter = styled.div`
     margin: 20px;
-
 `
+
 const ItemContainerInner = styled.span`
     box-sizing: border-box;
     background-color: white;
@@ -33,22 +34,20 @@ const Icon = ({ item, onExpand, onCollapse, depth }) => {
         return depth === 0 ? (<span> ・</span>) : (<span>└</span>)
     }
 }
-const AddNewTimer = (props) => {
-    return (<Input />)
-}
 const AddSection = ({ itemId }) => {
     return (
         <Input />
     )
 }
+
 const Content = ({ item }) => {
     if (item.children.length > 0) {
-        return <span>{'title :' + item.data.title}  <AddNewTimer itemId={item.id} /><AddSection /></span>
+        return <span>{'title :' + item.data.title}  <AddNewTimer parentId={item.id} /><AddSection /></span>
     } else {
         return <span>{'time limit :' + item.data.timeLimit}</span>
     }
-
 }
+
 const renderItem = ({ item, depth, onExpand, onCollapse, provided }) => {
     return (
         <ItemContainerOuter
@@ -69,8 +68,7 @@ const renderItem = ({ item, depth, onExpand, onCollapse, provided }) => {
     )
 }
 
-const TreeRenderer = ({ onSubmit, setTimers }) => {
-    const [tree, setTree] = useState(initState.get('tree').toJS())
+const TreeRenderer = ({ tree, setTree, setTimers }) => {
 
     const onCollapse = itemId => {
         setTree(mutateTree(tree, itemId, { isExpanded: false }))
@@ -87,9 +85,9 @@ const TreeRenderer = ({ onSubmit, setTimers }) => {
         )
     }
 
-    useEffect(() => {
+    useDeepCompareEffect(() => {
         setTimers(parseTreeData(tree))
-    })
+    }, [tree])
 
     return (
         <Paper>

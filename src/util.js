@@ -43,3 +43,6 @@ export const parseTreeData = treeData => {
 
     return parseChild(treeData, rootItem)
 }
+export const getNewItemId = (tree) => {
+    return String(tree.get('items').size - 1) //except root, start id from 0
+}

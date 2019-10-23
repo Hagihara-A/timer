@@ -1,6 +1,6 @@
 import { actionTypes as AT } from './actions'
 import { Map, List, fromJS } from 'immutable'
-import { getCurrentTimerIndex } from './util'
+import { getCurrentTimerIndex, getNewItemId } from './util'
 import { initState } from './initState'
 export const timerState = {
     INIT: 'INIT',
@@ -24,8 +24,32 @@ export const initTimersRecursive = (timers) => {
 }
 export const rootReducer = (state = initState, action) => {
     const idx = getCurrentTimerIndex(state.get('timers'))
-    if (action.type === AT.SET_TIMERS) {
-        return state.set('timers', fromJS(action.payload.timers))
+    switch (action.type) {
+        case AT.SET_TIMERS:
+            return state.set('timers', fromJS(action.payload.timers))
+        case AT.SET_TREE:
+            return state.set('tree', fromJS(action.payload.tree))
+        case AT.ADD_TREE_ITEM:
+            const { parentId, timeLimit } = action.payload
+            let tree = state.get('tree')
+            const newId = getNewItemId(tree)
+            tree = tree.updateIn(['items', parentId, 'children'], children => children.push(newId))
+
+            const newItem = fromJS({
+                id: newId,
+                children: [],
+                hasChildren: false,
+                isExpanded: false,
+                isChildrenLoading: false,
+                data: {
+                    timeLimit
+                }
+            })
+
+            tree = tree.setIn(['items', newId], newItem)
+            return state.set('tree', tree)
+        default:
+            break
     }
     if (idx) {
         const idxToTime = ['timers', ...idx, 'time']

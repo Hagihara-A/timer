@@ -5,7 +5,9 @@ export const actionTypes = {
     RESET: 'RESET',
     FINISH: 'FINISH',
     ADD_TIMER: 'ADD_TIMER',
-    SET_TIMERS: 'SET_TIMERS'
+    SET_TIMERS: 'SET_TIMERS',
+    SET_TREE: 'SET_TREE',
+    ADD_TREE_ITEM: 'ADD_TREE_ITEM',
 }
 
 export const addTime = (time) => {
@@ -36,10 +38,11 @@ export const finishTimer = () => {
         type: actionTypes.FINISH,
     }
 }
-export const addTimer = (timeLimit) => {
+export const addTimer = (parentId, timeLimit) => {
     return {
         type: actionTypes.ADD_TIMER,
         payload: {
+            parentId,
             timeLimit
         }
     }
@@ -49,6 +52,25 @@ export const setTimers = (timers) => {
         type: actionTypes.SET_TIMERS,
         payload: {
             timers
+        }
+    }
+}
+
+export const setTree = tree => {
+    return {
+        type: actionTypes.SET_TREE,
+        payload: {
+            tree
+        }
+    }
+}
+
+export const addTreeItem = (parentId, timeLimit) => {
+    return {
+        type: actionTypes.ADD_TREE_ITEM,
+        payload: {
+            parentId,
+            timeLimit
         }
     }
 }

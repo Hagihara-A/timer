@@ -1,13 +1,15 @@
-import TreeRenderer from "../../components/Tree/TreeRenderer";
 import { connect } from "react-redux";
-import { addTimer, setTimers } from "../../actions";
+import { setTimers, setTree } from "../../actions";
+import TreeRenderer from "../../components/Tree/TreeRenderer";
 
 const stateToProps = state => (
-    {}
+    {
+        tree: state.get('tree').toJS()
+    }
 )
 const dispatchToProps = dispatch => (
     {
-        onSubmit: (timeLimit) => dispatch(addTimer(timeLimit)),
+        setTree: tree => dispatch(setTree(tree)),
         setTimers: timers => dispatch(setTimers(timers))
     }
 )
