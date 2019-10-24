@@ -8,6 +8,7 @@ export const actionTypes = {
     SET_TIMERS: 'SET_TIMERS',
     SET_TREE: 'SET_TREE',
     ADD_TREE_ITEM: 'ADD_TREE_ITEM',
+    ADD_SECTION: 'ADD_SECTION'
 }
 
 export const addTime = (time) => {
@@ -71,6 +72,15 @@ export const addTreeItem = (parentId, timeLimit) => {
         payload: {
             parentId,
             timeLimit
+        }
+    }
+}
+export const addSection = (parentId, title) => {
+    return {
+        type: actionTypes.ADD_SECTION,
+        payload: {
+            parentId,
+            title
         }
     }
 }

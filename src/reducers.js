@@ -22,6 +22,24 @@ export const initTimersRecursive = (timers) => {
         }
     })
 }
+const setNewItemOnTree = (tree, parentId, data = {}) => {
+    const newId = getNewItemId(tree)
+    console.log(parentId, tree.getIn(['items', parentId]).toJS());
+    
+    let newTree = tree.updateIn(['items', parentId, 'children'], children => children.push(newId))
+
+    const newItem = fromJS({
+        id: newId,
+        children: [],
+        hasChildren: false,
+        isExpanded: false,
+        isChildrenLoading: false,
+        data
+    })
+
+    newTree = newTree.setIn(['items', newId], newItem)
+    return newTree
+}
 export const rootReducer = (state = initState, action) => {
     const idx = getCurrentTimerIndex(state.get('timers'))
     switch (action.type) {
@@ -29,25 +47,18 @@ export const rootReducer = (state = initState, action) => {
             return state.set('timers', fromJS(action.payload.timers))
         case AT.SET_TREE:
             return state.set('tree', fromJS(action.payload.tree))
-        case AT.ADD_TREE_ITEM:
+        case AT.ADD_TREE_ITEM: {
             const { parentId, timeLimit } = action.payload
             let tree = state.get('tree')
-            const newId = getNewItemId(tree)
-            tree = tree.updateIn(['items', parentId, 'children'], children => children.push(newId))
-
-            const newItem = fromJS({
-                id: newId,
-                children: [],
-                hasChildren: false,
-                isExpanded: false,
-                isChildrenLoading: false,
-                data: {
-                    timeLimit
-                }
-            })
-
-            tree = tree.setIn(['items', newId], newItem)
+            tree = setNewItemOnTree(tree, parentId, { timeLimit })
             return state.set('tree', tree)
+        }
+        case AT.ADD_SECTION: {
+            const { parentId, title } = action.payload
+            let tree = state.get('tree')
+            tree = setNewItemOnTree(tree, parentId, { title })
+            return state.set('tree', tree)
+        }
         default:
             break
     }
