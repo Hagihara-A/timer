@@ -6,6 +6,7 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import AddNewSection from '../../containers/TimerTree/AddNewSection';
 import AddNewTimer from '../../containers/TimerTree/AddNewTimer';
 import { parseTreeData } from '../../util';
+import RemoveItem from '../../containers/TimerTree/RemoveItem';
 
 const ItemContainerOuter = styled.div`
     margin: 20px;
@@ -41,9 +42,14 @@ const Content = ({ item }) => {
             <span>{'title :' + item.data.title}
                 <AddNewTimer parentId={item.id} />
                 <AddNewSection parentId={item.id} />
+                <RemoveItem removeItemId={item.id}/>
             </span>)
     } else {
-        return <span>{'time limit :' + item.data.timeLimit}</span>
+        return (
+            <span>
+                {'time limit :' + item.data.timeLimit}
+                <RemoveItem removeItemId={item.id}/>
+            </span>)
     }
 }
 

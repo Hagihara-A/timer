@@ -24,8 +24,6 @@ export const initTimersRecursive = (timers) => {
 }
 const setNewItemOnTree = (tree, parentId, data = {}) => {
     const newId = getNewItemId(tree)
-    console.log(parentId, tree.getIn(['items', parentId]).toJS());
-    
     let newTree = tree.updateIn(['items', parentId, 'children'], children => children.push(newId))
 
     const newItem = fromJS({
@@ -57,6 +55,18 @@ export const rootReducer = (state = initState, action) => {
             const { parentId, title } = action.payload
             let tree = state.get('tree')
             tree = setNewItemOnTree(tree, parentId, { title })
+            return state.set('tree', tree)
+        }
+        case AT.REMOVE_ITEM: {
+            const { removeItemId } = action.payload
+            let tree = state.get('tree')
+            const parentItem = tree.get('items').find(value => value.get('children').some(id => id === removeItemId))
+            const parentId = parentItem.get('id')
+            const removeItemIndex = parentItem.get('children').indexOf(removeItemId)
+            // const childIds = tree.getIn(['items', removeItemId, 'children']) TODO: remove all children Items
+            
+            tree = tree.deleteIn(['items', parentId, 'children', removeItemIndex])
+            tree = tree.deleteIn(['items', removeItemId])
             return state.set('tree', tree)
         }
         default:

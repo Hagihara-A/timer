@@ -8,7 +8,8 @@ export const actionTypes = {
     SET_TIMERS: 'SET_TIMERS',
     SET_TREE: 'SET_TREE',
     ADD_TREE_ITEM: 'ADD_TREE_ITEM',
-    ADD_SECTION: 'ADD_SECTION'
+    ADD_SECTION: 'ADD_SECTION',
+    REMOVE_ITEM: 'REMOVE_ITEM'
 }
 
 export const addTime = (time) => {
@@ -81,6 +82,14 @@ export const addSection = (parentId, title) => {
         payload: {
             parentId,
             title
+        }
+    }
+}
+export const removeItem = removeItemId => {
+    return {
+        type: actionTypes.REMOVE_ITEM,
+        payload: {
+            removeItemId
         }
     }
 }
