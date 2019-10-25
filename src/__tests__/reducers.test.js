@@ -108,7 +108,6 @@ test('initTimerRecursive', () => {
         ]
     })
     const ret = initTimersRecursive(state.get('timers'))
-    console.log(ret);
 
     expect(ret).toEqual(initState.get('timers'))
 })
