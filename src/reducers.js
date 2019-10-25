@@ -77,6 +77,15 @@ export const rootReducer = (state = initState, action) => {
                 return state.setIn(['tree', 'items', editItemId, 'data', 'timeLimit'], content)
             }
         }
+        case AT.COPY_ITEM: {
+            const { originItemId } = action.payload
+            const originItem = state.getIn(['tree', 'items', originItemId])
+            const newItemId = getNewItemId(state.get('tree'))
+            const newItem = originItem.set('id', newItemId)
+            let newState = state.setIn(['tree', 'items', newItemId], newItem)
+            newState = newState.updateIn(['tree', 'items', 'root', 'children'], children => children.push(newItemId))
+            return newState
+        }
         default:
             break
     }

@@ -10,7 +10,8 @@ export const actionTypes = {
     ADD_TREE_ITEM: 'ADD_TREE_ITEM',
     ADD_SECTION: 'ADD_SECTION',
     REMOVE_ITEM: 'REMOVE_ITEM',
-    EDIT_ITEM: 'EDIT_ITEM'
+    EDIT_ITEM: 'EDIT_ITEM',
+    COPY_ITEM: 'COPY_ITEM'
 }
 
 export const addTime = (time) => {
@@ -100,6 +101,14 @@ export const editItem = (editItemId, content) => {
         payload: {
             editItemId,
             content
+        }
+    }
+}
+export const copyItem = originItemId => {
+    return {
+        type: actionTypes.COPY_ITEM,
+        payload: {
+            originItemId
         }
     }
 }

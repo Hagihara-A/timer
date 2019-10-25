@@ -8,6 +8,7 @@ import AddNewTimer from '../../containers/TimerTree/AddNewTimer';
 import { parseTreeData } from '../../util';
 import RemoveItem from '../../containers/TimerTree/RemoveItem';
 import EditItem from './EditItem';
+import CopyItem from './CopyItem';
 
 const ItemContainerOuter = styled.div`
     margin: 20px;
@@ -21,10 +22,6 @@ const ItemContainerInner = styled.span`
     padding: 8px;
 `
 
-export const Input = styled.input`
-    width: 3rem;
-    margin-left: 5px;
-`
 const Icon = ({ item, onExpand, onCollapse, depth }) => {
     if (item.children && item.children.length > 0) {
         return (item.isExpanded ? (
@@ -45,6 +42,7 @@ const Content = ({ item }) => {
                 <AddNewSection parentId={item.id} />
                 <RemoveItem removeItemId={item.id} />
                 <EditItem itemId={item.id} />
+                <CopyItem itemId={item.id} />
             </span>)
     } else {
         return (
@@ -52,6 +50,7 @@ const Content = ({ item }) => {
                 {'time limit :' + item.data.timeLimit}
                 <RemoveItem removeItemId={item.id} />
                 <EditItem itemId={item.id} />
+                <CopyItem itemId={item.id} />
             </span>)
     }
 }
