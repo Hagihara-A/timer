@@ -64,10 +64,18 @@ export const rootReducer = (state = initState, action) => {
             const parentId = parentItem.get('id')
             const removeItemIndex = parentItem.get('children').indexOf(removeItemId)
             // const childIds = tree.getIn(['items', removeItemId, 'children']) TODO: remove all children Items
-            
+
             tree = tree.deleteIn(['items', parentId, 'children', removeItemIndex])
             tree = tree.deleteIn(['items', removeItemId])
             return state.set('tree', tree)
+        }
+        case AT.EDIT_ITEM: {
+            const { editItemId, content } = action.payload
+            if (state.getIn(['tree', 'items', editItemId, 'data', 'title'])) {
+                return state.setIn(['tree', 'items', editItemId, 'data', 'title'], content)
+            } else {
+                return state.setIn(['tree', 'items', editItemId, 'data', 'timeLimit'], content)
+            }
         }
         default:
             break

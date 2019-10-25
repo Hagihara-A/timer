@@ -9,7 +9,8 @@ export const actionTypes = {
     SET_TREE: 'SET_TREE',
     ADD_TREE_ITEM: 'ADD_TREE_ITEM',
     ADD_SECTION: 'ADD_SECTION',
-    REMOVE_ITEM: 'REMOVE_ITEM'
+    REMOVE_ITEM: 'REMOVE_ITEM',
+    EDIT_ITEM: 'EDIT_ITEM'
 }
 
 export const addTime = (time) => {
@@ -90,6 +91,15 @@ export const removeItem = removeItemId => {
         type: actionTypes.REMOVE_ITEM,
         payload: {
             removeItemId
+        }
+    }
+}
+export const editItem = (editItemId, content) => {
+    return {
+        type: actionTypes.EDIT_ITEM,
+        payload: {
+            editItemId,
+            content
         }
     }
 }
