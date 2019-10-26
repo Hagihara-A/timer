@@ -1,6 +1,7 @@
 import React from 'react'
+import DeleteIcon from '@material-ui/icons/Delete'
 
 const RemoveIcon = ({onClick}) => {
-    return (<span onClick={onClick}>&nbsp; x &nbsp;</span>)
+    return <DeleteIcon onClick={onClick} color='primary' />
 }
 export default RemoveIcon

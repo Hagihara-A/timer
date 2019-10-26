@@ -1,14 +1,15 @@
 import Tree, { moveItemOnTree, mutateTree } from '@atlaskit/tree';
 import Paper from '@material-ui/core/Paper';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import React from 'react';
 import styled from 'styled-components';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import AddNewSection from '../../containers/TimerTree/AddNewSection';
 import AddNewTimer from '../../containers/TimerTree/AddNewTimer';
-import { parseTreeData } from '../../util';
 import RemoveItem from '../../containers/TimerTree/RemoveItem';
-import EditItem from './EditItem';
+import { parseTreeData } from '../../util';
 import CopyItem from './CopyItem';
+import EditableContent from './EditableContent';
 
 const ItemContainerOuter = styled.div`
     margin: 20px;
@@ -25,10 +26,10 @@ const ItemContainerInner = styled.span`
 const Icon = ({ item, onExpand, onCollapse, depth }) => {
     if (item.children && item.children.length > 0) {
         return (item.isExpanded ? (
-            <span onClick={() => onCollapse(item.id)}>&nbsp; - &nbsp;</span>
+            <ArrowDropDownIcon onClick={() => onCollapse(item.id)} color='primary' fontSize='large' />
         ) : (
-                <span onClick={() => onExpand(item.id)}>&nbsp; + &nbsp;</span>
-            ));
+                <ArrowRightIcon onClick={() => onExpand(item.id)} color='primary' fontSize='large' />
+            ))
     } else {
         return depth === 0 ? (<span> ・</span>) : (<span>└</span>)
     }
@@ -37,19 +38,17 @@ const Icon = ({ item, onExpand, onCollapse, depth }) => {
 const Content = ({ item }) => {
     if (item.data && item.data.title) {
         return (
-            <span>{'title :' + item.data.title}
+            <span>
+                <EditableContent itemId={item.id} />
                 <AddNewTimer parentId={item.id} />
-                <AddNewSection parentId={item.id} />
                 <RemoveItem removeItemId={item.id} />
-                <EditItem itemId={item.id} />
                 <CopyItem itemId={item.id} />
             </span>)
     } else {
         return (
             <span>
-                {'time limit :' + item.data.timeLimit}
+                <EditableContent itemId={item.id} />
                 <RemoveItem removeItemId={item.id} />
-                <EditItem itemId={item.id} />
                 <CopyItem itemId={item.id} />
             </span>)
     }
