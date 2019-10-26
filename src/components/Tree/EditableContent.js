@@ -1,3 +1,4 @@
+import TextField from '@material-ui/core/TextField';
 import EditIcon from '@material-ui/icons/Edit';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
@@ -28,9 +29,9 @@ const EditableContent = ({ itemId }) => {
     return (
         <span>
             {isEditing ? (
-                <input
+                <TextField
                     value={value}
-                    {...inputAttr}
+                    inputProps={inputAttr}
                     onChange={onChange}
                     onKeyDown={onKeyDown}
                 />
