@@ -27,7 +27,7 @@ ReactDOM.render(
         <Provider store={store} >
             <Paper>
                 <IntroSection />
-                <Paper>
+                <Paper style={{height: '1000px'}}>
                     <TimerTree />
                 </Paper>
                 <TimerSection />

@@ -11,27 +11,24 @@ import { parseTreeData } from '../../util';
 import CopyItem from './CopyItem';
 import EditableContent from './EditableContent';
 
-const ItemContainerOuter = styled.div`
-    margin: 20px;
+const TreeContainer = styled.div`
+    max-width: 600px;
+    position: absolute;
+    left: 45%;
 `
-
-const ItemContainerInner = styled.span`
-    box-sizing: border-box;
-    background-color: white;
-    border: 3px solid lightgray;
-    border-radius: 5px;
-    padding: 8px;
+const ItemContainer = styled.div`
+    border: solid lightblue;
+    vertical-align: text-top;
 `
-
 const Icon = ({ item, onExpand, onCollapse, depth }) => {
     if (item.children && item.children.length > 0) {
         return (item.isExpanded ? (
-            <ArrowDropDownIcon onClick={() => onCollapse(item.id)} color='primary' fontSize='large' />
+            <ArrowDropDownIcon onClick={() => onCollapse(item.id)} color='primary' />
         ) : (
-                <ArrowRightIcon onClick={() => onExpand(item.id)} color='primary' fontSize='large' />
+                <ArrowRightIcon onClick={() => onExpand(item.id)} color='primary' />
             ))
     } else {
-        return depth === 0 ? (<span> ・</span>) : (<span>└</span>)
+        return <span> &bull; </span>
     }
 }
 
@@ -54,23 +51,22 @@ const Content = ({ item }) => {
     }
 }
 
-const renderItem = ({ item, depth, onExpand, onCollapse, provided }) => {
+const renderItem = ({ item, depth, onExpand, onCollapse, provided, snapshot }) => {
     return (
-        <ItemContainerOuter
+        <ItemContainer
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
+            depth={depth}
         >
-            <ItemContainerInner>
-                <Icon
-                    item={item}
-                    onExpand={onExpand}
-                    onCollapse={onCollapse}
-                    depth={depth}
-                />
-                <Content item={item} />
-            </ItemContainerInner>
-        </ItemContainerOuter>
+            <Icon
+                item={item}
+                onExpand={onExpand}
+                onCollapse={onCollapse}
+                depth={depth}
+            />
+            <Content item={item} />
+        </ItemContainer>
     )
 }
 
@@ -96,16 +92,20 @@ const TreeRenderer = ({ tree, setTree, setTimers }) => {
     }, [tree])
 
     return (
-        <Paper>
-            <Tree
-                tree={tree}
-                renderItem={renderItem}
-                isDragEnabled
-                isNestingEnabled
-                onCollapse={onCollapse}
-                onExpand={onExpand}
-                onDragEnd={onDragEnd}
-            />
+        <Paper
+            style={{ position: 'relative' }}
+        >
+            <TreeContainer>
+                <Tree
+                    tree={tree}
+                    renderItem={renderItem}
+                    isDragEnabled
+                    isNestingEnabled
+                    onCollapse={onCollapse}
+                    onExpand={onExpand}
+                    onDragEnd={onDragEnd}
+                />
+            </TreeContainer>
         </Paper>
     )
 }
