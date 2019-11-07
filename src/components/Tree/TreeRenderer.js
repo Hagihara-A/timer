@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import AddNewTimer from '../../containers/TimerTree/AddNewTimer';
 import RemoveItem from '../../containers/TimerTree/RemoveItem';
-import { parseTreeData } from '../../util';
+import { parseTreeData, combineTwoTimersToSection } from '../../util';
 import CopyItem from './CopyItem';
 import EditableContent from './EditableContent';
 
@@ -82,11 +82,16 @@ const TreeRenderer = ({ tree, setTree, setTimers }) => {
     }
     const onDragEnd = (source, destination) => {
         if (!destination) return
-        setTree(
-            moveItemOnTree(tree, source, destination)
-        )
+        const srcItemId = tree.items[source.parentId].children[source.index]
+        const srcItem = tree.items[srcItemId]
+        const dstItem = tree.items[destination.parentId]
+        if (typeof destination.index === 'undefined' && srcItem.children.length === 0 && dstItem.children.length === 0) {
+            // when two timers combined
+            setTree(combineTwoTimersToSection(tree, source, destination))
+        } else {
+            setTree(moveItemOnTree(tree, source, destination))
+        }
     }
-
     useDeepCompareEffect(() => {
         setTimers(parseTreeData(tree))
     }, [tree])
