@@ -1,10 +1,10 @@
 import { fromJS } from "immutable"
 import { actionTypes as AT } from "../actions"
-import { getNewItemId } from "../util"
+import { getNewItemIds } from "../util"
 import { initState } from "../initState"
 
 const setNewItemOnTree = (tree, parentId, data = {}) => {
-    const newId = getNewItemId(tree)
+    const newId = getNewItemIds(tree, 1)[0]
     let newTree = tree.updateIn(['items', parentId, 'children'], children => children.push(newId))
 
     const newItem = fromJS({
@@ -62,7 +62,7 @@ const treeReducer = (tree = initState.get('tree'), action) => {
             const { originItemId } = action.payload
             const originItem = tree.getIn(['items', originItemId])
             const numChildren = countAllChildren(tree, originItem)
-            const newItemId = getNewItemId(tree)
+            const newItemId = getNewItemIds(tree)
             const newItem = originItem.set('id', newItemId)
             return tree
                 .setIn(['items', newItemId], newItem)

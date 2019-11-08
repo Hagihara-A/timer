@@ -1,4 +1,4 @@
-import { List } from 'immutable'
+import { List, Map } from 'immutable'
 import { mutateTree } from '@atlaskit/tree'
 import { timerState } from './reducers/timersReducer'
 
@@ -45,12 +45,13 @@ export const parseTreeData = treeData => {
 
     return parseChild(treeData, rootItem)
 }
-export const getNewItemId = (tree) => {
-    if (tree.get) {
-        return String(tree.get('items').size - 1) //except root, start id from 0
-    } else {
-        return String(Object.keys(tree.items).length - 1)
+export const getNewItemIds = (tree, numIds) => {
+    const startNum = Map.isMap(tree) ? tree.get('items').size - 1 : Object.keys(tree.items).length - 1
+    const newIds = []
+    for (let i = startNum; i < numIds + startNum; i++) {
+        newIds.push(String(i))
     }
+    return newIds
 }
 const initTreeItem = {
     children: [],
@@ -86,7 +87,7 @@ export const combineTwoTimersToSection = (tree, source, destination) => {
     const dstItemId = destination.parentId
     const srcItemId = tree.items[source.parentId].children[source.index]
 
-    const newSectionId = getNewItemId(tree)
+    const newSectionId = getNewItemIds(tree, 1)[0]
     const newSection = {
         ...initTreeItem,
         id: newSectionId,

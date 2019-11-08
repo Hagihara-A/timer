@@ -1,4 +1,4 @@
-import { getCurrentTimerIndex, parseTreeData, addItemToTree, getParentItem, combineTwoTimersToSection, getNewItemId } from "../util";
+import { getCurrentTimerIndex, parseTreeData, addItemToTree, getParentItem, combineTwoTimersToSection, getNewItemIds } from "../util";
 import { fromJS, List } from "immutable";
 import { timerState as TS } from "../reducers/timersReducer";
 
@@ -357,8 +357,9 @@ const sampleTree = {
     }
 }
 test('getNewItemId', () => {
-    const newId = getNewItemId(sampleTree)
-    expect(newId).toBe(String(Object.keys(sampleTree.items).length - 1))
+    const newIds = getNewItemIds(sampleTree, 2)
+    const firstId = Object.keys(sampleTree.items).length - 1
+    expect(newIds).toEqual([String(firstId), String(firstId + 1)])
 })
 test('addItemToTree', () => {
     const itemToAdd = {
@@ -378,7 +379,7 @@ test('combineTwoTimersToSection', () => {
     const source = { parentId: '3-2', index: 1 }
     const srcItemId = sampleTree.items[source.parentId].children[source.index]
     const destination = { parentId: '1-0' }
-    const newId = getNewItemId(sampleTree)
+    const newId = getNewItemIds(sampleTree ,1)[0]
     const newTree = combineTwoTimersToSection(sampleTree, source, destination)
     expect(newTree.items[newId].children).toEqual([destination.parentId, srcItemId])
 })
