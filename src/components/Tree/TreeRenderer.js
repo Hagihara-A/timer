@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import AddNewTimer from '../../containers/TimerTree/AddNewTimer';
 import RemoveItem from '../../containers/TimerTree/RemoveItem';
-import { parseTreeData, combineTwoTimersToSection } from '../../util';
+import { combineTwoTimersToSection, parseTreeData } from '../../util';
 import CopyItem from './CopyItem';
 import EditableContent from './EditableContent';
 

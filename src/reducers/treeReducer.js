@@ -1,5 +1,5 @@
+import { fromJS } from "immutable"
 import { actionTypes as AT } from "../actions"
-import {  fromJS } from "immutable"
 import { getNewItemId } from "../util"
 import { initState } from "../initState"
 

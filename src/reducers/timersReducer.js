@@ -61,6 +61,8 @@ const timersReducer = (timers = initState.get('timers'), action) => {
         switch (action.type) {
             case AT.RESET:
                 return initTimersRecursive(timers)
+            case AT.SET_TIMERS:
+                return fromJS(action.payload.timers)
             default:
                 return timers
         }
