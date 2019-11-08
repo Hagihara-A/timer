@@ -72,6 +72,7 @@ const renderItem = ({ item, depth, onExpand, onCollapse, provided, snapshot }) =
 
 const TreeRenderer = ({ tree, setTree, setTimers }) => {
 
+    // TODO: relocate onXxx to reducer 
     const onCollapse = itemId => {
         setTree(mutateTree(tree, itemId, { isExpanded: false }))
     }

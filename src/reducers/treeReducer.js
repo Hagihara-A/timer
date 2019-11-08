@@ -19,6 +19,16 @@ const setNewItemOnTree = (tree, parentId, data = {}) => {
     newTree = newTree.setIn(['items', newId], newItem)
     return newTree
 }
+export const countAllChildren = (tree, parentItemId) => {
+    return tree.getIn(['items', parentItemId, 'children']).reduce((accum, childId) => {
+        const childrenOfChild = tree.getIn(['items', childId, 'children'])
+        if (childrenOfChild.size > 0) {
+            return accum + countAllChildren(tree, childId) + 1
+        } else {
+            return accum + 1
+        }
+    }, 0)
+}
 const treeReducer = (tree = initState.get('tree'), action) => {
     switch (action.type) {
         case AT.SET_TREE:
@@ -51,6 +61,7 @@ const treeReducer = (tree = initState.get('tree'), action) => {
         case AT.COPY_ITEM: {
             const { originItemId } = action.payload
             const originItem = tree.getIn(['items', originItemId])
+            const numChildren = countAllChildren(tree, originItem)
             const newItemId = getNewItemId(tree)
             const newItem = originItem.set('id', newItemId)
             return tree
