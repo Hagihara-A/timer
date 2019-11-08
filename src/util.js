@@ -1,6 +1,6 @@
 import { List } from 'immutable'
-import { timerState } from './reducers'
 import { mutateTree } from '@atlaskit/tree'
+import { timerState } from './reducers/timersReducer'
 
 export function getCurrentTimerIndex(timers) {
     for (let idx = 0; idx < timers.size; idx++) {
@@ -24,6 +24,7 @@ export const parseTreeData = treeData => {
     const parseChild = (treeData, item) => {
         const childrenData = []
         if (item.children.length > 0) {
+            // eslint-disable-next-line no-unused-vars
             for (const childId of item.children) {
                 const childItem = treeData.items[childId]
                 const childData = parseChild(treeData, childItem)

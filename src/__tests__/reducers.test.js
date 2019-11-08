@@ -1,5 +1,5 @@
 import { fromJS } from "immutable"
-import { timerState, initTimersRecursive } from "../reducers"
+import { timerState, initTimersRecursive } from "../reducers/timersReducer"
 
 const initState = fromJS({
     timers: [

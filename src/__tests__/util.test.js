@@ -1,7 +1,6 @@
 import { getCurrentTimerIndex, parseTreeData, addItemToTree, getParentItem, combineTwoTimersToSection, getNewItemId } from "../util";
 import { fromJS, List } from "immutable";
-import { timerState as TS } from "../reducers";
-
+import { timerState as TS } from "../reducers/timersReducer";
 
 test('get index from initState', () => {
     const initState = fromJS({
