@@ -1,5 +1,5 @@
 import React, {useRef, useEffect} from 'react';
-import { timerState } from '../../reducers';
+import { timerState } from '../../reducers/timersReducer';
 
 const { ELAPSE, STOP, END , INIT} = timerState
 const Timer = ({timerState, timeLimit, time, onReachTimeLimit, whenElapse, whenEnd}) => {

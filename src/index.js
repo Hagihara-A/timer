@@ -1,15 +1,15 @@
+import { createMuiTheme } from '@material-ui/core/styles';
+import { Paper } from 'material-ui';
+import { MuiThemeProvider } from 'material-ui/styles';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { store } from './store';
 import { Provider } from 'react-redux';
-import * as serviceWorker from './serviceWorker';
 import "./App.scss";
-import { MuiThemeProvider } from 'material-ui/styles';
-import { createMuiTheme } from '@material-ui/core/styles'
-import TimerSection from './TimerSection';
-import FormSection from './ScheduleSection';
 import IntroSection from './components/Intro/IntroSection';
-import { Paper } from 'material-ui';
+import TimerTree from './containers/TimerTree/TimerTree';
+import * as serviceWorker from './serviceWorker';
+import { store } from './store';
+import TimerSection from './TimerSection';
 
 const theme = createMuiTheme({
     palette: {
@@ -27,7 +27,9 @@ ReactDOM.render(
         <Provider store={store} >
             <Paper>
                 <IntroSection />
-                <FormSection />
+                <Paper style={{height: '1000px'}}>
+                    <TimerTree />
+                </Paper>
                 <TimerSection />
             </Paper>
         </ Provider>
