@@ -1,10 +1,10 @@
-import { fromJS } from "immutable"
+import { fromJS, List, Map } from "immutable"
 import { actionTypes as AT } from "../actions"
-import { getNewItemIds } from "../util"
 import { initState } from "../initState"
+import { getNewItemIds } from "../util"
 
 const setNewItemOnTree = (tree, parentId, data = {}) => {
-    const newId = getNewItemIds(tree, 1)[0]
+    const newId = getNewItemIds(tree, 1).get(0)
     let newTree = tree.updateIn(['items', parentId, 'children'], children => children.push(newId))
 
     const newItem = fromJS({
@@ -19,15 +19,14 @@ const setNewItemOnTree = (tree, parentId, data = {}) => {
     newTree = newTree.setIn(['items', newId], newItem)
     return newTree
 }
-export const countAllChildren = (tree, parentItemId) => {
-    return tree.getIn(['items', parentItemId, 'children']).reduce((accum, childId) => {
-        const childrenOfChild = tree.getIn(['items', childId, 'children'])
-        if (childrenOfChild.size > 0) {
-            return accum + countAllChildren(tree, childId) + 1
+export const getAllChildrenIds = (tree, parentItemId) => {
+    return tree.getIn(['items', parentItemId, 'children']).reduce((accum, id) => {
+        if (tree.getIn(['items', id, 'children']).size > 0) {
+            return accum.concat(getAllChildrenIds(tree, id))
         } else {
-            return accum + 1
+            return accum.push(id)
         }
-    }, 0)
+    }, List([parentItemId]))
 }
 const treeReducer = (tree = initState.get('tree'), action) => {
     switch (action.type) {
@@ -60,13 +59,27 @@ const treeReducer = (tree = initState.get('tree'), action) => {
         }
         case AT.COPY_ITEM: {
             const { originItemId } = action.payload
-            const originItem = tree.getIn(['items', originItemId])
-            const numChildren = countAllChildren(tree, originItem)
-            const newItemId = getNewItemIds(tree)
-            const newItem = originItem.set('id', newItemId)
-            return tree
-                .setIn(['items', newItemId], newItem)
-                .updateIn(['items', 'root', 'children'], children => children.push(newItemId))
+
+            const childrenIds = getAllChildrenIds(tree, originItemId)
+            const newItemIds = getNewItemIds(tree, childrenIds.size)
+            const correspond = Map(childrenIds.zip(newItemIds))
+
+            const newItems = childrenIds.reduce((accItems, curId) => {
+                const curItem = tree.getIn(['items', curId])
+                const newId = correspond.get(curId)
+                const newChildren = curItem.get('children').map(prevId => correspond.get(prevId))
+                const itemToAdd = curItem.set('children', newChildren).set('id', newId)
+
+                return accItems.set(newId, itemToAdd)
+            }, Map({}))
+
+            const parentItem = tree
+                .get('items')
+                .find(item => item.get('children').some(id => id === originItemId))
+            const indexToInsert = parentItem.get('children').findIndex(id => id === originItemId) + 1
+            const newParentChildren = parentItem.get('children').insert(indexToInsert, correspond.get(originItemId))
+
+            return tree.update('items', items => items.merge(newItems)).setIn(['items', parentItem.get('id'), 'children'], newParentChildren)
         }
         default:
             return tree

@@ -359,7 +359,7 @@ const sampleTree = {
 test('getNewItemId', () => {
     const newIds = getNewItemIds(sampleTree, 2)
     const firstId = Object.keys(sampleTree.items).length - 1
-    expect(newIds).toEqual([String(firstId), String(firstId + 1)])
+    expect(newIds.toJS()).toEqual([String(firstId), String(firstId + 1)])
 })
 test('addItemToTree', () => {
     const itemToAdd = {
@@ -379,7 +379,7 @@ test('combineTwoTimersToSection', () => {
     const source = { parentId: '3-2', index: 1 }
     const srcItemId = sampleTree.items[source.parentId].children[source.index]
     const destination = { parentId: '1-0' }
-    const newId = getNewItemIds(sampleTree ,1)[0]
+    const newId = getNewItemIds(sampleTree ,1).get(0)
     const newTree = combineTwoTimersToSection(sampleTree, source, destination)
     expect(newTree.items[newId].children).toEqual([destination.parentId, srcItemId])
 })

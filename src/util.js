@@ -47,9 +47,9 @@ export const parseTreeData = treeData => {
 }
 export const getNewItemIds = (tree, numIds) => {
     const startNum = Map.isMap(tree) ? tree.get('items').size - 1 : Object.keys(tree.items).length - 1
-    const newIds = []
+    let newIds = List([])
     for (let i = startNum; i < numIds + startNum; i++) {
-        newIds.push(String(i))
+        newIds = newIds.push(String(i))
     }
     return newIds
 }
@@ -87,7 +87,7 @@ export const combineTwoTimersToSection = (tree, source, destination) => {
     const dstItemId = destination.parentId
     const srcItemId = tree.items[source.parentId].children[source.index]
 
-    const newSectionId = getNewItemIds(tree, 1)[0]
+    const newSectionId = getNewItemIds(tree, 1).get(0)
     const newSection = {
         ...initTreeItem,
         id: newSectionId,
