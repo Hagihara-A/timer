@@ -83,15 +83,21 @@ const TreeRenderer = ({ tree, setTree, setTimers }) => {
     }
     const onDragEnd = (source, destination) => {
         if (!destination) return
-        const srcItemId = tree.items[source.parentId].children[source.index]
-        const srcItem = tree.items[srcItemId]
-        const dstItem = tree.items[destination.parentId]
-        if (typeof destination.index === 'undefined' && srcItem.children.length === 0 && dstItem.children.length === 0) {
-            // when two timers combined
-            setTree(combineTwoTimersToSection(tree, source, destination))
-        } else {
-            setTree(moveItemOnTree(tree, source, destination))
-        }
+        setTree(
+            moveItemOnTree(tree, source, destination)
+        )
+        // *************when  combine two timers into section***********
+        // const srcItemId = tree.items[source.parentId].children[source.index]
+        // const srcItem = tree.items[srcItemId]
+        // const dstItem = tree.items[destination.parentId]
+        // if (typeof destination.index === 'undefined' && srcItem.children.length === 0 && dstItem.children.length === 0) {
+        //     // when two timers combined
+        //     setTree(combineTwoTimersToSection(tree, source, destination))
+        // } else {
+        //     setTree(moveItemOnTree(tree, source, destination))
+        // }
+        //  *************************************************************
+        
     }
     useDeepCompareEffect(() => {
         setTimers(parseTreeData(tree))
