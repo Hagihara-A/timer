@@ -1,6 +1,8 @@
 import { List, Map } from 'immutable'
-import { mutateTree } from '@atlaskit/tree'
+import { mutateTree, TreeItem, ItemId, TreeSourcePosition, TreeDestinationPosition } from '@atlaskit/tree'
 import { timerState } from './reducers/timersReducer'
+import { TreeData } from '@atlaskit/tree'
+import { TreeDataIm, Timers, TimerItem } from './types'
 
 export function getCurrentTimerIndex(timers) {
     for (let idx = 0; idx < timers.size; idx++) {
@@ -20,7 +22,7 @@ export function getCurrentTimerIndex(timers) {
     return null
 }
 
-export const parseTreeData = treeData => {
+export const parseTreeData = (treeData) => {
     const parseChild = (treeData, item) => {
         const childrenData = []
         if (item.children.length > 0) {
@@ -45,9 +47,9 @@ export const parseTreeData = treeData => {
 
     return parseChild(treeData, rootItem)
 }
-export const getNewItemIds = (tree, numIds) => {
+export const getNewItemIds = (tree: TreeData | TreeDataIm, numIds: number) => {
     const startNum = Map.isMap(tree) ? tree.get('items').size - 1 : Object.keys(tree.items).length - 1
-    let newIds = List([])
+    let newIds = List<ItemId>([])
     for (let i = startNum; i < numIds + startNum; i++) {
         newIds = newIds.push(String(i))
     }
@@ -60,7 +62,7 @@ const initTreeItem = {
     isChildrenLoading: false,
     data: {}
 }
-export const addItemToTree = (tree, item) => {
+export const addItemToTree = (tree: TreeData, item: TreeItem) => {
     return {
         ...tree,
         items: {
@@ -73,17 +75,17 @@ export const addItemToTree = (tree, item) => {
     }
 }
 
-export const getParentItem = (tree, childId) => {
+export const getParentItem = (tree: TreeData, childId: ItemId) => {
     const parentItemEnt = Object.entries(tree.items).filter(ent => ent[1].children.includes(childId))
     return Object.values(Object.fromEntries(parentItemEnt))[0]
 }
-export const removeItemFromTree = (tree, itemId) => {
+export const removeItemFromTree = (tree: TreeData, itemId: ItemId) => {
     const parentItem = getParentItem(tree, itemId)
 
     const newChildren = parentItem.children.filter(id => id !== itemId)
     return mutateTree(tree, parentItem.id, { children: newChildren, hasChildren: newChildren.length > 0 })
 }
-export const combineTwoTimersToSection = (tree, source, destination) => {
+export const combineTwoTimersToSection = (tree: TreeData, source: TreeSourcePosition, destination: TreeDestinationPosition) => {
     const dstItemId = destination.parentId
     const srcItemId = tree.items[source.parentId].children[source.index]
 
