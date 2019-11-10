@@ -105,7 +105,10 @@ const TreeRenderer = ({ tree, setTree, setTimers }) => {
 
     return (
         <Paper
-            style={{ position: 'relative' }}
+            style={{
+                position: 'relative',
+                height: '700px'
+            }}
         >
             <TreeContainer>
                 <Tree
