@@ -1,3 +1,6 @@
+import { ItemId, TreeData } from "@atlaskit/tree"
+import { Timers } from "./types"
+
 export const actionTypes = {
     ADD: 'ADD',
     START: 'START',
@@ -14,7 +17,7 @@ export const actionTypes = {
     COPY_ITEM: 'COPY_ITEM'
 }
 
-export const addTime = (time) => {
+export const addTime = (time: number) => {
     return {
         type: actionTypes.ADD,
         payload: {
@@ -42,7 +45,7 @@ export const finishTimer = () => {
         type: actionTypes.FINISH,
     }
 }
-export const addTimer = (parentId, timeLimit) => {
+export const addTimer = (parentId: ItemId, timeLimit: number) => {
     return {
         type: actionTypes.ADD_TIMER,
         payload: {
@@ -51,7 +54,7 @@ export const addTimer = (parentId, timeLimit) => {
         }
     }
 }
-export const setTimers = (timers) => {
+export const setTimers = (timers: Timers) => {
     return {
         type: actionTypes.SET_TIMERS,
         payload: {
@@ -60,7 +63,7 @@ export const setTimers = (timers) => {
     }
 }
 
-export const setTree = tree => {
+export const setTree = (tree: TreeData) => {
     return {
         type: actionTypes.SET_TREE,
         payload: {
@@ -69,7 +72,7 @@ export const setTree = tree => {
     }
 }
 
-export const addTreeItem = (parentId, timeLimit) => {
+export const addTreeItem = (parentId: ItemId, timeLimit: number) => {
     return {
         type: actionTypes.ADD_TREE_ITEM,
         payload: {
@@ -78,7 +81,7 @@ export const addTreeItem = (parentId, timeLimit) => {
         }
     }
 }
-export const addSection = (parentId, title) => {
+export const addSection = (parentId: ItemId, title: number) => {
     return {
         type: actionTypes.ADD_SECTION,
         payload: {
@@ -87,7 +90,7 @@ export const addSection = (parentId, title) => {
         }
     }
 }
-export const removeItem = removeItemId => {
+export const removeItem = (removeItemId: ItemId) => {
     return {
         type: actionTypes.REMOVE_ITEM,
         payload: {
@@ -95,7 +98,7 @@ export const removeItem = removeItemId => {
         }
     }
 }
-export const editItem = (editItemId, content) => {
+export const editItem = (editItemId: ItemId, content: any) => {
     return {
         type: actionTypes.EDIT_ITEM,
         payload: {
@@ -104,7 +107,7 @@ export const editItem = (editItemId, content) => {
         }
     }
 }
-export const copyItem = originItemId => {
+export const copyItem = (originItemId: ItemId) => {
     return {
         type: actionTypes.COPY_ITEM,
         payload: {
