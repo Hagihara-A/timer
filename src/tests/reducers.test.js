@@ -1,113 +1,18 @@
-import { fromJS } from "immutable"
-import { timerState, initTimersRecursive } from "../reducers/timersReducer"
+import { initTimersRecursive, timerState } from "../reducers/timersReducer"
+import { initTimers } from "./testData"
 
-const initState = fromJS({
-    timers: [
-        {
-            time: 0,
-            timerState: timerState.INIT,
-            timeLimit: 3
-        },
-        [
-            {
-                time: 0,
-                timerState: timerState.INIT,
-                timeLimit: 2
-            },
-            {
-                time: 0,
-                timerState: timerState.INIT,
-                timeLimit: 2
-            },
-        ],
-        {
-            time: 0,
-            timerState: timerState.INIT,
-            timeLimit: 5
-        },
-        [
-            {
-                time: 0,
-                timerState: timerState.INIT,
-                timeLimit: 2
-            },
-            {
-                time: 0,
-                timerState: timerState.INIT,
-                timeLimit: 2
-            },
-            [
-                {
-                    time: 0,
-                    timerState: timerState.INIT,
-                    timeLimit: 3
-                },
-                {
-                    time: 0,
-                    timerState: timerState.INIT,
-                    timeLimit: 3
-                },
-
-            ],
-
-        ],
-    ]
-})
-
+const T = 'timerState'
 test('initTimerRecursive', () => {
-    const state = fromJS({
-        timers: [
-            {
-                time: 3,
-                timerState: timerState.END,
-                timeLimit: 3
-            },
-            [
-                {
-                    time: 2,
-                    timerState: timerState.END,
-                    timeLimit: 2
-                },
-                {
-                    time: 0,
-                    timerState: timerState.END,
-                    timeLimit: 2
-                },
-            ],
-            {
-                time: 5,
-                timerState: timerState.END,
-                timeLimit: 5
-            },
-            [
-                {
-                    time: 2,
-                    timerState: timerState.END,
-                    timeLimit: 2
-                },
-                {
-                    time: 2,
-                    timerState: timerState.END,
-                    timeLimit: 2
-                },
-                [
-                    {
-                        time: 3,
-                        timerState: timerState.END,
-                        timeLimit: 3
-                    },
-                    {
-                        time: 2,
-                        timerState: timerState.ELAPSE,
-                        timeLimit: 3
-                    },
-
-                ],
-
-            ],
-        ]
+    const { END } = timerState
+    const almostFinishedTimers = initTimers.withMutations(timers => {
+        return timers
+            .setIn([0, T], END)
+            .setIn([1, 0, T], END)
+            .setIn([1, 1, T], END)
+            .setIn([2, T], END)
+            .setIn([3, 0, T], END)
+            .setIn([3, 1, 1, T], END)
     })
-    const ret = initTimersRecursive(state.get('timers'))
-
-    expect(ret).toEqual(initState.get('timers'))
+    const actual = initTimersRecursive(almostFinishedTimers)
+    expect(actual).toEqual(initTimers)
 })
