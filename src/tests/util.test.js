@@ -4,7 +4,6 @@ import { allFinishedTimers, elapsedTimers, initTimers } from "./testData";
 
 test('get index from initState', () => {
     const indexes = getCurrentTimerIndex(initTimers)
-
     expect(indexes).toEqual(List([0]))
 })
 
