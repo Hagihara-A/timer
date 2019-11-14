@@ -1,7 +1,7 @@
 
-import { getCurrentTimerIndex } from "../util";
 import { fromJS, List } from "immutable";
-import { timerState as TS } from "../reducers";
+import { timerState as TS } from "../reducers/timersReducer";
+import { getCurrentTimerIndex } from "../util";
 
 test('get index from initState', () => {
     const initState = fromJS({
