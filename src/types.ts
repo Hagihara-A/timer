@@ -1,10 +1,10 @@
 import { List, Map } from "immutable";
 import { ItemId } from '@atlaskit/tree'
-export interface TreeDataIm {
+export interface TreeDataIm extends Map<string, any> {
     rootId: ItemId
     items: Map<ItemId, TreeItemIm>
 }
-interface TreeItemIm {
+export interface TreeItemIm extends Map<string, any>{
     id: ItemId,
     children: List<ItemId>
     hasChildren?: boolean
@@ -20,4 +20,8 @@ export interface TimerItem {
 }
 export interface Timers {
     [index: number]: TimerItem | Timers
+}
+export interface Action {
+    type: string
+    payload: any
 }
