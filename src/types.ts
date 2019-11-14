@@ -25,3 +25,8 @@ export interface Action {
     type: string
     payload: any
 }
+
+export interface State extends Map<string, any>{
+    timers: Map<string, any>
+    tree : TreeDataIm
+}

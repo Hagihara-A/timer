@@ -97,7 +97,7 @@ const TreeRenderer = ({ tree, setTree, setTimers }) => {
         //     setTree(moveItemOnTree(tree, source, destination))
         // }
         //  *************************************************************
-        
+
     }
     useDeepCompareEffect(() => {
         setTimers(parseTreeData(tree))
