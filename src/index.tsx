@@ -1,5 +1,4 @@
 import { createMuiTheme } from '@material-ui/core/styles';
-import { Paper } from 'material-ui';
 import { MuiThemeProvider } from 'material-ui/styles';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -23,17 +22,13 @@ const theme = createMuiTheme({
 })
 
 ReactDOM.render(
-    <MuiThemeProvider theme={theme}>
-        <Provider store={store} >
-            <Paper>
-                <IntroSection />
-                <Paper style={{height: '1000px'}}>
-                    <TimerTree />
-                </Paper>
-                <TimerSection />
-            </Paper>
-        </ Provider>
-    </MuiThemeProvider>
+    <Provider store={store} >
+        <MuiThemeProvider >
+            <IntroSection />
+            <TimerTree />
+            <TimerSection />
+        </MuiThemeProvider>
+    </ Provider>
     , document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

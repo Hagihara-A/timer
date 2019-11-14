@@ -3,10 +3,12 @@ import EditIcon from '@material-ui/icons/Edit';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { editItem } from '../../actions';
+import { string } from 'prop-types';
+import { State } from '../../types';
 
 const EditableContent = ({ itemId }) => {
     const [isEditing, setIsEditing] = useState(false)
-    const data = useSelector(state => state.getIn(['tree', 'items', itemId, 'data']))
+    const data = useSelector((state: State) => state.getIn(['tree', 'items', itemId, 'data']))
     const dispatch = useDispatch()
     const onChange = e => {
         const content = e.target.value

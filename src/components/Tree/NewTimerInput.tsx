@@ -1,5 +1,5 @@
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import React, { useState } from 'react';
+import React, { useState, KeyboardEvent } from 'react';
 import styled from 'styled-components';
 
 const Input = styled.input`

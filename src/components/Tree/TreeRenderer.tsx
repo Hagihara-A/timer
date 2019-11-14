@@ -97,7 +97,7 @@ const TreeRenderer = ({ tree, setTree, setTimers }) => {
         //     setTree(moveItemOnTree(tree, source, destination))
         // }
         //  *************************************************************
-        
+
     }
     useDeepCompareEffect(() => {
         setTimers(parseTreeData(tree))
@@ -105,7 +105,10 @@ const TreeRenderer = ({ tree, setTree, setTimers }) => {
 
     return (
         <Paper
-            style={{ position: 'relative' }}
+            style={{
+                position: 'relative',
+                height: '700px'
+            }}
         >
             <TreeContainer>
                 <Tree
