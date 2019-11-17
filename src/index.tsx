@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import "./App.scss";
 import IntroSection from './components/Intro/IntroSection';
-import TimerTree from './containers/TimerTree/TimerTree';
+import TimerTree from './components/Tree/TimerTree';
 import * as serviceWorker from './serviceWorker';
 import { store } from './store';
 import TimerSection from './TimerSection';

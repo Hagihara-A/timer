@@ -1,13 +1,20 @@
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import React, { useState, KeyboardEvent } from 'react';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { addTreeItem } from '../../actions';
 
 const Input = styled.input`
     width: 3rem;
     margin-left: 5px;
 `
 
-export const NewTimerInput = ({ onSubmit }) => {
+export const NewTimerInput = ({ parentId }) => {
+    const dispatch = useDispatch()
+
+    const onSubmit = (timeLimit: number) => {
+        dispatch(addTreeItem(parentId, timeLimit))
+    }
     const [inputVal, setInputVal] = useState(1)
     const [isHidden, setIsHidden] = useState(true)
 
@@ -21,7 +28,7 @@ export const NewTimerInput = ({ onSubmit }) => {
     const onChange = (e) => {
         setInputVal(e.target.value)
     }
-    const onClick = e => {
+    const onClick = (e) => {
         setIsHidden(!isHidden)
     }
     return (<span >

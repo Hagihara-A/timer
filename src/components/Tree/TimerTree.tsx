@@ -3,14 +3,15 @@ import Paper from '@material-ui/core/Paper';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import AddNewTimer from '../../containers/TimerTree/AddNewTimer';
-import RemoveItem from '../../containers/TimerTree/RemoveItem';
-import { combineTwoTimersToSection, parseTreeData } from '../../util';
+import { setTimers, setTree } from '../../actions';
+import { parseTreeData } from '../../util';
 import CopyItem from './CopyItem';
 import EditableContent from './EditableContent';
-
+import { NewTimerInput } from './NewTimerInput';
+import RemoveIcon from './RemoveIcon';
 const TreeContainer = styled.div`
     max-width: 600px;
     position: absolute;
@@ -37,15 +38,15 @@ const Content = ({ item }) => {
         return (
             <span>
                 <EditableContent itemId={item.id} />
-                <AddNewTimer parentId={item.id} />
-                <RemoveItem removeItemId={item.id} />
+                <NewTimerInput parentId={item.id} /> 
+                <RemoveIcon removeItemId={item.id} />
                 <CopyItem itemId={item.id} />
             </span>)
     } else {
         return (
             <span>
                 <EditableContent itemId={item.id} />
-                <RemoveItem removeItemId={item.id} />
+                <RemoveIcon removeItemId={item.id} />
                 <CopyItem itemId={item.id} />
             </span>)
     }
@@ -70,22 +71,26 @@ const renderItem = ({ item, depth, onExpand, onCollapse, provided, snapshot }) =
     )
 }
 
-const TreeRenderer = ({ tree, setTree, setTimers }) => {
+const TimerTree = () => {
+    const dispatch = useDispatch()
+    const tree = useSelector((state: Map<string, any>) => state.get('tree').toJS())
 
     // TODO: relocate onXxx to reducer 
     const onCollapse = itemId => {
-        setTree(mutateTree(tree, itemId, { isExpanded: false }))
+        dispatch(setTree(
+            mutateTree(tree, itemId, { isExpanded: false })
+        ))
     }
     const onExpand = itemId => {
-        setTree(
+        dispatch(setTree(
             mutateTree(tree, itemId, { isExpanded: true })
-        )
+        ))
     }
     const onDragEnd = (source, destination) => {
         if (!destination) return
-        setTree(
+        dispatch(setTree(
             moveItemOnTree(tree, source, destination)
-        )
+        ))
         // *************when  combine two timers into section***********
         // const srcItemId = tree.items[source.parentId].children[source.index]
         // const srcItem = tree.items[srcItemId]
@@ -100,7 +105,9 @@ const TreeRenderer = ({ tree, setTree, setTimers }) => {
 
     }
     useDeepCompareEffect(() => {
-        setTimers(parseTreeData(tree))
+        dispatch(
+            setTimers(parseTreeData(tree))
+        )
     }, [tree])
 
     return (
@@ -125,4 +132,4 @@ const TreeRenderer = ({ tree, setTree, setTimers }) => {
     )
 }
 
-export default TreeRenderer
+export default TimerTree

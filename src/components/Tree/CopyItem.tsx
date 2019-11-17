@@ -1,9 +1,10 @@
+import { ItemId } from '@atlaskit/tree';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import React from "react";
 import { useDispatch } from "react-redux";
 import { copyItem } from "../../actions";
 
-const CopyItem = ({ itemId }) => {
+const CopyItem = ({ itemId }: {itemId: ItemId}) => {
     const dispatch = useDispatch()
 
     const onClick = e => {
