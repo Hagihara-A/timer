@@ -59,7 +59,7 @@ const treeReducer = (tree: TreeDataIm = initState.get('tree'), action: Action) =
             if (tree.getIn(['items', editItemId, 'data', 'title'])) {
                 return tree.setIn(['items', editItemId, 'data', 'title'], content)
             } else {
-                return tree.setIn(['tree', 'items', editItemId, 'data', 'timeLimit'], content)
+                return tree.setIn(['items', editItemId, 'data', 'timeLimit'], content)
             }
         }
         case AT.COPY_ITEM: {
