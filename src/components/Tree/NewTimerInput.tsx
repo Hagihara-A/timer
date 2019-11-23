@@ -22,6 +22,7 @@ export const NewTimerInput = ({ parentId }) => {
         if (e.keyCode === 13) {
             onSubmit(e.target.value)
             setInputVal(1)
+            setIsHidden(!isHidden)
         }
     }
 

@@ -1,16 +1,13 @@
-import { createMuiTheme } from '@material-ui/core/styles';
-import { MuiThemeProvider } from 'material-ui/styles';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import "./App.scss";
-import IntroSection from './components/Intro/IntroSection';
 import TimerTree from './components/Tree/TimerTree';
 import * as serviceWorker from './serviceWorker';
 import { store } from './store';
-import TimerSection from './TimerSection';
 
-const theme = createMuiTheme({
+export const theme = createMuiTheme({
     palette: {
         primary: {
             main: '#1e88e5',
@@ -23,11 +20,9 @@ const theme = createMuiTheme({
 
 ReactDOM.render(
     <Provider store={store} >
-        <MuiThemeProvider >
-            <IntroSection />
+        <ThemeProvider theme={theme}>
             <TimerTree />
-            <TimerSection />
-        </MuiThemeProvider>
+        </ThemeProvider>
     </ Provider>
     , document.getElementById('root'));
 
