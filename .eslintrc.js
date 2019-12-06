@@ -23,8 +23,7 @@ module.exports = {
     "plugins": [
         "react",
         "@typescript-eslint",
-        "prettier",
-        "plugin:prettier/recommended"
+        "prettier"
     ],
     "rules": {
         "prettier/prettier": "error"
