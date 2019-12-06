@@ -1,30 +1,32 @@
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+import { createMuiTheme } from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/styles";
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 import "./App.scss";
-import TimerTree from './components/Tree/TimerTree';
-import * as serviceWorker from './serviceWorker';
-import { store } from './store';
+import TimerTree from "./components/Tree/TimerTree";
+import * as serviceWorker from "./serviceWorker";
+import { store } from "./store";
 
 export const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: '#1e88e5',
-        },
-        secondary: {
-            main: '#e57373',
-        },
+  palette: {
+    primary: {
+      main: "#1e88e5"
     },
-})
+    secondary: {
+      main: "#e57373"
+    }
+  }
+});
 
 ReactDOM.render(
-    <Provider store={store} >
-        <ThemeProvider theme={theme}>
-            <TimerTree />
-        </ThemeProvider>
-    </ Provider>
-    , document.getElementById('root'));
+  <Provider store={store}>
+    <ThemeProvider theme={theme}>
+      <TimerTree />
+    </ThemeProvider>
+  </Provider>,
+  document.getElementById("root")
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
