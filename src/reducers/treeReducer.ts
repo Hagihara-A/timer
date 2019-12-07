@@ -65,12 +65,10 @@ const treeReducer = (
         .deleteIn(["items", removeItemId]);
     }
     case AT.EDIT_ITEM: {
-      const { editItemId, content } = action.payload;
-      if (tree.getIn(["items", editItemId, "data", "title"])) {
-        return tree.setIn(["items", editItemId, "data", "title"], content);
-      } else {
-        return tree.setIn(["items", editItemId, "data", "timeLimit"], content);
-      }
+      const { editItemId, data } = action.payload;
+      return tree.updateIn(["items", editItemId, "data"], originData =>
+        originData.merge(data)
+      );
     }
     case AT.COPY_ITEM: {
       const { originItemId } = action.payload;

@@ -98,12 +98,12 @@ export const removeItem = (removeItemId: ItemId) => {
     }
   };
 };
-export const editItem = (editItemId: ItemId, content: any) => {
+export const editItem = (editItemId: ItemId, data: any) => {
   return {
     type: actionTypes.EDIT_ITEM,
     payload: {
       editItemId,
-      content
+      data
     }
   };
 };

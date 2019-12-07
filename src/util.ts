@@ -116,7 +116,7 @@ export const combineTwoTimersToSection = (
     id: newSectionId,
     children: [destination.parentId, srcItemId],
     data: {
-      title: "Write Here!"
+      times: 1
     }
   };
 
