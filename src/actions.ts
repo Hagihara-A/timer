@@ -1,4 +1,4 @@
-import { ItemId, TreeData } from "@atlaskit/tree";
+import { ItemId, TreeData, TreeSourcePosition, TreeDestinationPosition } from "@atlaskit/tree";
 import { Timers } from "./types";
 
 export const actionTypes = {
@@ -14,7 +14,9 @@ export const actionTypes = {
   ADD_SECTION: "ADD_SECTION",
   REMOVE_ITEM: "REMOVE_ITEM",
   EDIT_ITEM: "EDIT_ITEM",
-  COPY_ITEM: "COPY_ITEM"
+  COPY_ITEM: "COPY_ITEM",
+  ON_DRAG_END: "ON_DRAG_END",
+  TOGGLE_PROPERTY: 'TOGGLE_PROPERTY'
 };
 
 export const addTime = (time: number) => {
@@ -115,3 +117,21 @@ export const copyItem = (originItemId: ItemId) => {
     }
   };
 };
+export const onDragEnd = (source: TreeSourcePosition, destination: TreeDestinationPosition) => {
+  return {
+    type: actionTypes.ON_DRAG_END,
+    payload: {
+      source,
+      destination
+    }
+  }
+}
+export const toggleProperty = (id: ItemId, property: string) => {
+  return {
+    type: actionTypes.TOGGLE_PROPERTY,
+    payload: {
+      id,
+      property
+    }
+  }
+}

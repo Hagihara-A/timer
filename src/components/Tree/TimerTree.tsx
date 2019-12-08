@@ -1,8 +1,9 @@
 import Tree, {
   moveItemOnTree,
   mutateTree,
+  TreeDestinationPosition,
   TreeSourcePosition,
-  TreeDestinationPosition
+  ItemId
 } from "@atlaskit/tree";
 import Paper from "@material-ui/core/Paper";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
@@ -10,9 +11,12 @@ import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import useDeepCompareEffect from "use-deep-compare-effect";
-import { setTimers, setTree } from "../../actions";
-import { parseTreeData, combineTwoTimersToSection } from "../../util";
+import {
+  setTree,
+  onDragEnd as onDragEndAction,
+  toggleProperty
+} from "../../actions";
+import { combineTwoTimersToSection } from "../../util";
 import EditableContent from "./EditableContent";
 const TreeContainer = styled.div`
   max-width: 600px;
@@ -36,7 +40,7 @@ const Icon = ({ item, onExpand, onCollapse, depth }) => {
 };
 
 const Content = ({ item }) => {
-  if (item.data && item.data.title) {
+  if (item.data.timeLimit) {
     return (
       <span>
         <EditableContent itemId={item.id} />
@@ -87,54 +91,30 @@ const TimerTree = () => {
     state.get("tree").toJS()
   );
 
-  // TODO: relocate onXxx to reducer
-  const onCollapse = itemId => {
-    dispatch(setTree(mutateTree(tree, itemId, { isExpanded: false })));
-  };
-  const onExpand = itemId => {
-    dispatch(setTree(mutateTree(tree, itemId, { isExpanded: true })));
+  const toggleIsExpanded = (itemId: ItemId) => {
+    dispatch(toggleProperty(itemId, "isExpanded"));
   };
   const onDragEnd = (
     source: TreeSourcePosition,
     destination: TreeDestinationPosition
   ) => {
-    if (!destination) return;
-    // dispatch(setTree(moveItemOnTree(tree, source, destination)));
-    // *************when  combine two timers into section***********
-    const srcItemId = tree.items[source.parentId].children[source.index];
-    const srcItem = tree.items[srcItemId];
-    const dstItem = tree.items[destination.parentId];
-    if (
-      typeof destination.index === "undefined" &&
-      srcItem.children.length === 0 &&
-      dstItem.children.length === 0
-    ) {
-      // when two timers combined
-      dispatch(setTree(combineTwoTimersToSection(tree, source, destination)));
+    if (!destination) {
+      return;
     } else {
-      dispatch(setTree(moveItemOnTree(tree, source, destination)));
+      dispatch(onDragEndAction(source, destination));
     }
-    //  *************************************************************
   };
-  // useDeepCompareEffect(() => {
-  //   dispatch(setTimers(parseTreeData(tree)));
-  // }, [tree]);
 
   return (
-    <Paper
-      style={{
-        position: "relative",
-        height: "700px"
-      }}
-    >
+    <Paper>
       <TreeContainer>
         <Tree
           tree={tree}
           renderItem={renderItem}
           isDragEnabled
           isNestingEnabled
-          onCollapse={onCollapse}
-          onExpand={onExpand}
+          onCollapse={toggleIsExpanded}
+          onExpand={toggleIsExpanded}
           onDragEnd={onDragEnd}
         />
       </TreeContainer>

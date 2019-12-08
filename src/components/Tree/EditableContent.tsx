@@ -61,7 +61,7 @@ const EditableTimer = ({ item }: { item: TreeItemIm }) => {
   const itemId = item.get("id");
   const times = item.getIn(["data", "times"]);
   const timeLimit = item.getIn(["data", "timeLimit"]);
-  const power = item.getIn(['data', 'power'])
+  const power = item.getIn(["data", "power"]);
 
   const onChangeTimes = e => {
     dispatch(editItem(itemId, { times: e.target.value }));
@@ -70,8 +70,8 @@ const EditableTimer = ({ item }: { item: TreeItemIm }) => {
     dispatch(editItem(itemId, { timeLimit: e.target.value }));
   };
   const onChangePower = e => {
-    dispatch(editItem(itemId, {power: e.target.value}))
-  }
+    dispatch(editItem(itemId, { power: e.target.value }));
+  };
   return (
     <span>
       <EditableInput
@@ -79,17 +79,19 @@ const EditableTimer = ({ item }: { item: TreeItemIm }) => {
         onChange={onChangeTimes}
         inputProps={{ type: "number", min: 1 }}
       />
-      ×
+      {"x"}
       <EditableInput
         value={timeLimit}
         onChange={onChangeTimeLimit}
         inputProps={{ type: "number", min: 1 }}
       />
-      Sec @
+      {"Sec @"}
       <EditableInput
         value={power}
         onChange={onChangePower}
-        inputProps={{ type: "number", min: 1 }} /> W
+        inputProps={{ type: "number", min: 1 }}
+      />
+      {" W"}
     </span>
   );
 };
@@ -98,7 +100,7 @@ const EditableContent = ({ itemId }: { itemId: ItemId }) => {
   const item = useSelector((state: State) =>
     state.getIn(["tree", "items", itemId])
   );
-  const isSection = item.get("children").size > 0;
+  const isSection = !item.hasIn(["data", "timeLimit"]);
   return isSection ? (
     <EditableSection item={item} />
   ) : (

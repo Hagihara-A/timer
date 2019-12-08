@@ -1,5 +1,11 @@
 import { copyItem } from "../actions";
-import treeReducer, { getAllChildrenIds } from "../reducers/treeReducer";
+import treeReducer, {
+  addItemToTree,
+  getAllChildrenIds,
+  getParentItem,
+  removeItemFromTree,
+  setNewItemOnTree
+} from "../reducers/treeReducer";
 import { getNewItemIds } from "../util";
 import { sampleState } from "./testData";
 
@@ -30,4 +36,65 @@ test("COPY_ITEM", () => {
   expect(newTree.getIn(["items", newIds.get(2), "children"]).size).toBe(
     prevTree.getIn(["items", allChildrenIds.get(2), "children"]).size
   );
+});
+
+test("setNewItemOnTree", () => {
+  const tree = sampleState.get("tree");
+  const dataToadd = { test: "testItem" };
+  const parentId = "3-2-1";
+  const newTree = setNewItemOnTree(tree, parentId, dataToadd);
+  expect(newTree.get("items").size - 1).toEqual(tree.get("items").size);
+  const childId = newTree.getIn(["items", parentId, "children"]).last();
+  expect(newTree.getIn(["items", childId, "data"]).toJS()).toEqual(dataToadd);
+});
+
+test("getParentItem", () => {
+  const tree = sampleState.get("tree");
+  const childId = "3-2-1";
+  const actualParentId = "3-2";
+  const actualParentItem = tree.getIn(["items", actualParentId]);
+  const parentItem = getParentItem(tree, childId);
+  expect(parentItem.toJS()).toEqual(actualParentItem.toJS());
+});
+test("removeItemFromTree", () => {
+  const tree = sampleState.get("tree");
+  const itemIdToRemove = "3-2";
+  const removeItemPosition = {
+    parentId: "3",
+    index: 2
+  };
+  const { tree: removedTree, itemRemoved } = removeItemFromTree(
+    tree,
+    removeItemPosition
+  );
+  expect(
+    tree.getIn([
+      "items",
+      removeItemPosition.parentId,
+      "children",
+      removeItemPosition.index
+    ])
+  ).toBe(itemRemoved);
+  expect(
+    removedTree.getIn([
+      "items",
+      removeItemPosition.parentId,
+      "children",
+      removeItemPosition.index
+    ])
+  ).not.toBe(itemIdToRemove);
+});
+
+test("addItemToTree", () => {
+  const newId = "hogehoge";
+  const newTree = addItemToTree(
+    sampleState.get("tree"),
+    {
+      parentId: "3-2",
+      index: 0
+    },
+    newId
+  );
+
+  expect(newTree.getIn(["items", "3-2", "children", 0])).toBe(newId);
 });
