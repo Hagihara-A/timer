@@ -1,4 +1,8 @@
-import Tree, { ItemId, TreeDestinationPosition, TreeSourcePosition } from "@atlaskit/tree";
+import Tree, {
+  ItemId,
+  TreeDestinationPosition,
+  TreeSourcePosition
+} from "@atlaskit/tree";
 import Paper from "@material-ui/core/Paper";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
@@ -29,24 +33,7 @@ const Icon = ({ item, onExpand, onCollapse, depth }) => {
 };
 
 const Content = ({ item }) => {
-  if (item.data.timeLimit) {
-    return (
-      <span>
-        <EditableContent itemId={item.id} />
-        {/* <NewTimerInput parentId={item.id} /> */}
-        {/* <RemoveIcon removeItemId={item.id} /> */}
-        {/* <CopyItem itemId={item.id} /> */}
-      </span>
-    );
-  } else {
-    return (
-      <span>
-        <EditableContent itemId={item.id} />
-        {/* <RemoveIcon removeItemId={item.id} /> */}
-        {/* <CopyItem itemId={item.id} /> */}
-      </span>
-    );
-  }
+  return <EditableContent itemId={item.id} />;
 };
 
 const renderItem = ({

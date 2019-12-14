@@ -3,7 +3,6 @@ import { ThemeProvider } from "@material-ui/styles";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import "./App.scss";
 import TimerTree from "./components/Tree/TimerTree";
 import * as serviceWorker from "./serviceWorker";
 import { store } from "./store";
