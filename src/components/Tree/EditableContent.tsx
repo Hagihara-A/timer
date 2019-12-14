@@ -100,7 +100,7 @@ const EditableContent = ({ itemId }: { itemId: ItemId }) => {
   const item = useSelector((state: State) =>
     state.getIn(["tree", "items", itemId])
   );
-  const isSection = !item.hasIn(["data", "timeLimit"]);
+  const isSection = item.getIn(["data", "timeLimit"]) === 0;
   return isSection ? (
     <EditableSection item={item} />
   ) : (

@@ -1,22 +1,11 @@
-import Tree, {
-  moveItemOnTree,
-  mutateTree,
-  TreeDestinationPosition,
-  TreeSourcePosition,
-  ItemId
-} from "@atlaskit/tree";
+import Tree, { ItemId, TreeDestinationPosition, TreeSourcePosition } from "@atlaskit/tree";
 import Paper from "@material-ui/core/Paper";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import {
-  setTree,
-  onDragEnd as onDragEndAction,
-  toggleProperty
-} from "../../actions";
-import { combineTwoTimersToSection } from "../../util";
+import { onDragEnd as onDragEndAction, toggleProperty } from "../../actions";
 import EditableContent from "./EditableContent";
 const TreeContainer = styled.div`
   max-width: 600px;
