@@ -2,7 +2,6 @@ import { copyItem } from "../actions";
 import treeReducer, {
   addItemToTree,
   getAllChildrenIds,
-  getParentItem,
   removeItemFromTree,
   setNewItemOnTree
 } from "../reducers/treeReducer";
@@ -48,14 +47,6 @@ test("setNewItemOnTree", () => {
   expect(newTree.getIn(["items", childId, "data"]).toJS()).toEqual(dataToadd);
 });
 
-test("getParentItem", () => {
-  const tree = sampleState.get("tree");
-  const childId = "3-2-1";
-  const actualParentId = "3-2";
-  const actualParentItem = tree.getIn(["items", actualParentId]);
-  const parentItem = getParentItem(tree, childId);
-  expect(parentItem.toJS()).toEqual(actualParentItem.toJS());
-});
 test("removeItemFromTree", () => {
   const tree = sampleState.get("tree");
   const itemIdToRemove = "3-2";
