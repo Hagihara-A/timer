@@ -20,7 +20,7 @@ const theme = createMuiTheme({
   overrides: {
     MuiTextField: {
       root: {
-        maxWidth: '150px'
+        maxWidth: '50px'
       }
     }    
   }
