@@ -40,6 +40,30 @@ const getItemIdFromPosition = (
     return tree.getIn(["items", position.parentId, "children", position.index]);
   }
 };
+
+export const getParentItem = (
+  tree: TreeDataIm,
+  childId: ItemId
+): TreeItemIm => {
+  return tree.get("items").find((item: TreeItemIm) => {
+    return item.get("children").includes(childId);
+  });
+};
+export const getAllChildrenIds = (
+  tree: TreeDataIm,
+  parentItemId: ItemId
+): List<ItemId> => {
+  return tree
+    .getIn(["items", parentItemId, "children"])
+    .reduce((accum: List<ItemId>, id: ItemId) => {
+      if (tree.getIn(["items", id, "children"]).size > 0) {
+        return accum.concat(getAllChildrenIds(tree, id));
+      } else {
+        return accum.push(id);
+      }
+    }, List([parentItemId]));
+};
+
 export const removeItemFromTree = (
   tree: TreeDataIm,
   position: TreeSourcePosition
@@ -90,69 +114,6 @@ export const addItemToTree = (
     );
   }
 };
-
-export const getParentItem = (
-  tree: TreeDataIm,
-  childId: ItemId
-): TreeItemIm => {
-  return tree.get("items").find((item: TreeItemIm) => {
-    return item.get("children").includes(childId);
-  });
-};
-export const getAllChildrenIds = (
-  tree: TreeDataIm,
-  parentItemId: ItemId
-): List<ItemId> => {
-  return tree
-    .getIn(["items", parentItemId, "children"])
-    .reduce((accum: List<ItemId>, id: ItemId) => {
-      if (tree.getIn(["items", id, "children"]).size > 0) {
-        return accum.concat(getAllChildrenIds(tree, id));
-      } else {
-        return accum.push(id);
-      }
-    }, List([parentItemId]));
-};
-
-const combineTwoTimersToSection = (
-  tree: TreeDataIm,
-  source: TreeSourcePosition,
-  destination: TreeDestinationPosition
-) => {
-  const dstItemId = destination.parentId;
-  const srcItemId = getItemIdFromPosition(tree, source);
-
-  const newSectionId = getNewItemIds(tree, 1).get(0);
-  const newSection = initTreeItem.withMutations(item =>
-    item
-      .set("id", newSectionId)
-      .set("data", Map({ times: 1 }))
-      .set("isExpanded", true)
-      .set("hasChildren", true)
-  );
-  let newTree = tree.setIn(["items", newSectionId], newSection);
-
-  const dstParentItem = getParentItem(newTree, dstItemId);
-  const dstItemPosition: TreeSourcePosition = {
-    parentId: dstParentItem.get("id"),
-    index: dstParentItem
-      .get("children")
-      .findIndex((itemId: ItemId) => itemId === destination.parentId)
-  };
-
-  ({ tree: newTree } = removeItemFromTree(newTree, source));
-  ({ tree: newTree } = removeItemFromTree(newTree, dstItemPosition));
-  newTree = addItemToTree(newTree, dstItemPosition, newSectionId);
-  newTree = addItemToTree(newTree, { parentId: newSectionId }, dstItemId);
-  newTree = addItemToTree(
-    newTree,
-    { parentId: newSectionId, index: 1 },
-    srcItemId
-  );
-  
-  return newTree;
-};
-
 const moveItemOnTree = (
   tree: TreeDataIm,
   from: TreeSourcePosition,
@@ -242,22 +203,9 @@ const treeReducer = (
       }: {
         source: TreeSourcePosition;
         destination: TreeDestinationPosition;
-        } = action.payload;
+      } = action.payload;
       if (!destination) return tree;
-
-      const srcItemId = getItemIdFromPosition(tree, source);
-      const srcItem = tree.getIn(["items", srcItemId]);
-      const dstItem = tree.getIn(["items", destination.parentId]);
-
-      if (
-        typeof destination.index === "undefined" &&
-        srcItem.get("children").size === 0 &&
-        dstItem.get("children").size === 0
-      ) {
-        return combineTwoTimersToSection(tree, source, destination);
-      } else {
-        return moveItemOnTree(tree, source, destination);
-      }
+      return moveItemOnTree(tree, source, destination);
     case AT.TOGGLE_PROPERTY:
       const {
         id,
