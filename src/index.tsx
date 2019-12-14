@@ -8,14 +8,21 @@ import TimerTree from "./components/Tree/TimerTree";
 import * as serviceWorker from "./serviceWorker";
 import { store } from "./store";
 
-export const theme = createMuiTheme({
+const theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#1e88e5"
+      main: "#555555"
     },
     secondary: {
       main: "#e57373"
     }
+  },
+  overrides: {
+    MuiTextField: {
+      root: {
+        maxWidth: '50px'
+      }
+    }    
   }
 });
 

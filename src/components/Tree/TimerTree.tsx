@@ -1,19 +1,12 @@
-import Tree, { moveItemOnTree, mutateTree } from "@atlaskit/tree";
-import { CardContent } from "@material-ui/core";
+import Tree, { ItemId, TreeDestinationPosition, TreeSourcePosition } from "@atlaskit/tree";
 import Paper from "@material-ui/core/Paper";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
-import { Card } from "material-ui";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import useDeepCompareEffect from "use-deep-compare-effect";
-import { setTimers, setTree } from "../../actions";
-import { parseTreeData } from "../../util";
-import CopyItem from "./CopyItem";
+import { onDragEnd as onDragEndAction, toggleProperty } from "../../actions";
 import EditableContent from "./EditableContent";
-import { NewTimerInput } from "./NewTimerInput";
-import RemoveIcon from "./RemoveIcon";
 const TreeContainer = styled.div`
   max-width: 600px;
   position: absolute;
@@ -36,21 +29,21 @@ const Icon = ({ item, onExpand, onCollapse, depth }) => {
 };
 
 const Content = ({ item }) => {
-  if (item.data && item.data.title) {
+  if (item.data.timeLimit) {
     return (
       <span>
         <EditableContent itemId={item.id} />
-        <NewTimerInput parentId={item.id} />
-        <RemoveIcon removeItemId={item.id} />
-        <CopyItem itemId={item.id} />
+        {/* <NewTimerInput parentId={item.id} /> */}
+        {/* <RemoveIcon removeItemId={item.id} /> */}
+        {/* <CopyItem itemId={item.id} /> */}
       </span>
     );
   } else {
     return (
       <span>
         <EditableContent itemId={item.id} />
-        <RemoveIcon removeItemId={item.id} />
-        <CopyItem itemId={item.id} />
+        {/* <RemoveIcon removeItemId={item.id} /> */}
+        {/* <CopyItem itemId={item.id} /> */}
       </span>
     );
   }
@@ -65,7 +58,7 @@ const renderItem = ({
   snapshot
 }) => {
   return (
-    <div
+    <ItemContainer
       ref={provided.innerRef}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
@@ -77,7 +70,7 @@ const renderItem = ({
         depth={depth}
       />
       <Content item={item} />
-    </div>
+    </ItemContainer>
   );
 };
 
@@ -87,47 +80,30 @@ const TimerTree = () => {
     state.get("tree").toJS()
   );
 
-  // TODO: relocate onXxx to reducer
-  const onCollapse = itemId => {
-    dispatch(setTree(mutateTree(tree, itemId, { isExpanded: false })));
+  const toggleIsExpanded = (itemId: ItemId) => {
+    dispatch(toggleProperty(itemId, "isExpanded"));
   };
-  const onExpand = itemId => {
-    dispatch(setTree(mutateTree(tree, itemId, { isExpanded: true })));
+  const onDragEnd = (
+    source: TreeSourcePosition,
+    destination: TreeDestinationPosition
+  ) => {
+    if (!destination) {
+      return;
+    } else {
+      dispatch(onDragEndAction(source, destination));
+    }
   };
-  const onDragEnd = (source, destination) => {
-    if (!destination) return;
-    dispatch(setTree(moveItemOnTree(tree, source, destination)));
-    // *************when  combine two timers into section***********
-    // const srcItemId = tree.items[source.parentId].children[source.index]
-    // const srcItem = tree.items[srcItemId]
-    // const dstItem = tree.items[destination.parentId]
-    // if (typeof destination.index === 'undefined' && srcItem.children.length === 0 && dstItem.children.length === 0) {
-    //     // when two timers combined
-    //     setTree(combineTwoTimersToSection(tree, source, destination))
-    // } else {
-    //     setTree(moveItemOnTree(tree, source, destination))
-    // }
-    //  *************************************************************
-  };
-  useDeepCompareEffect(() => {
-    dispatch(setTimers(parseTreeData(tree)));
-  }, [tree]);
 
   return (
-    <Paper
-      style={{
-        position: "relative",
-        height: "700px"
-      }}
-    >
+    <Paper>
       <TreeContainer>
         <Tree
           tree={tree}
           renderItem={renderItem}
           isDragEnabled
           isNestingEnabled
-          onCollapse={onCollapse}
-          onExpand={onExpand}
+          onCollapse={toggleIsExpanded}
+          onExpand={toggleIsExpanded}
           onDragEnd={onDragEnd}
         />
       </TreeContainer>

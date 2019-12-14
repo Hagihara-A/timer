@@ -10,10 +10,7 @@ export const initState = fromJS({
         children: ["0", "1", "2", "3"],
         hasChildren: true,
         isExpanded: true,
-        isChildrenLoading: false,
-        data: {
-          title: "root"
-        }
+        isChildrenLoading: false
       },
       "0": {
         id: "0",
@@ -22,7 +19,10 @@ export const initState = fromJS({
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          timeLimit: 3
+          timeLimit: 3,
+          times: 1,
+          power: 130,
+          comment: ""
         }
       },
       "1": {
@@ -32,7 +32,10 @@ export const initState = fromJS({
         isExpanded: true,
         isChildrenLoading: false,
         data: {
-          title: "first"
+          timeLimit: 0,
+          times: 1,
+          power: 0,
+          comment: ""
         }
       },
       "1-0": {
@@ -42,7 +45,10 @@ export const initState = fromJS({
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          timeLimit: 2
+          timeLimit: 2,
+          times: 1,
+          power: 260,
+          comment: ""
         }
       },
       "1-1": {
@@ -52,7 +58,10 @@ export const initState = fromJS({
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          timeLimit: 2
+          timeLimit: 2,
+          times: 1,
+          power: 260,
+          comment: ""
         }
       },
       "2": {
@@ -62,7 +71,10 @@ export const initState = fromJS({
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          timeLimit: 5
+          timeLimit: 5,
+          times: 1,
+          power: 260,
+          comment: ""
         }
       },
       "3": {
@@ -72,7 +84,10 @@ export const initState = fromJS({
         isExpanded: true,
         isChildrenLoading: false,
         data: {
-          title: "second"
+          timeLimit: 0,
+          times: 1,
+          power: 0,
+          comment: ""
         }
       },
       "3-0": {
@@ -82,7 +97,10 @@ export const initState = fromJS({
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          timeLimit: 2
+          timeLimit: 2,
+          times: 1,
+          power: 150,
+          comment: ""
         }
       },
       "3-1": {
@@ -92,7 +110,10 @@ export const initState = fromJS({
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          timeLimit: 2
+          timeLimit: 2,
+          times: 1,
+          power: 150,
+          comment: ""
         }
       },
       "3-2": {
@@ -102,7 +123,10 @@ export const initState = fromJS({
         isExpanded: true,
         isChildrenLoading: false,
         data: {
-          title: "third"
+          timeLimit: 0,
+          times: 1,
+          power: 0,
+          comment: ""
         }
       },
       "3-2-0": {
@@ -112,7 +136,10 @@ export const initState = fromJS({
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          timeLimit: 3
+          timeLimit: 3,
+          times: 1,
+          power: 150,
+          comment: ""
         }
       },
       "3-2-1": {
@@ -122,7 +149,10 @@ export const initState = fromJS({
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          timeLimit: 3
+          timeLimit: 3,
+          times: 1,
+          power: 150,
+          comment: ""
         }
       }
     }
