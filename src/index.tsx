@@ -19,9 +19,9 @@ const theme = createMuiTheme({
   overrides: {
     MuiTextField: {
       root: {
-        maxWidth: '50px'
+        maxWidth: "50px"
       }
-    }    
+    }
   }
 });
 
