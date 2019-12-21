@@ -1,6 +1,6 @@
-import { fromJS } from "immutable";
+import { State } from "./types";
 
-export const initState = fromJS({
+export const initState: State = {
   timers: [
     {
       id: "0",
@@ -301,4 +301,4 @@ export const initState = fromJS({
       }
     }
   }
-});
+};
