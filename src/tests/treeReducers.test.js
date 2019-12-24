@@ -1,91 +1,48 @@
-import { copyItem } from "../actions";
-import treeReducer, {
-  addItemToTree,
-  getAllChildrenIds,
-  removeItemFromTree,
-  setNewItemOnTree
-} from "../reducers/treeReducer";
-import { getNewItemIds } from "../util";
+import produce from "immer";
+import { setNewItemOnTree, treeReducer } from "../reducers/treeReducer";
 import { sampleState } from "./testData";
-
-test("getAllChildrenIds of id:root", () => {
-  const tree = sampleState.get("tree");
-  const parentId = tree.get("rootId");
-  const children = getAllChildrenIds(tree, parentId);
-  expect(children.size).toBe(tree.get("items").size);
-});
-test("getAllChildrenIds of id:3-2", () => {
-  const tree = sampleState.get("tree");
-  const parentId = "3-2";
-  const children = getAllChildrenIds(tree, parentId);
-  expect(children.sort().toJS()).toEqual(["3-2", "3-2-0", "3-2-1"]);
-});
-test("COPY_ITEM", () => {
-  const copyId = "3-2";
-  const prevTree = sampleState.get("tree");
-  const allChildrenIds = getAllChildrenIds(prevTree, copyId);
-  const newIds = getNewItemIds(prevTree, allChildrenIds.size);
-  const newTree = treeReducer(prevTree, copyItem(copyId));
-  expect(newTree.getIn(["items", newIds.get(0), "children"]).size).toBe(
-    prevTree.getIn(["items", allChildrenIds.get(0), "children"]).size
-  );
-  expect(newTree.getIn(["items", newIds.get(1), "children"]).size).toBe(
-    prevTree.getIn(["items", allChildrenIds.get(1), "children"]).size
-  );
-  expect(newTree.getIn(["items", newIds.get(2), "children"]).size).toBe(
-    prevTree.getIn(["items", allChildrenIds.get(2), "children"]).size
-  );
-});
+import { actionTypes as AT, addTreeItem, removeItem } from "../actions";
 
 test("setNewItemOnTree", () => {
-  const tree = sampleState.get("tree");
+  const tree = sampleState.tree;
   const dataToadd = { test: "testItem" };
   const parentId = "3-2-1";
-  const newTree = setNewItemOnTree(tree, parentId, dataToadd);
-  expect(newTree.get("items").size - 1).toEqual(tree.get("items").size);
-  const childId = newTree.getIn(["items", parentId, "children"]).last();
-  expect(newTree.getIn(["items", childId, "data"]).toJS()).toEqual(dataToadd);
+  const newTree = produce(tree, draft =>
+    setNewItemOnTree(draft, parentId, dataToadd)
+  );
+  expect(Object.keys(newTree.items)).toHaveLength(
+    Object.keys(tree.items).length + 1
+  );
+  const parentItem = newTree.items[parentId];
+  const childId = parentItem.children[parentItem.children.length - 1];
+  expect(newTree.items[childId].data).toEqual(dataToadd);
 });
 
-test("removeItemFromTree", () => {
-  const tree = sampleState.get("tree");
-  const itemIdToRemove = "3-2";
-  const removeItemPosition = {
-    parentId: "3",
-    index: 2
-  };
-  const { tree: removedTree, itemRemoved } = removeItemFromTree(
-    tree,
-    removeItemPosition
-  );
-  expect(
-    tree.getIn([
-      "items",
-      removeItemPosition.parentId,
-      "children",
-      removeItemPosition.index
-    ])
-  ).toBe(itemRemoved);
-  expect(
-    removedTree.getIn([
-      "items",
-      removeItemPosition.parentId,
-      "children",
-      removeItemPosition.index
-    ])
-  ).not.toBe(itemIdToRemove);
-});
+describe("treeReducer", () => {
+  const tree = sampleState.tree;
+  test(AT.ADD_TREE_ITEM, () => {
+    const parentId = "3-2";
+    const action = addTreeItem(parentId, 1234);
+    const newTree = treeReducer(tree, action);
+    const parentItem = newTree.items[parentId];
 
-test("addItemToTree", () => {
-  const newId = "hogehoge";
-  const newTree = addItemToTree(
-    sampleState.get("tree"),
-    {
-      parentId: "3-2",
-      index: 0
-    },
-    newId
-  );
+    expect(parentItem.children).toHaveLength(
+      tree.items[parentId].children.length + 1
+    );
 
-  expect(newTree.getIn(["items", "3-2", "children", 0])).toBe(newId);
+    expect(
+      newTree.items[parentItem.children[parentItem.children.length - 1]].data
+        .timeLimit
+    ).toEqual(1234);
+  });
+
+  test(AT.REMOVE_ITEM, () => {
+    const removeItemId = "3-2";
+    const action = removeItem(removeItemId);
+    const newTree = treeReducer(tree, action);
+    expect(newTree.items[removeItemId]).toBeUndefined();
+    const childId = tree.items[removeItemId].children[0];
+    expect(newTree.items[childId]).toBeUndefined();
+    expect(newTree.items["3-1"]).not.toBeUndefined();
+  });
 });
