@@ -6,6 +6,13 @@ export interface Action {
   payload: any;
 }
 export interface State {
-  timers: Timers;
-  tree: TreeData;
+  readonly timers: Timers;
+  readonly tree: TreeData;
+}
+
+export interface TreeItemData {
+  timeLimit: number;
+  times: number;
+  power: number;
+  comment: string;
 }
