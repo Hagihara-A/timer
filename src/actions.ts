@@ -4,7 +4,7 @@ import {
   TreeDestinationPosition,
   TreeSourcePosition
 } from "@atlaskit/tree";
-import { Timers } from "./types";
+import { Timers, TreeItemData } from "./types";
 
 export const actionTypes = {
   ADD: "ADD",
@@ -104,7 +104,7 @@ export const removeItem = (removeItemId: ItemId) => {
     }
   };
 };
-export const editItem = (editItemId: ItemId, data: any) => {
+export const editItem = (editItemId: ItemId, data: Partial<TreeItemData>) => {
   return {
     type: actionTypes.EDIT_ITEM,
     payload: {
@@ -133,12 +133,12 @@ export const onDragEnd = (
     }
   };
 };
-export const toggleProperty = (id: ItemId, property: string) => {
+export const toggleProperty = (id: ItemId, prop: string) => {
   return {
     type: actionTypes.TOGGLE_PROPERTY,
     payload: {
       id,
-      property
+      prop
     }
   };
 };
