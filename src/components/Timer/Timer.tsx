@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
-import { timerState } from "../../reducers/timersReducer";
 
+const timerState = { ELAPSE: "ELAPSE", STOP: "STOP", END: "END", INIT: "INIT" };
 const { ELAPSE, STOP, END, INIT } = timerState;
 const Timer = ({
   timerState,

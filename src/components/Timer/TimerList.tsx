@@ -1,28 +1,14 @@
-import List from "@material-ui/core/List";
 import React from "react";
-import ListItem from "material-ui/List/ListItem";
-import TimerContainer from "../../containers/Timer/TimerContainer";
-import { List as ListIm } from "immutable";
+import { useSelector } from "react-redux";
+import { State } from "../../types";
 
-const renderTimerList = timers => {
+export const TimerList = () => {
+  const timers = useSelector((state: State) => state.timers);
   return (
-    <List>
-      {timers.map((v, i) => {
-        if (ListIm.isList(v)) {
-          return <ListItem key={i}>{renderTimerList(v)}</ListItem>;
-        } else {
-          return (
-            <ListItem key={i}>
-              <TimerContainer {...v.toJS()} />/ {v.get("timeLimit")}
-            </ListItem>
-          );
-        }
+    <div>
+      {timers.map(item => {
+        return <div key={item.id}>{item.id + "  " + item.data.timeLimit} </div>;
       })}
-    </List>
+    </div>
   );
 };
-
-const TimerList = props => {
-  return renderTimerList(props.timers);
-};
-export default TimerList;

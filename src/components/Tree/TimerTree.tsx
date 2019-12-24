@@ -1,6 +1,8 @@
 import Tree, {
   ItemId,
+  RenderItemParams,
   TreeDestinationPosition,
+  TreeItem,
   TreeSourcePosition
 } from "@atlaskit/tree";
 import Paper from "@material-ui/core/Paper";
@@ -10,11 +12,11 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { onDragEnd as onDragEndAction, toggleProperty } from "../../actions";
+import { State } from "../../types";
 import EditableContent from "./EditableContent";
 const TreeContainer = styled.div`
-  max-width: 600px;
-  position: absolute;
-  left: 45%;
+  max-width: 300px;
+  margin: auto;
 `;
 const ItemContainer = styled.div`
   border: solid lightblue;
@@ -32,7 +34,7 @@ const Icon = ({ item, onExpand, onCollapse, depth }) => {
   }
 };
 
-const Content = ({ item }) => {
+const Content = ({ item }: { item: TreeItem }) => {
   return <EditableContent itemId={item.id} />;
 };
 
@@ -43,7 +45,7 @@ const renderItem = ({
   onCollapse,
   provided,
   snapshot
-}) => {
+}: RenderItemParams) => {
   return (
     <ItemContainer
       ref={provided.innerRef}
@@ -63,9 +65,7 @@ const renderItem = ({
 
 const TimerTree = () => {
   const dispatch = useDispatch();
-  const tree = useSelector((state: Map<string, any>) =>
-    state.get("tree").toJS()
-  );
+  const tree = useSelector((state: State) => state.tree);
 
   const toggleIsExpanded = (itemId: ItemId) => {
     dispatch(toggleProperty(itemId, "isExpanded"));
