@@ -3,6 +3,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
+import { TimerList } from "./components/Timer/TimerList";
 import TimerTree from "./components/Tree/TimerTree";
 import * as serviceWorker from "./serviceWorker";
 import { store } from "./store";
@@ -29,6 +30,7 @@ ReactDOM.render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>
       <TimerTree />
+      <TimerList />
     </ThemeProvider>
   </Provider>,
   document.getElementById("root")
