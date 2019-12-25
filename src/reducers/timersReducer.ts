@@ -1,6 +1,7 @@
 import produce from "immer";
-import { Action, Timers } from "../types";
+import { Timers } from "../types";
 import { initState } from "../initState";
+import { Action } from "../types";
 
 export const timersReducer = produce(
   (timers: Timers = initState.timers, action: Action) => {

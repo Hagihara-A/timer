@@ -3,7 +3,6 @@
 import {
   ItemId,
   moveItemOnTree,
-  TreeData,
   TreeDestinationPosition,
   TreeItem,
   TreeSourcePosition
@@ -11,8 +10,7 @@ import {
 import produce from "immer";
 import { actionTypes as AT } from "../actions";
 import { initState } from "../initState";
-import { Action } from "../types";
-
+import { TimerTreeData as TreeData, Action } from "../types";
 const initTreeItem: TreeItem = {
   id: undefined,
   children: [],
