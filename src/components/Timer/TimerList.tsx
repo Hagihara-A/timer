@@ -1,16 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { State } from "../../types";
 import styled from "styled-components";
+import { useSprings, animated } from "react-spring";
 
-const List = styled.div`
-  text-align: center;
-`;
 export const TimerList = () => {
   const timers = useSelector((state: State) => state.timers);
-  const ListItems = timers.map(item => {
-    const { timeLimit, times, power } = item.data;
-    return <li key={item.id}> {`${times} x ${timeLimit} at ${power} W`}</li>;
+
+  const [focus, setFocus] = useState(0);
+  const [springs, set] = useSprings(timers.length, () => ({
+    fontSize: "10px"
+  }));
+  const ListItems = springs.map((spring, idx) => {
+    const item = timers[idx];
+    const { timeLimit, power, times } = item.data;
+    return (
+      <animated.div style={spring} key={item.id}>
+        {`${times} x ${timeLimit} sec at ${power} W`}
+      </animated.div>
+    );
   });
-  return <List>{ListItems}</List>;
+  return (
+    <animated.div style={{ textAlign: "center" }}>
+      {ListItems}
+      <button
+        onClick={e => {
+          setFocus((focus + 1) % timers.length);
+          set(i => (i === focus ? { fontSize: "20px" } : { fontSize: "10px" }));
+        }}
+      >
+        next
+      </button>
+    </animated.div>
+  );
 };

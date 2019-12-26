@@ -5,7 +5,6 @@ import Tree, {
   TreeItem,
   TreeSourcePosition
 } from "@atlaskit/tree";
-import Paper from "@material-ui/core/Paper";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import React from "react";
@@ -82,19 +81,17 @@ const TimerTree = () => {
   };
 
   return (
-    <Paper>
-      <TreeContainer>
-        <Tree
-          tree={tree}
-          renderItem={renderItem}
-          isDragEnabled
-          isNestingEnabled
-          onCollapse={toggleIsExpanded}
-          onExpand={toggleIsExpanded}
-          onDragEnd={onDragEnd}
-        />
-      </TreeContainer>
-    </Paper>
+    <TreeContainer>
+      <Tree
+        tree={tree}
+        renderItem={renderItem}
+        isDragEnabled
+        isNestingEnabled
+        onCollapse={toggleIsExpanded}
+        onExpand={toggleIsExpanded}
+        onDragEnd={onDragEnd}
+      />
+    </TreeContainer>
   );
 };
 

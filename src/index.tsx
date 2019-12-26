@@ -32,25 +32,24 @@ const App = () => {
     from: { opacity: 0, position: "absolute" },
     enter: { opacity: 1 },
     leave: { opacity: 0 }
-  });
-  const Contents = transitions.map(({ item, key, props }) =>
-    item ? (
-      <animated.div style={props}>
-        <TimerTree />
-      </animated.div>
-    ) : (
-      <animated.div style={props}>
-        <TimerList />
-      </animated.div>
-    )
-  );
+  } as const);
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        {Contents}
+        {transitions.map(({ item, key, props }) =>
+          item ? (
+            <animated.div style={props}>
+              <TimerTree />
+            </animated.div>
+          ) : (
+            <animated.div style={props}>
+              <TimerList />
+            </animated.div>
+          )
+        )}
         <button
           onClick={() => setIsTree(!isTree)}
-          style={{ position: "relative", top: "500px" }}
+          style={{ position: "absolute", top: "500px" }}
         >
           TOGGLE
         </button>
