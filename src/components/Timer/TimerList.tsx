@@ -11,7 +11,7 @@ export const TimerList = () => {
     fontSize: "1rem"
   }));
   const ListItems = springs.map((spring, idx) => {
-    const item = timers[idx];
+    const item = timers[idx].item;
     const { timeLimit, power, times } = item.data;
     return (
       <animated.div style={spring} key={item.id}>
