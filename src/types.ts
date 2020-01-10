@@ -1,27 +1,34 @@
-import { TreeData, TreeItem } from "@atlaskit/tree";
+import { ItemId, TreeData, TreeItem } from "@atlaskit/tree";
+import { FlattenedItem } from "@atlaskit/tree/dist/cjs/types";
 import * as actionCreator from "./actions";
-export interface TimersItem extends TreeItem {
-  data?: TreeItemData;
-}
-
-export type Timers = TimersItem[];
 
 export interface State {
-  readonly timers: Timers;
   readonly tree: TimerTreeData;
+  readonly timers: Timers;
+}
+//  state.tree type definition
+export interface TimerTreeData extends TreeData {
+  items: Record<ItemId, TimerTreeItem>;
+}
+export interface TimerTreeItem extends TreeItem {
+  data?: TimerTreeItemData;
 }
 
-export interface TreeItemData {
+export interface TimerTreeItemData {
   timeLimit: number;
   times: number;
   power: number;
   comment: string;
 }
 
-export interface TimerTreeData extends TreeData {
-  data?: TreeItemData;
+// state.tree definition
+export type Timers = FlattendTreeItem[];
+
+interface FlattendTreeItem extends FlattenedItem {
+  item: TimerTreeItem;
 }
 
+// Action definition
 type ReturnTypes<T> = {
   [K in keyof T]: T[K] extends (...args: any[]) => any
     ? ReturnType<T[K]>

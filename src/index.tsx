@@ -1,11 +1,9 @@
 import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
-import React, { useState } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import { animated, useTransition } from "react-spring";
-import { TimerList } from "./components/Timer/TimerList";
-import TimerTree from "./components/Tree/TimerTree";
+import { Main } from "./components/main";
 import * as serviceWorker from "./serviceWorker";
 import { store } from "./store";
 const theme = createMuiTheme({
@@ -27,27 +25,10 @@ const theme = createMuiTheme({
 });
 
 const App = () => {
-  const [isTree, setIsTree] = useState(true);
-  const transitions = useTransition(isTree, null, {
-    from: { opacity: 0, position: "absolute" },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 }
-  } as const);
-
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        {transitions.map(({ item, key, props }) => (
-          <animated.div style={props} key={key}>
-            {item ? <TimerTree /> : <TimerList />}
-          </animated.div>
-        ))}
-        <button
-          onClick={() => setIsTree(!isTree)}
-          style={{ position: "absolute", top: "500px" }}
-        >
-          TOGGLE
-        </button>
+        <Main />
       </ThemeProvider>
     </Provider>
   );
