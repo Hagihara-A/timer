@@ -1,8 +1,10 @@
+import { Button, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { animated, useSprings } from "react-spring";
 import { State } from "../../types";
 
+const AnimatedTyporaphy = animated(Typography);
 export const TimerList = () => {
   const timers = useSelector((state: State) => state.timers);
 
@@ -14,22 +16,24 @@ export const TimerList = () => {
     const item = timers[idx].item;
     const { timeLimit, power, times } = item.data;
     return (
-      <animated.div style={spring} key={item.id}>
-        <div key={item.id}>{`${times} x ${timeLimit} sec at ${power} W`}</div>
-      </animated.div>
+      <AnimatedTyporaphy style={spring} key={item.id} component="div">
+        {`${times} x ${timeLimit} sec at ${power} W`}
+      </AnimatedTyporaphy>
     );
   });
   return (
-    <animated.div>
+    <animated.div style={{ textAlign: "center" }}>
       {ListItems}
-      <button
+      <Button
+        variant="contained"
+        color="secondary"
         onClick={() => {
           setFocus((focus + 1) % timers.length);
           set(index => ({ fontSize: index === focus ? "2rem" : "1rem" }));
         }}
       >
         next
-      </button>
+      </Button>
     </animated.div>
   );
 };

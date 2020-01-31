@@ -1,18 +1,26 @@
+import { Typography } from "@material-ui/core";
+import PlayCircleFilledWhiteIcon from "@material-ui/icons/PlayCircleFilledWhite";
+import StopIcon from "@material-ui/icons/Stop";
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useTransition, animated } from "react-spring";
-import TimerTree from "./Tree/TimerTree";
-import { TimerList } from "./Timer/TimerList";
+import { useSelector } from "react-redux";
+import { animated, useTransition } from "react-spring";
 import { parseTimers } from "../actions";
 import { State } from "../types";
+import { TimerList } from "./Timer/TimerList";
+import TimerTree from "./Tree/TimerTree";
 
-export const Main = () => {
+const TimerApp = () => {
   const [isTree, setIsTree] = useState(true);
   const toggleIsTree = () => setIsTree(!isTree);
-  const dispatch = useDispatch();
+  const toggle = () => {
+    if (isTree) {
+      parseTimers(tree);
+    }
+    toggleIsTree();
+  };
   const tree = useSelector((state: State) => state.tree);
   const transitions = useTransition(isTree, null, {
-    from: { opacity: 0, position: "absolute" },
+    from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 }
   } as const);
@@ -24,17 +32,43 @@ export const Main = () => {
           {item ? <TimerTree /> : <TimerList />}
         </animated.div>
       ))}
-      <button
-        onClick={() => {
-          if (isTree) {
-            dispatch(parseTimers(tree));
-          }
-          toggleIsTree();
-        }}
-        style={{ position: "absolute", top: "500px", left: "45%" }}
-      >
-        TOGGLE
-      </button>
+
+      {transitions.map(({ item, key, props }) => {
+        const iconStyles = {
+          color: "primary",
+          fontSize: "large",
+          onClick: toggle,
+          cursor: "pointer",
+          style: { height: "100px", width: "100px" }
+        } as const;
+        return (
+          <animated.div
+            key={key}
+            style={{
+              ...props,
+              position: "fixed",
+              bottom: "10px",
+              width: "100%",
+              textAlign: "center"
+            }}
+          >
+            {item ? (
+              <PlayCircleFilledWhiteIcon {...iconStyles} />
+            ) : (
+              <StopIcon {...iconStyles} />
+            )}
+          </animated.div>
+        );
+      })}
     </>
   );
 };
+
+export const Main = () => (
+  <>
+    <Typography variant="h1" align="center" style={{ lineHeight: "initial" }}>
+      Training Timer
+    </Typography>
+    <TimerApp />
+  </>
+);

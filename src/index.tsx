@@ -1,4 +1,4 @@
-import { createMuiTheme } from "@material-ui/core";
+import { createMuiTheme, responsiveFontSizes } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 import { Main } from "./components/main";
 import * as serviceWorker from "./serviceWorker";
 import { store } from "./store";
-const theme = createMuiTheme({
+let theme = createMuiTheme({
   palette: {
     primary: {
       main: "#555555"
@@ -24,6 +24,7 @@ const theme = createMuiTheme({
   }
 });
 
+theme = responsiveFontSizes(theme);
 const App = () => {
   return (
     <Provider store={store}>
