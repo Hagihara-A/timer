@@ -20,9 +20,19 @@ const TimerApp = () => {
   };
   const tree = useSelector((state: State) => state.tree);
   const transitions = useTransition(isTree, null, {
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 }
+    from: {
+      opacity: 0,
+      transform: `translate3d(${isTree ? 100 : -100}%,0,0)`,
+      position: "absolute",
+      left: "0",
+      right: "0",
+      margin: "auto"
+    },
+    enter: { opacity: 1, transform: "translate3d(0%,0,0)" },
+    leave: {
+      opacity: 0,
+      transform: `translate3d(${isTree ? -50 : 50}%,0,0)`
+    }
   } as const);
 
   return (
