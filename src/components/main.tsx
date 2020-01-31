@@ -22,56 +22,52 @@ const TimerApp = () => {
   const transitions = useTransition(isTree, null, {
     from: {
       opacity: 0,
-      transform: `translate3d(${isTree ? 100 : -100}%,0,0)`,
+      transform: `translate3d(${isTree ? -100 : 100}%,0,0)`,
       position: "absolute",
       left: "0",
-      right: "0",
-      margin: "auto"
+      right: "0"
     },
     enter: { opacity: 1, transform: "translate3d(0%,0,0)" },
     leave: {
       opacity: 0,
-      transform: `translate3d(${isTree ? -50 : 50}%,0,0)`
+      transform: `translate3d(${isTree ? 50 : -50}%,0,0)`
     }
   } as const);
 
-  return (
-    <>
-      {transitions.map(({ item, key, props }) => (
+  const iconStyles = {
+    color: "primary",
+    onClick: toggle,
+    cursor: "pointer",
+    style: { height: "100px", width: "100px" }
+  } as const;
+
+  const View = transitions.map(({ item, key, props }) => {
+    return (
+      <>
         <animated.div style={props} key={key}>
           {item ? <TimerTree /> : <TimerList />}
         </animated.div>
-      ))}
 
-      {transitions.map(({ item, key, props }) => {
-        const iconStyles = {
-          color: "primary",
-          fontSize: "large",
-          onClick: toggle,
-          cursor: "pointer",
-          style: { height: "100px", width: "100px" }
-        } as const;
-        return (
-          <animated.div
-            key={key}
-            style={{
-              ...props,
-              position: "fixed",
-              bottom: "10px",
-              width: "100%",
-              textAlign: "center"
-            }}
-          >
-            {item ? (
-              <PlayCircleFilledWhiteIcon {...iconStyles} />
-            ) : (
-              <StopIcon {...iconStyles} />
-            )}
-          </animated.div>
-        );
-      })}
-    </>
-  );
+        <animated.div
+          key={key}
+          style={{
+            ...props,
+            position: "fixed",
+            bottom: "10px",
+            width: "100%",
+            textAlign: "center"
+          }}
+        >
+          {item ? (
+            <PlayCircleFilledWhiteIcon {...iconStyles} />
+          ) : (
+            <StopIcon {...iconStyles} />
+          )}
+        </animated.div>
+      </>
+    );
+  });
+  return <div>{View}</div>;
 };
 
 export const Main = () => (
