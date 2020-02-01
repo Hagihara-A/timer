@@ -1,8 +1,149 @@
-import { fromJS } from "immutable";
-import { timerState as TS } from "../reducers/timersReducer";
-
-export const sampleState = fromJS({
-  timers: [],
+export const sampleState = {
+  timers: [
+    {
+      id: "0",
+      children: [],
+      hasChildren: false,
+      isExpanded: false,
+      isChildrenLoading: false,
+      data: {
+        timeLimit: 3,
+        times: 1,
+        power: 130,
+        comment: ""
+      }
+    },
+    {
+      id: "1",
+      children: ["1-0", "1-1"],
+      hasChildren: true,
+      isExpanded: true,
+      isChildrenLoading: false,
+      data: {
+        timeLimit: 0,
+        times: 1,
+        power: 0,
+        comment: ""
+      }
+    },
+    {
+      id: "1-0",
+      children: [],
+      hasChildren: false,
+      isExpanded: false,
+      isChildrenLoading: false,
+      data: {
+        timeLimit: 2,
+        times: 1,
+        power: 260,
+        comment: ""
+      }
+    },
+    {
+      id: "1-1",
+      children: [],
+      hasChildren: false,
+      isExpanded: false,
+      isChildrenLoading: false,
+      data: {
+        timeLimit: 2,
+        times: 1,
+        power: 260,
+        comment: ""
+      }
+    },
+    {
+      id: "2",
+      children: [],
+      hasChildren: false,
+      isExpanded: false,
+      isChildrenLoading: false,
+      data: {
+        timeLimit: 5,
+        times: 1,
+        power: 260,
+        comment: ""
+      }
+    },
+    {
+      id: "3",
+      children: ["3-0", "3-1", "3-2"],
+      hasChildren: false,
+      isExpanded: true,
+      isChildrenLoading: false,
+      data: {
+        timeLimit: 0,
+        times: 1,
+        power: 0,
+        comment: ""
+      }
+    },
+    {
+      id: "3-0",
+      children: [],
+      hasChildren: false,
+      isExpanded: false,
+      isChildrenLoading: false,
+      data: {
+        timeLimit: 2,
+        times: 1,
+        power: 150,
+        comment: ""
+      }
+    },
+    {
+      id: "3-1",
+      children: [],
+      hasChildren: false,
+      isExpanded: false,
+      isChildrenLoading: false,
+      data: {
+        timeLimit: 2,
+        times: 1,
+        power: 150,
+        comment: ""
+      }
+    },
+    {
+      id: "3-2",
+      children: ["3-2-0", "3-2-1"],
+      hasChildren: true,
+      isExpanded: true,
+      isChildrenLoading: false,
+      data: {
+        timeLimit: 0,
+        times: 1,
+        power: 0,
+        comment: ""
+      }
+    },
+    {
+      id: "3-2-0",
+      children: [],
+      hasChildren: false,
+      isExpanded: false,
+      isChildrenLoading: false,
+      data: {
+        timeLimit: 3,
+        times: 1,
+        power: 150,
+        comment: ""
+      }
+    },
+    {
+      id: "3-2-1",
+      children: [],
+      hasChildren: false,
+      isExpanded: false,
+      isChildrenLoading: false,
+      data: {
+        timeLimit: 3,
+        times: 1,
+        power: 150,
+        comment: ""
+      }
+    }
+  ],
   tree: {
     rootId: "root",
     items: {
@@ -11,10 +152,7 @@ export const sampleState = fromJS({
         children: ["0", "1", "2", "3"],
         hasChildren: true,
         isExpanded: true,
-        isChildrenLoading: false,
-        data: {
-          title: "root"
-        }
+        isChildrenLoading: false
       },
       "0": {
         id: "0",
@@ -23,7 +161,10 @@ export const sampleState = fromJS({
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          timeLimit: 3
+          timeLimit: 3,
+          times: 1,
+          power: 130,
+          comment: ""
         }
       },
       "1": {
@@ -33,7 +174,10 @@ export const sampleState = fromJS({
         isExpanded: true,
         isChildrenLoading: false,
         data: {
-          title: "first"
+          timeLimit: 0,
+          times: 1,
+          power: 0,
+          comment: ""
         }
       },
       "1-0": {
@@ -43,7 +187,10 @@ export const sampleState = fromJS({
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          timeLimit: 2
+          timeLimit: 2,
+          times: 1,
+          power: 260,
+          comment: ""
         }
       },
       "1-1": {
@@ -53,7 +200,10 @@ export const sampleState = fromJS({
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          timeLimit: 2
+          timeLimit: 2,
+          times: 1,
+          power: 260,
+          comment: ""
         }
       },
       "2": {
@@ -63,7 +213,10 @@ export const sampleState = fromJS({
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          timeLimit: 5
+          timeLimit: 5,
+          times: 1,
+          power: 260,
+          comment: ""
         }
       },
       "3": {
@@ -73,7 +226,10 @@ export const sampleState = fromJS({
         isExpanded: true,
         isChildrenLoading: false,
         data: {
-          title: "second"
+          timeLimit: 0,
+          times: 1,
+          power: 0,
+          comment: ""
         }
       },
       "3-0": {
@@ -83,7 +239,10 @@ export const sampleState = fromJS({
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          timeLimit: 2
+          timeLimit: 2,
+          times: 1,
+          power: 150,
+          comment: ""
         }
       },
       "3-1": {
@@ -93,7 +252,10 @@ export const sampleState = fromJS({
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          timeLimit: 2
+          timeLimit: 2,
+          times: 1,
+          power: 150,
+          comment: ""
         }
       },
       "3-2": {
@@ -103,7 +265,10 @@ export const sampleState = fromJS({
         isExpanded: true,
         isChildrenLoading: false,
         data: {
-          title: "third"
+          timeLimit: 0,
+          times: 1,
+          power: 0,
+          comment: ""
         }
       },
       "3-2-0": {
@@ -113,7 +278,10 @@ export const sampleState = fromJS({
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          timeLimit: 3
+          timeLimit: 3,
+          times: 1,
+          power: 150,
+          comment: ""
         }
       },
       "3-2-1": {
@@ -123,90 +291,12 @@ export const sampleState = fromJS({
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          timeLimit: 3
+          timeLimit: 3,
+          times: 1,
+          power: 150,
+          comment: ""
         }
       }
     }
   }
-});
-
-export const initTimers = fromJS([
-  { time: 0, timerState: TS.INIT, timeLimit: 1 },
-  [
-    { time: 0, timerState: TS.INIT, timeLimit: 2 },
-    { time: 0, timerState: TS.INIT, timeLimit: 2 }
-  ],
-  { time: 0, timerState: TS.INIT, timeLimit: 1 },
-  [
-    { time: 0, timerState: TS.INIT, timeLimit: 2 },
-    [
-      { time: 0, timerState: TS.INIT, timeLimit: 3 },
-      { time: 0, timerState: TS.INIT, timeLimit: 3 }
-    ]
-  ]
-]);
-
-export const elapsedTimers = fromJS([
-  { time: 0, timerState: TS.END, timeLimit: 1 },
-  [
-    { time: 0, timerState: TS.END, timeLimit: 2 },
-    { time: 0, timerState: TS.END, timeLimit: 2 }
-  ],
-  { time: 0, timerState: TS.END, timeLimit: 1 },
-  [
-    { time: 0, timerState: TS.END, timeLimit: 2 },
-    [
-      { time: 0, timerState: TS.END, timeLimit: 3 },
-      { time: 0, timerState: TS.ELAPSE, timeLimit: 3 }
-    ]
-  ]
-]);
-
-export const allFinishedTimers = fromJS([
-  {
-    time: 3,
-    timerState: TS.END,
-    timeLimit: 3
-  },
-  [
-    {
-      time: 2,
-      timerState: TS.END,
-      timeLimit: 2
-    },
-    {
-      time: 2,
-      timerState: TS.END,
-      timeLimit: 2
-    }
-  ],
-  {
-    time: 5,
-    timerState: TS.END,
-    timeLimit: 5
-  },
-  [
-    {
-      time: 2,
-      timerState: TS.END,
-      timeLimit: 2
-    },
-    {
-      time: 2,
-      timerState: TS.END,
-      timeLimit: 2
-    },
-    [
-      {
-        time: 3,
-        timerState: TS.END,
-        timeLimit: 3
-      },
-      {
-        time: 3,
-        timerState: TS.END,
-        timeLimit: 3
-      }
-    ]
-  ]
-]);
+};

@@ -1,7 +1,7 @@
-import { fromJS } from "immutable";
+import { flattenTree } from "@atlaskit/tree/dist/cjs/utils/tree";
+import produce from "immer";
 
-export const initState = fromJS({
-  timers: [],
+const state = {
   tree: {
     rootId: "root",
     items: {
@@ -156,5 +156,10 @@ export const initState = fromJS({
         }
       }
     }
-  }
+  },
+  timers: undefined
+};
+
+export const initState = produce(state, draft => {
+  draft.timers = flattenTree(draft.tree);
 });

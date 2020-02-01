@@ -1,42 +1,38 @@
-import { List, Map } from "immutable";
-import { ItemId } from "@atlaskit/tree";
+import { ItemId, TreeData, TreeItem } from "@atlaskit/tree";
+import { FlattenedItem } from "@atlaskit/tree/dist/cjs/types";
+import * as actionCreator from "./actions";
 
-export interface TreeDataIm extends Map<string, any> {
-  rootId: ItemId;
-  items: Map<ItemId, TreeItemIm>;
+export interface State {
+  readonly tree: TimerTreeData;
+  readonly timers: Timers;
+}
+//  state.tree type definition
+export interface TimerTreeData extends TreeData {
+  items: Record<ItemId, TimerTreeItem>;
+}
+export interface TimerTreeItem extends TreeItem {
+  data?: TimerTreeItemData;
 }
 
-interface data extends Map<string, number | string> {
+export interface TimerTreeItemData {
   timeLimit: number;
   times: number;
   power: number;
   comment: string;
 }
 
-export interface TreeItemIm extends Map<string, any> {
-  id: ItemId;
-  children: List<ItemId>;
-  hasChildren?: boolean;
-  isExpanded?: boolean;
-  isChildrenLoading?: boolean;
-  data?: data;
+// state.tree definition
+export type Timers = FlattendTreeItem[];
+
+interface FlattendTreeItem extends FlattenedItem {
+  item: TimerTreeItem;
 }
 
-export interface TimerItem {
-  time: number;
-  timerState: string;
-  timeLimit: number;
-}
-
-export interface Timers {
-  [index: number]: TimerItem | Timers;
-}
-export interface Action {
-  type: string;
-  payload: any;
-}
-
-export interface State extends Map<string, any> {
-  timers: Map<string, any>;
-  tree: TreeDataIm;
-}
+// Action definition
+type ReturnTypes<T> = {
+  [K in keyof T]: T[K] extends (...args: any[]) => any
+    ? ReturnType<T[K]>
+    : never;
+};
+type UnWrap<T> = T extends { [K in keyof T]: infer U } ? U : never;
+export type Action = UnWrap<ReturnTypes<typeof actionCreator>>;

@@ -6,9 +6,9 @@ module.exports = {
   },
   extends: [
     "eslint:recommended",
+    "plugin:jest/recommended",
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:jest/recommended"
+    "plugin:@typescript-eslint/eslint-recommended"
   ],
   globals: {
     Atomics: "readonly",
@@ -22,14 +22,15 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: "module"
   },
-  plugins: ["react", "@typescript-eslint", "prettier", "jest"],
+  plugins: ["react", "prettier", "jest", "@typescript-eslint"],
   rules: {
     "prettier/prettier": "error",
     "jest/no-disabled-tests": "warn",
     "jest/no-focused-tests": "error",
     "jest/no-identical-title": "error",
     "jest/prefer-to-have-length": "warn",
-    "jest/valid-expect": "error"
+    "jest/valid-expect": "error",
+    "@typescript-eslint/no-unused-vars": "error"
   },
   settings: {
     react: {

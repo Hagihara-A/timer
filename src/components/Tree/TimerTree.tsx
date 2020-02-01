@@ -1,16 +1,21 @@
-import Tree, { ItemId, TreeDestinationPosition, TreeSourcePosition } from "@atlaskit/tree";
-import Paper from "@material-ui/core/Paper";
+import Tree, {
+  ItemId,
+  RenderItemParams,
+  TreeDestinationPosition,
+  TreeItem,
+  TreeSourcePosition
+} from "@atlaskit/tree";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { onDragEnd as onDragEndAction, toggleProperty } from "../../actions";
+import { State } from "../../types";
 import EditableContent from "./EditableContent";
 const TreeContainer = styled.div`
-  max-width: 600px;
-  position: absolute;
-  left: 45%;
+  max-width: 300px;
+  margin: auto;
 `;
 const ItemContainer = styled.div`
   border: solid lightblue;
@@ -28,25 +33,8 @@ const Icon = ({ item, onExpand, onCollapse, depth }) => {
   }
 };
 
-const Content = ({ item }) => {
-  if (item.data.timeLimit) {
-    return (
-      <span>
-        <EditableContent itemId={item.id} />
-        {/* <NewTimerInput parentId={item.id} /> */}
-        {/* <RemoveIcon removeItemId={item.id} /> */}
-        {/* <CopyItem itemId={item.id} /> */}
-      </span>
-    );
-  } else {
-    return (
-      <span>
-        <EditableContent itemId={item.id} />
-        {/* <RemoveIcon removeItemId={item.id} /> */}
-        {/* <CopyItem itemId={item.id} /> */}
-      </span>
-    );
-  }
+const Content = ({ item }: { item: TreeItem }) => {
+  return <EditableContent itemId={item.id} />;
 };
 
 const renderItem = ({
@@ -56,7 +44,7 @@ const renderItem = ({
   onCollapse,
   provided,
   snapshot
-}) => {
+}: RenderItemParams) => {
   return (
     <ItemContainer
       ref={provided.innerRef}
@@ -76,9 +64,7 @@ const renderItem = ({
 
 const TimerTree = () => {
   const dispatch = useDispatch();
-  const tree = useSelector((state: Map<string, any>) =>
-    state.get("tree").toJS()
-  );
+  const tree = useSelector((state: State) => state.tree);
 
   const toggleIsExpanded = (itemId: ItemId) => {
     dispatch(toggleProperty(itemId, "isExpanded"));
@@ -95,19 +81,17 @@ const TimerTree = () => {
   };
 
   return (
-    <Paper>
-      <TreeContainer>
-        <Tree
-          tree={tree}
-          renderItem={renderItem}
-          isDragEnabled
-          isNestingEnabled
-          onCollapse={toggleIsExpanded}
-          onExpand={toggleIsExpanded}
-          onDragEnd={onDragEnd}
-        />
-      </TreeContainer>
-    </Paper>
+    <TreeContainer>
+      <Tree
+        tree={tree}
+        renderItem={renderItem}
+        isDragEnabled
+        isNestingEnabled
+        onCollapse={toggleIsExpanded}
+        onExpand={toggleIsExpanded}
+        onDragEnd={onDragEnd}
+      />
+    </TreeContainer>
   );
 };
 

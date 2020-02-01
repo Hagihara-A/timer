@@ -1,5 +1,10 @@
-import { ItemId, TreeData, TreeSourcePosition, TreeDestinationPosition } from "@atlaskit/tree";
-import { Timers } from "./types";
+import {
+  ItemId,
+  TreeData,
+  TreeDestinationPosition,
+  TreeSourcePosition
+} from "@atlaskit/tree";
+import { Timers, TimerTreeItemData } from "./types";
 
 export const actionTypes = {
   ADD: "ADD",
@@ -16,9 +21,9 @@ export const actionTypes = {
   EDIT_ITEM: "EDIT_ITEM",
   COPY_ITEM: "COPY_ITEM",
   ON_DRAG_END: "ON_DRAG_END",
-  TOGGLE_PROPERTY: 'TOGGLE_PROPERTY'
-};
-
+  TOGGLE_PROPERTY: "TOGGLE_PROPERTY",
+  FLATTEN_TREE: "FLATTEN_TREE"
+} as const;
 export const addTime = (time: number) => {
   return {
     type: actionTypes.ADD,
@@ -100,7 +105,10 @@ export const removeItem = (removeItemId: ItemId) => {
     }
   };
 };
-export const editItem = (editItemId: ItemId, data: any) => {
+export const editItem = (
+  editItemId: ItemId,
+  data: Partial<TimerTreeItemData>
+) => {
   return {
     type: actionTypes.EDIT_ITEM,
     payload: {
@@ -117,21 +125,37 @@ export const copyItem = (originItemId: ItemId) => {
     }
   };
 };
-export const onDragEnd = (source: TreeSourcePosition, destination: TreeDestinationPosition) => {
+export const onDragEnd = (
+  source: TreeSourcePosition,
+  destination: TreeDestinationPosition
+) => {
   return {
     type: actionTypes.ON_DRAG_END,
     payload: {
       source,
       destination
     }
-  }
-}
-export const toggleProperty = (id: ItemId, property: string) => {
+  };
+};
+
+export const toggleProperty = (
+  id: ItemId,
+  prop: "isExpanded" | "isChildrenLoading" | "hasChildren"
+) => {
   return {
     type: actionTypes.TOGGLE_PROPERTY,
     payload: {
       id,
-      property
+      prop
     }
-  }
-}
+  };
+};
+
+export const parseTimers = (sourceTree: TreeData) => {
+  return {
+    type: actionTypes.FLATTEN_TREE,
+    payload: {
+      sourceTree
+    }
+  };
+};

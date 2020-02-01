@@ -1,226 +1,95 @@
 import {
   ItemId,
+  moveItemOnTree,
   TreeDestinationPosition,
+  TreeItem,
   TreeSourcePosition
 } from "@atlaskit/tree";
-import { fromJS, List, Map } from "immutable";
+import produce, { Draft } from "immer";
 import { actionTypes as AT } from "../actions";
 import { initState } from "../initState";
-import { Action, TreeDataIm, TreeItemIm } from "../types";
-import { getNewItemIds } from "../util";
-
-const initTreeItem = fromJS({
+import { TimerTreeData as TreeData, Action } from "../types";
+const initTreeItem: TreeItem = {
+  id: undefined,
   children: [],
   hasChildren: false,
   isExpanded: false,
   isChildrenLoading: false
-});
+};
+
+export const getNewItemIds = (tree: TreeData, numIds: number) => {
+  const startNum = Object.keys(tree.items).length - 1;
+  const newIds: ItemId[] = [];
+  for (let i = startNum; i < numIds + startNum; i++) {
+    newIds.push(String(i));
+  }
+  return newIds;
+};
+
 export const setNewItemOnTree = (
-  tree: TreeDataIm,
+  tree: TreeData,
   parentId: ItemId,
   data = {}
 ) => {
-  const newId = getNewItemIds(tree, 1).get(0);
-  let newTree = tree.updateIn(["items", parentId, "children"], children =>
-    children.push(newId)
-  );
-
-  const newItem = initTreeItem.withMutations(item =>
-    item.set("id", newId).set("data", Map(data))
-  );
-  newTree = newTree.setIn(["items", newId], newItem);
-  return newTree;
-};
-const getItemIdFromPosition = (
-  tree: TreeDataIm,
-  position: TreeDestinationPosition
-): ItemId => {
-  if (typeof position.index === "undefined") return position.parentId;
-  else {
-    return tree.getIn(["items", position.parentId, "children", position.index]);
-  }
-};
-
-export const getParentItem = (
-  tree: TreeDataIm,
-  childId: ItemId
-): TreeItemIm => {
-  return tree.get("items").find((item: TreeItemIm) => {
-    return item.get("children").includes(childId);
+  const newId = getNewItemIds(tree, 1)[0];
+  const newItem = produce(initTreeItem, draft => {
+    draft.id = newId;
+    draft.data = data;
   });
+  tree.items[parentId].children.push(newId);
+  tree.items[newId] = newItem;
 };
 export const getAllChildrenIds = (
-  tree: TreeDataIm,
+  tree: TreeData,
   parentItemId: ItemId
-): List<ItemId> => {
-  return tree
-    .getIn(["items", parentItemId, "children"])
-    .reduce((accum: List<ItemId>, id: ItemId) => {
-      if (tree.getIn(["items", id, "children"]).size > 0) {
+): ItemId[] => {
+  return tree.items[parentItemId].children.reduce(
+    (accum, id) => {
+      if (tree.items[id].children.length > 0) {
         return accum.concat(getAllChildrenIds(tree, id));
       } else {
-        return accum.push(id);
+        return [...accum, id];
       }
-    }, List([parentItemId]));
-};
-
-export const removeItemFromTree = (
-  tree: TreeDataIm,
-  position: TreeSourcePosition
-): { tree: TreeDataIm; itemRemoved: ItemId } => {
-  const sourceParent = tree.getIn(["items", position.parentId]);
-  const newSourceChildren = sourceParent.get("children").delete(position.index);
-  const itemRemoved = getItemIdFromPosition(tree, position);
-  const newTree = tree.withMutations(tree =>
-    tree
-      .setIn(["items", position.parentId, "children"], newSourceChildren)
-      .setIn(
-        ["items", position.parentId, "hasChildren"],
-        newSourceChildren.size > 0
-      )
-      .setIn(
-        ["items", position.parentId, "isExpanded"],
-        newSourceChildren.size > 0 && sourceParent.get("isExpanded")
-      )
+    },
+    [parentItemId]
   );
-
-  return {
-    tree: newTree,
-    itemRemoved
-  };
 };
-
-export const addItemToTree = (
-  tree: TreeDataIm,
-  position: TreeDestinationPosition,
-  item: ItemId
-): TreeDataIm => {
-  const destinationParent = tree.getIn(["items", position.parentId]);
-  if (typeof position.index === "undefined") {
-    if (destinationParent.get("children").size === 0) {
-      return tree.withMutations(tree => {
-        const itemToMutate = tree.getIn(["items", position.parentId]);
-        const newItem = itemToMutate
-          .update("children", children => children.push(item))
-          .set("hasChildren", true)
-          .set("isExpanded", true);
-        return tree.setIn(["items", position.parentId], newItem);
-      });
-    }
-  } else {
-    return tree.updateIn(
-      ["items", position.parentId, "children"],
-      (children: List<ItemId>) => children.insert(position.index, item)
-    );
-  }
-};
-const moveItemOnTree = (
-  tree: TreeDataIm,
-  from: TreeSourcePosition,
-  to: TreeDestinationPosition
-): TreeDataIm => {
-  const { tree: newTree, itemRemoved } = removeItemFromTree(tree, from);
-  return addItemToTree(newTree, to, itemRemoved);
-};
-
-const treeReducer = (
-  tree: TreeDataIm = initState.get("tree"),
-  action: Action
-) => {
-  switch (action.type) {
-    case AT.SET_TREE:
-      return fromJS(action.payload.tree);
-    case AT.ADD_TREE_ITEM: {
-      const { parentId, timeLimit } = action.payload;
-      return setNewItemOnTree(tree, parentId, { timeLimit });
-    }
-    case AT.ADD_SECTION: {
-      const { parentId, title } = action.payload;
-      return setNewItemOnTree(tree, parentId, { title });
-    }
-    case AT.REMOVE_ITEM: {
-      const { removeItemId } = action.payload;
-      const parentItem = tree
-        .get("items")
-        .find((value: TreeItemIm) =>
-          value.get("children").some((id: ItemId) => id === removeItemId)
-        );
-      const parentId = parentItem.get("id");
-      const removeItemIndex = parentItem.get("children").indexOf(removeItemId);
-      return tree
-        .deleteIn(["items", parentId, "children", removeItemIndex])
-        .deleteIn(["items", removeItemId]);
-    }
-    case AT.EDIT_ITEM: {
-      const { editItemId, data } = action.payload;
-      return tree.updateIn(["items", editItemId, "data"], originData =>
-        originData.merge(data)
-      );
-    }
-    case AT.COPY_ITEM: {
-      const { originItemId } = action.payload;
-
-      const childrenIds = getAllChildrenIds(tree, originItemId);
-      const newItemIds = getNewItemIds(tree, childrenIds.size);
-      const correspond = Map(childrenIds.zip(newItemIds));
-
-      const newItems = childrenIds.reduce((accItems, curId) => {
-        const curItem: TreeItemIm = tree.getIn(["items", curId]);
-        const newId = correspond.get(curId);
-        const newChildren = curItem
-          .get("children")
-          .map((prevId: ItemId) => correspond.get(prevId));
-        const itemToAdd = curItem.set("children", newChildren).set("id", newId);
-
-        if (typeof newId === "string") {
-          return accItems.set(newId, itemToAdd);
-        } else {
-          return accItems;
+export const treeReducer = produce(
+  (tree: Draft<TreeData> = initState.tree, action: Action) => {
+    switch (action.type) {
+      case AT.ADD_TREE_ITEM: {
+        const { parentId, timeLimit } = action.payload;
+        setNewItemOnTree(tree, parentId, { timeLimit });
+        break;
+      }
+      case AT.REMOVE_ITEM: {
+        const removeItemId: ItemId = action.payload.removeItemId;
+        const allChildIds = getAllChildrenIds(tree, removeItemId);
+        for (const id of allChildIds) {
+          delete tree.items[id];
         }
-      }, Map({}));
-
-      const parentItem: TreeItemIm = tree
-        .get("items")
-        .find((item: TreeItemIm) =>
-          item.get("children").some((id: ItemId) => id === originItemId)
-        );
-      const indexToInsert =
-        parentItem
-          .get("children")
-          .findIndex((id: ItemId) => id === originItemId) + 1;
-      const newParentChildren = parentItem
-        .get("children")
-        .insert(indexToInsert, correspond.get(originItemId));
-
-      return tree
-        .update("items", items => items.merge(newItems))
-        .setIn(["items", parentItem.get("id"), "children"], newParentChildren);
+        break;
+      }
+      case AT.EDIT_ITEM: {
+        const { editItemId, data } = action.payload;
+        const originalData = tree.items[editItemId].data;
+        tree.items[editItemId].data = { ...originalData, ...data };
+        break;
+      }
+      case AT.ON_DRAG_END: {
+        const source: TreeSourcePosition = action.payload.source;
+        const destination: TreeDestinationPosition = action.payload.destination;
+        if (!destination) return tree;
+        return moveItemOnTree(tree, source, destination);
+      }
+      case AT.TOGGLE_PROPERTY: {
+        const { id, prop } = action.payload;
+        const flag = tree.items[id][prop];
+        tree.items[id][prop] = !flag;
+        break;
+      }
+      default:
+        return tree;
     }
-    case AT.ON_DRAG_END:
-      const {
-        source,
-        destination
-      }: {
-        source: TreeSourcePosition;
-        destination: TreeDestinationPosition;
-      } = action.payload;
-      if (!destination) return tree;
-      return moveItemOnTree(tree, source, destination);
-    case AT.TOGGLE_PROPERTY:
-      const {
-        id,
-        property
-      }: {
-        id: ItemId;
-        property: Pick<
-          TreeItemIm,
-          "hasChildren" | "isExpanded" | "isChildrenLoading"
-        >;
-      } = action.payload;
-      return tree.updateIn(["items", id, property], flag => !flag);
-
-    default:
-      return tree;
   }
-};
-export default treeReducer;
+);

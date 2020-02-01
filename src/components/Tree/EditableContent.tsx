@@ -1,9 +1,9 @@
-import { ItemId } from "@atlaskit/tree";
+import { ItemId, TreeItem } from "@atlaskit/tree";
 import TextField from "@material-ui/core/TextField";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { editItem } from "../../actions";
-import { State, TreeItemIm } from "../../types";
+import { State } from "../../types";
 
 const EditableInput = ({
   value,
@@ -37,11 +37,11 @@ const EditableInput = ({
   );
 };
 
-const EditableSection = ({ item }: { item: TreeItemIm }) => {
-  const val = item.getIn(["data", "times"]) as number;
+const EditableSection = ({ item }: { item: TreeItem }) => {
+  const val = item.data.times;
   const dispatch = useDispatch();
   const onChange = e => {
-    dispatch(editItem(item.get("id"), { times: e.target.value }));
+    dispatch(editItem(item.id, { times: Number(e.target.value) }));
   };
   return (
     <span>
@@ -55,13 +55,11 @@ const EditableSection = ({ item }: { item: TreeItemIm }) => {
   );
 };
 
-const EditableTimer = ({ item }: { item: TreeItemIm }) => {
+const EditableTimer = ({ item }: { item: TreeItem }) => {
   const dispatch = useDispatch();
 
-  const itemId = item.get("id");
-  const times = item.getIn(["data", "times"]);
-  const timeLimit = item.getIn(["data", "timeLimit"]);
-  const power = item.getIn(["data", "power"]);
+  const itemId = item.id;
+  const { times, power, timeLimit } = item.data;
 
   const onChangeTimes = e => {
     dispatch(editItem(itemId, { times: e.target.value }));
@@ -96,12 +94,11 @@ const EditableTimer = ({ item }: { item: TreeItemIm }) => {
   );
 };
 
+export const isSection = (item: TreeItem) => item.children.length > 0;
+
 const EditableContent = ({ itemId }: { itemId: ItemId }) => {
-  const item = useSelector((state: State) =>
-    state.getIn(["tree", "items", itemId])
-  );
-  const isSection = item.getIn(["data", "timeLimit"]) === 0;
-  return isSection ? (
+  const item = useSelector((state: State) => state.tree.items[itemId]);
+  return isSection(item) ? (
     <EditableSection item={item} />
   ) : (
     <EditableTimer item={item} />
