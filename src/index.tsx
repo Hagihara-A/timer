@@ -14,13 +14,6 @@ let theme = createMuiTheme({
     secondary: {
       main: "#062457"
     }
-  },
-  overrides: {
-    MuiTextField: {
-      root: {
-        maxWidth: "50px"
-      }
-    }
   }
 });
 

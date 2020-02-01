@@ -1,5 +1,5 @@
 import { ItemId } from "@atlaskit/tree";
-import { styled, Typography, IconButton } from "@material-ui/core";
+import { styled, Typography, IconButton, Dialog } from "@material-ui/core";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import PlayCircleFilledWhiteIcon from "@material-ui/icons/PlayCircleFilledWhite";
@@ -18,6 +18,7 @@ import {
 } from "../actions";
 import { TimerList } from "./Timer/TimerList";
 import TimerTree from "./Tree/TimerTree";
+import { AddTimerDialog } from "./AddTimerDialog";
 
 const Heading = styled(({ children }) => (
   <Typography variant="h1" align="center">
@@ -34,10 +35,10 @@ const iconStyles = {
 
 const TimerApp = () => {
   const [isTree, setIsTree] = useState(true);
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const toggleIsTree = () => setIsTree(!isTree);
-  const toggle = () => {
-    toggleIsTree();
-  };
+  const toggleIsOpen = () => setIsOpenModal(!isOpenModal);
+
   const dispatch = useDispatch();
 
   const addTimerDispatch = (timeLimit: number) => {
@@ -63,10 +64,10 @@ const TimerApp = () => {
   const TimerTreeIcons = () => {
     return (
       <>
-        <IconButton>
+        <IconButton onClick={toggleIsOpen}>
           <AddCircleIcon {...iconStyles} />
         </IconButton>
-        <IconButton onClick={toggle}>
+        <IconButton onClick={toggleIsTree}>
           <CheckCircleIcon {...iconStyles} />
         </IconButton>
       </>
@@ -90,7 +91,7 @@ const TimerApp = () => {
           <StopIcon {...iconStyles} onClick={stopTimerDispatch} />
         </IconButton>
         <IconButton>
-          <RotateLeftIcon {...iconStyles} onClick={toggle} />
+          <RotateLeftIcon {...iconStyles} onClick={toggleIsTree} />
         </IconButton>
       </>
     );
@@ -143,6 +144,7 @@ const TimerApp = () => {
     <div>
       <Heading>Training Timer</Heading>
       {View}
+      <AddTimerDialog isOpen={isOpenModal} toggleIsOpen={toggleIsOpen} />
     </div>
   );
 };
