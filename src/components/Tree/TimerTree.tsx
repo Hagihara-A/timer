@@ -17,9 +17,10 @@ const TreeContainer = styled.div`
   max-width: 300px;
   margin: auto;
 `;
-const ItemContainer = styled.div`
-  border: solid lightblue;
-  vertical-align: text-top;
+const ItemContainer = styled.div<any>`
+  border-radius: 2px;
+  margin: 1px 0;
+  background-color: hsl(${props => 40 - props.depth * 15}, 50%, 50%);
 `;
 const Icon = ({ item, onExpand, onCollapse, depth }) => {
   if (item.children && item.children.length > 0) {
@@ -50,6 +51,7 @@ const renderItem = ({
       ref={provided.innerRef}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
+      depth={depth}
     >
       <Icon
         item={item}
