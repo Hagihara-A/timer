@@ -22,17 +22,14 @@ const TimerApp = () => {
   const transitions = useTransition(isTree, null, {
     from: {
       opacity: 0,
-      transform: `translate3d(${isTree ? -100 : 100}%,0,0)`,
-      position: "absolute",
-      left: "0",
-      right: "0"
+      xy: isTree ? [-100, 0] : [100, 0]
     },
-    enter: { opacity: 1, transform: "translate3d(0%,0,0)" },
+    enter: { opacity: 1, xy: [0, 0] },
     leave: {
       opacity: 0,
-      transform: `translate3d(${isTree ? 50 : -50}%,0,0)`
+      xy: isTree ? [50, 0] : [-50, 0]
     }
-  } as const);
+  });
 
   const iconStyles = {
     color: "primary",
@@ -41,10 +38,23 @@ const TimerApp = () => {
     style: { height: "100px", width: "100px" }
   } as const;
 
+  const translate = (x: Number, y: Number) => {
+    if (x === 0 && y === 0) return "none";
+    return `translate(${x}%, ${y}%`;
+  };
+
   const View = transitions.map(({ item, key, props }) => {
     return (
-      <>
-        <animated.div style={props} key={key}>
+      <div key={key}>
+        <animated.div
+          style={{
+            ...props,
+            transform: props.xy.to(translate),
+            position: "absolute",
+            left: 0,
+            right: 0
+          }}
+        >
           {item ? <TimerTree /> : <TimerList />}
         </animated.div>
 
@@ -64,17 +74,17 @@ const TimerApp = () => {
             <StopIcon {...iconStyles} />
           )}
         </animated.div>
-      </>
+      </div>
     );
   });
-  return <div>{View}</div>;
+  return (
+    <div>
+      <Typography variant="h1" align="center" style={{ lineHeight: "initial" }}>
+        Training Timer
+      </Typography>
+      {View}
+    </div>
+  );
 };
 
-export const Main = () => (
-  <>
-    <Typography variant="h1" align="center" style={{ lineHeight: "initial" }}>
-      Training Timer
-    </Typography>
-    <TimerApp />
-  </>
-);
+export const Main = () => <TimerApp />;

@@ -16,7 +16,7 @@ export const TimerList = () => {
     const item = timers[idx].item;
     const { timeLimit, power, times } = item.data;
     return (
-      <AnimatedTyporaphy style={spring} key={item.id} component="div">
+      <AnimatedTyporaphy style={spring} key={item.id}>
         {`${times} x ${timeLimit} sec at ${power} W`}
       </AnimatedTyporaphy>
     );
