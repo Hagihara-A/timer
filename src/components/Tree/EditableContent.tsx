@@ -20,6 +20,9 @@ const EditableInput = ({
       setIsEditing(!isEditing);
     }
   };
+  const onBlur = () => {
+    setIsEditing(false);
+  };
   const onClick = e => setIsEditing(!isEditing);
   return (
     <span>
@@ -29,6 +32,7 @@ const EditableInput = ({
           inputProps={inputProps}
           onChange={onChange}
           onKeyDown={onKeyDown}
+          onBlur={onBlur}
         />
       ) : (
         <span onClick={onClick}>&nbsp; {value} &nbsp;</span>
