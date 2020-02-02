@@ -63,8 +63,14 @@ export const treeReducer = (tree: Draft<TreeData>, action: Action) => {
       return tree;
     }
     case AT.REMOVE_ITEM: {
-      const removeItemId: ItemId = action.payload.removeItemId;
-      const allChildIds = getAllChildrenIds(tree, removeItemId);
+      const { parentId, index } = action.payload.source;
+
+      const allChildIds = getAllChildrenIds(
+        tree,
+        tree.items[parentId].children[index]
+      );
+      tree.items[parentId].children.splice(index, 1);
+
       for (const id of allChildIds) {
         delete tree.items[id];
       }

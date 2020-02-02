@@ -92,11 +92,11 @@ export const addSection = (parentId: ItemId, title: number) => {
     }
   };
 };
-export const removeItem = (removeItemId: ItemId) => {
+export const removeItem = (source: TreeSourcePosition) => {
   return {
     type: actionTypes.REMOVE_ITEM,
     payload: {
-      removeItemId
+      source
     }
   };
 };

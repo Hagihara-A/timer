@@ -1,4 +1,3 @@
-import { ItemId } from "@atlaskit/tree";
 import { styled, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
@@ -6,10 +5,9 @@ import { animated, useTransition } from "react-spring";
 import {
   addTreeItem,
   finishTimer,
-  removeItem,
+  parseTreeToTimers,
   startTimer,
-  stopTimer,
-  parseTreeToTimers
+  stopTimer
 } from "../actions";
 import { AddTimerDialog } from "./AddTimerDialog";
 import { TimerList } from "./Timer/TimerList";
@@ -41,10 +39,6 @@ const TimerApp = () => {
   const slideToTimerList = () => {
     dispatch(parseTreeToTimers());
     toggleIsTree();
-  };
-
-  const removeTimerDispatch = (itemId: ItemId) => {
-    dispatch(removeItem(itemId));
   };
 
   const startTimerDispatch = () => {

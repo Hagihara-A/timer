@@ -10,7 +10,11 @@ import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { onDragEnd as onDragEndAction, toggleProperty } from "../../actions";
+import {
+  onDragEnd as onDragEndAction,
+  toggleProperty,
+  removeItem
+} from "../../actions";
 import { State } from "../../types";
 import EditableContent from "./EditableContent";
 const TreeContainer = styled.div`
@@ -67,6 +71,7 @@ const renderItem = ({
 const TimerTree = () => {
   const dispatch = useDispatch();
   const tree = useSelector((state: State) => state.tree);
+  console.log(tree);
 
   const toggleIsExpanded = (itemId: ItemId) => {
     dispatch(toggleProperty(itemId, "isExpanded"));
@@ -75,11 +80,8 @@ const TimerTree = () => {
     source: TreeSourcePosition,
     destination: TreeDestinationPosition
   ) => {
-    if (!destination) {
-      return;
-    } else {
-      dispatch(onDragEndAction(source, destination));
-    }
+    if (!destination) dispatch(removeItem(source));
+    dispatch(onDragEndAction(source, destination));
   };
 
   return (
