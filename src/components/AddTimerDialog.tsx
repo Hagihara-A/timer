@@ -1,37 +1,51 @@
-import React from "react";
 import {
   Dialog,
-  TextField,
-  Typography,
+  DialogContent,
   DialogTitle,
-  DialogContent
+  TextField,
+  makeStyles
 } from "@material-ui/core";
+import React from "react";
 
-const sty = { margin: "10px" };
-export const AddTimerDialog = ({ isOpen, toggleIsOpen }) => {
+const useStyles = makeStyles({
+  root: {
+    margin: "10px"
+  }
+});
+export const AddTimerDialog = ({
+  open,
+  onClose
+}: {
+  open: boolean;
+  onClose: () => void;
+}) => {
+  const classes = useStyles();
   return (
-    <Dialog open={isOpen} onClose={toggleIsOpen}>
+    <Dialog open={open} onClose={onClose}>
       <DialogTitle>Input new Timer</DialogTitle>
       <DialogContent>
         <TextField
           variant="outlined"
           label="Repeat"
-          inputProps={{ type: "number", min: 1, defaultValue: 1 }}
-          style={sty}
+          inputProps={{
+            type: "number",
+            min: 1
+          }}
+          className={classes.root}
         />
         <br />
         <TextField
           variant="outlined"
           label="TimeLimit"
-          inputProps={{ type: "number", min: 1, defaultValue: 1 }}
-          style={sty}
+          inputProps={{ type: "number", min: 1 }}
+          className={classes.root}
         />
         <br />
         <TextField
           variant="outlined"
           label="Power"
-          inputProps={{ type: "number", min: 1, defaultValue: 1 }}
-          style={sty}
+          inputProps={{ type: "number", min: 1 }}
+          className={classes.root}
         />
         <br />
       </DialogContent>

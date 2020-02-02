@@ -16,6 +16,11 @@ export const TimerListIcons = ({
   onClickSkip,
   onClickStop,
   onClickReset
+}: {
+  onClickStart: () => void;
+  onClickSkip: () => void;
+  onClickStop: () => void;
+  onClickReset: () => void;
 }) => {
   const classes = useIconStyles();
 
