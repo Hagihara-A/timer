@@ -3,10 +3,11 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-  makeStyles
+  makeStyles,
+  DialogActions,
+  Button
 } from "@material-ui/core";
-import React from "react";
-
+import React, { useState } from "react";
 const useStyles = makeStyles({
   root: {
     margin: "10px"
@@ -14,17 +15,29 @@ const useStyles = makeStyles({
 });
 export const AddTimerDialog = ({
   open,
-  onClose
+  onClose,
+  onSubmit
 }: {
   open: boolean;
   onClose: () => void;
+  onSubmit: (times: number, time: number, power: number) => void;
 }) => {
   const classes = useStyles();
+  const [times, setTimes] = useState(0);
+  const [timeLimit, setTimeLimit] = useState(0);
+  const [power, setPower] = useState(0);
+
+  const onClickOK = () => {
+    onSubmit(times, timeLimit, power);
+    onClose();
+  };
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Input new Timer</DialogTitle>
       <DialogContent>
         <TextField
+          value={times}
+          onChange={e => setTimes(Number(e.target.value))}
           variant="outlined"
           label="Repeat"
           inputProps={{
@@ -35,6 +48,8 @@ export const AddTimerDialog = ({
         />
         <br />
         <TextField
+          value={timeLimit}
+          onChange={e => setTimeLimit(Number(e.target.value))}
           variant="outlined"
           label="TimeLimit"
           inputProps={{ type: "number", min: 1 }}
@@ -42,6 +57,8 @@ export const AddTimerDialog = ({
         />
         <br />
         <TextField
+          value={power}
+          onChange={e => setPower(Number(e.target.value))}
           variant="outlined"
           label="Power"
           inputProps={{ type: "number", min: 1 }}
@@ -49,6 +66,9 @@ export const AddTimerDialog = ({
         />
         <br />
       </DialogContent>
+      <DialogActions>
+        <Button onClick={onClickOK}>OK!</Button>
+      </DialogActions>
     </Dialog>
   );
 };

@@ -58,8 +58,8 @@ export const treeReducer = produce(
   (tree: Draft<TreeData> = initState.tree, action: Action) => {
     switch (action.type) {
       case AT.ADD_TREE_ITEM: {
-        const { parentId, timeLimit } = action.payload;
-        setNewItemOnTree(tree, parentId, { timeLimit });
+        const { parentId, ...data } = action.payload;
+        setNewItemOnTree(tree, parentId, { ...data });
         break;
       }
       case AT.REMOVE_ITEM: {

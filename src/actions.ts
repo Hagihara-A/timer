@@ -7,7 +7,6 @@ import {
 import { Timers, TimerTreeItemData } from "./types";
 
 export const actionTypes = {
-  ADD: "ADD",
   START: "START",
   PAUSE: "PAUSE",
   RESET: "RESET",
@@ -24,14 +23,7 @@ export const actionTypes = {
   TOGGLE_PROPERTY: "TOGGLE_PROPERTY",
   FLATTEN_TREE: "FLATTEN_TREE"
 } as const;
-export const addTime = (time: number) => {
-  return {
-    type: actionTypes.ADD,
-    payload: {
-      time
-    }
-  };
-};
+
 export const startTimer = () => {
   return {
     type: actionTypes.START
@@ -79,12 +71,15 @@ export const setTree = (tree: TreeData) => {
   };
 };
 
-export const addTreeItem = (parentId: ItemId, timeLimit: number) => {
+export const addTreeItem = (
+  parentId: ItemId,
+  treeItemData: Pick<TimerTreeItemData, "timeLimit" | "times" | "power">
+) => {
   return {
     type: actionTypes.ADD_TREE_ITEM,
     payload: {
       parentId,
-      timeLimit
+      ...treeItemData
     }
   };
 };

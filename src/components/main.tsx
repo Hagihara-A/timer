@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { animated, useTransition } from "react-spring";
 import {
-  addTimer,
+  addTreeItem,
   finishTimer,
   removeItem,
   startTimer,
@@ -32,8 +32,8 @@ const TimerApp = () => {
 
   const dispatch = useDispatch();
 
-  const addTimerDispatch = (timeLimit: number) => {
-    dispatch(addTimer("root", timeLimit));
+  const addTimer = (times: number, timeLimit: number, power: number) => {
+    dispatch(addTreeItem("root", { times, power, timeLimit }));
   };
 
   const removeTimerDispatch = (itemId: ItemId) => {
@@ -112,7 +112,11 @@ const TimerApp = () => {
     <div>
       <Heading>Training Timer</Heading>
       {View}
-      <AddTimerDialog open={isOpenModal} onClose={toggleIsOpen} />
+      <AddTimerDialog
+        open={isOpenModal}
+        onClose={toggleIsOpen}
+        onSubmit={addTimer}
+      />
     </div>
   );
 };
