@@ -28,7 +28,9 @@ export const AddTimerDialog = ({
   const [power, setPower] = useState(0);
 
   const onClickOK = () => {
-    onSubmit(times, timeLimit, power);
+    if (times > 0 && timeLimit > 0 && power > 0) {
+      onSubmit(times, timeLimit, power);
+    }
     onClose();
   };
   return (

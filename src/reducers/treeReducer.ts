@@ -7,8 +7,8 @@ import {
 } from "@atlaskit/tree";
 import produce, { Draft } from "immer";
 import { actionTypes as AT } from "../actions";
-import { initState } from "../initState";
-import { TimerTreeData as TreeData, Action } from "../types";
+import { Action, TimerTreeData as TreeData } from "../types";
+
 const initTreeItem: TreeItem = {
   id: undefined,
   children: [],
@@ -54,42 +54,43 @@ export const getAllChildrenIds = (
     [parentItemId]
   );
 };
-export const treeReducer = produce(
-  (tree: Draft<TreeData> = initState.tree, action: Action) => {
-    switch (action.type) {
-      case AT.ADD_TREE_ITEM: {
-        const { parentId, ...data } = action.payload;
-        setNewItemOnTree(tree, parentId, { ...data });
-        break;
+
+export const treeReducer = (tree: Draft<TreeData>, action: Action) => {
+  switch (action.type) {
+    case AT.ADD_TREE_ITEM: {
+      const { parentId, ...data } = action.payload;
+      setNewItemOnTree(tree, parentId, { ...data });
+      return tree;
+    }
+    case AT.REMOVE_ITEM: {
+      const removeItemId: ItemId = action.payload.removeItemId;
+      const allChildIds = getAllChildrenIds(tree, removeItemId);
+      for (const id of allChildIds) {
+        delete tree.items[id];
       }
-      case AT.REMOVE_ITEM: {
-        const removeItemId: ItemId = action.payload.removeItemId;
-        const allChildIds = getAllChildrenIds(tree, removeItemId);
-        for (const id of allChildIds) {
-          delete tree.items[id];
-        }
-        break;
-      }
-      case AT.EDIT_ITEM: {
-        const { editItemId, data } = action.payload;
-        const originalData = tree.items[editItemId].data;
-        tree.items[editItemId].data = { ...originalData, ...data };
-        break;
-      }
-      case AT.ON_DRAG_END: {
-        const source: TreeSourcePosition = action.payload.source;
-        const destination: TreeDestinationPosition = action.payload.destination;
-        if (!destination) return tree;
-        return moveItemOnTree(tree, source, destination);
-      }
-      case AT.TOGGLE_PROPERTY: {
-        const { id, prop } = action.payload;
-        const flag = tree.items[id][prop];
-        tree.items[id][prop] = !flag;
-        break;
-      }
-      default:
-        return tree;
+      return tree;
+    }
+    case AT.EDIT_ITEM: {
+      const { editItemId, data } = action.payload;
+      const originalData = tree.items[editItemId].data;
+      tree.items[editItemId].data = { ...originalData, ...data };
+      return tree;
+    }
+    case AT.ON_DRAG_END: {
+      const source: TreeSourcePosition = action.payload.source;
+      const destination: TreeDestinationPosition = action.payload.destination;
+      if (!destination) return tree;
+      return moveItemOnTree(tree, source, destination);
+    }
+    case AT.TOGGLE_PROPERTY: {
+      const { id, prop } = action.payload;
+
+      const flag = tree.items[id][prop];
+      tree.items[id][prop] = !flag;
+      return tree;
+    }
+    default: {
+      return tree;
     }
   }
-);
+};

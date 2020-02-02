@@ -8,7 +8,8 @@ import {
   finishTimer,
   removeItem,
   startTimer,
-  stopTimer
+  stopTimer,
+  parseTreeToTimers
 } from "../actions";
 import { AddTimerDialog } from "./AddTimerDialog";
 import { TimerList } from "./Timer/TimerList";
@@ -32,8 +33,14 @@ const TimerApp = () => {
 
   const dispatch = useDispatch();
 
+  // TimerTreeButton callback
   const addTimer = (times: number, timeLimit: number, power: number) => {
     dispatch(addTreeItem("root", { times, power, timeLimit }));
+  };
+
+  const slideToTimerList = () => {
+    dispatch(parseTreeToTimers());
+    toggleIsTree();
   };
 
   const removeTimerDispatch = (itemId: ItemId) => {
@@ -93,7 +100,7 @@ const TimerApp = () => {
           {item ? (
             <TimerTreeIcons
               onClickAdd={toggleIsOpen}
-              onClickComplete={toggleIsTree}
+              onClickComplete={slideToTimerList}
             />
           ) : (
             <TimerListIcons
