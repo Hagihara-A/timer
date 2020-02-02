@@ -1,24 +1,20 @@
 import { ItemId } from "@atlaskit/tree";
-import { styled, Typography, IconButton, Dialog } from "@material-ui/core";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import PlayCircleFilledWhiteIcon from "@material-ui/icons/PlayCircleFilledWhite";
-import RotateLeftIcon from "@material-ui/icons/RotateLeft";
-import SkipNextIcon from "@material-ui/icons/SkipNext";
-import StopIcon from "@material-ui/icons/Stop";
+import { styled, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { animated, useTransition } from "react-spring";
 import {
   addTimer,
+  finishTimer,
   removeItem,
   startTimer,
-  finishTimer,
   stopTimer
 } from "../actions";
-import { TimerList } from "./Timer/TimerList";
-import TimerTree from "./Tree/TimerTree";
 import { AddTimerDialog } from "./AddTimerDialog";
+import { TimerList } from "./Timer/TimerList";
+import { TimerListIcons } from "./Timer/TimerListButtons";
+import TimerTree from "./Tree/TimerTree";
+import { TimerTreeIcons } from "./Tree/TimerTreeButtons";
 
 const Heading = styled(({ children }) => (
   <Typography variant="h1" align="center">
@@ -27,11 +23,6 @@ const Heading = styled(({ children }) => (
 ))({
   lineHeight: "initial"
 });
-
-const iconStyles = {
-  color: "primary",
-  style: { height: "100px", width: "100px" }
-} as const;
 
 const TimerApp = () => {
   const [isTree, setIsTree] = useState(true);
@@ -61,41 +52,6 @@ const TimerApp = () => {
     dispatch(stopTimer());
   };
 
-  const TimerTreeIcons = () => {
-    return (
-      <>
-        <IconButton onClick={toggleIsOpen}>
-          <AddCircleIcon {...iconStyles} />
-        </IconButton>
-        <IconButton onClick={toggleIsTree}>
-          <CheckCircleIcon {...iconStyles} />
-        </IconButton>
-      </>
-    );
-  };
-
-  const TimerListIcons = () => {
-    return (
-      <>
-        <IconButton>
-          <PlayCircleFilledWhiteIcon
-            {...iconStyles}
-            onClick={startTimerDispatch}
-          />
-        </IconButton>
-
-        <IconButton>
-          <SkipNextIcon {...iconStyles} onClick={skipTimerDisparch} />
-        </IconButton>
-        <IconButton>
-          <StopIcon {...iconStyles} onClick={stopTimerDispatch} />
-        </IconButton>
-        <IconButton>
-          <RotateLeftIcon {...iconStyles} onClick={toggleIsTree} />
-        </IconButton>
-      </>
-    );
-  };
   const transitions = useTransition(isTree, null, {
     from: {
       opacity: 0,
@@ -134,7 +90,19 @@ const TimerApp = () => {
             bottom: "10px"
           }}
         >
-          {item ? <TimerTreeIcons /> : <TimerListIcons />}
+          {item ? (
+            <TimerTreeIcons
+              onClickAdd={toggleIsOpen}
+              onClickComplete={toggleIsTree}
+            />
+          ) : (
+            <TimerListIcons
+              onClickStart={startTimerDispatch}
+              onClickSkip={skipTimerDisparch}
+              onClickStop={stopTimerDispatch}
+              onClickReset={toggleIsTree}
+            />
+          )}
         </animated.div>
       </div>
     );
@@ -144,7 +112,7 @@ const TimerApp = () => {
     <div>
       <Heading>Training Timer</Heading>
       {View}
-      <AddTimerDialog isOpen={isOpenModal} toggleIsOpen={toggleIsOpen} />
+      <AddTimerDialog open={isOpenModal} onClose={toggleIsOpen} />
     </div>
   );
 };

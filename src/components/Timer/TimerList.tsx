@@ -1,5 +1,5 @@
 import { Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { animated, useSprings } from "react-spring";
 import { State } from "../../types";
