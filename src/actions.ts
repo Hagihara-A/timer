@@ -146,11 +146,8 @@ export const toggleProperty = (
   };
 };
 
-export const parseTimers = (sourceTree: TreeData) => {
+export const parseTreeToTimers = () => {
   return {
-    type: actionTypes.FLATTEN_TREE,
-    payload: {
-      sourceTree
-    }
+    type: actionTypes.FLATTEN_TREE
   };
 };
