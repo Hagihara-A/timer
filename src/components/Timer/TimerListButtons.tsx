@@ -26,33 +26,17 @@ export const TimerListIcons = ({
 
   return (
     <div className={classes.root}>
-      <IconButton>
-        <PlayCircleFilledWhiteIcon
-          onClick={onClickStart}
-          className={classes.root}
-          color="primary"
-        />
+      <IconButton onClick={onClickStart}>
+        <PlayCircleFilledWhiteIcon className={classes.root} color="primary" />
       </IconButton>
-      <IconButton>
-        <SkipNextIcon
-          onClick={onClickSkip}
-          className={classes.root}
-          color="primary"
-        />
+      <IconButton onClick={onClickSkip}>
+        <SkipNextIcon className={classes.root} color="primary" />
       </IconButton>
-      <IconButton>
-        <StopIcon
-          onClick={onClickStop}
-          className={classes.root}
-          color="primary"
-        />
+      <IconButton onClick={onClickStop}>
+        <StopIcon className={classes.root} color="primary" />
       </IconButton>
-      <IconButton>
-        <RotateLeftIcon
-          onClick={onClickReset}
-          className={classes.root}
-          color="primary"
-        />
+      <IconButton onClick={onClickReset}>
+        <RotateLeftIcon className={classes.root} color="primary" />
       </IconButton>
     </div>
   );
