@@ -5,7 +5,7 @@ import {
   TreeItem,
   TreeSourcePosition
 } from "@atlaskit/tree";
-import produce, { Draft } from "immer";
+import produce, { Draft, original } from "immer";
 import { actionTypes as AT } from "../actions";
 import { Action, TimerTreeData as TreeData } from "../types";
 
@@ -55,7 +55,7 @@ export const getAllChildrenIds = (
   );
 };
 
-export const treeReducer = (tree: Draft<TreeData>, action: Action) => {
+export const treeReducer = produce((tree: Draft<TreeData>, action: Action) => {
   switch (action.type) {
     case AT.ADD_TREE_ITEM: {
       const { parentId, ...data } = action.payload;
@@ -86,7 +86,8 @@ export const treeReducer = (tree: Draft<TreeData>, action: Action) => {
       const source: TreeSourcePosition = action.payload.source;
       const destination: TreeDestinationPosition = action.payload.destination;
       if (!destination) return tree;
-      return moveItemOnTree(tree, source, destination);
+      // TODO remove original()
+      return moveItemOnTree(original(original(tree)), source, destination);
     }
     case AT.TOGGLE_PROPERTY: {
       const { id, prop } = action.payload;
@@ -99,4 +100,4 @@ export const treeReducer = (tree: Draft<TreeData>, action: Action) => {
       return tree;
     }
   }
-};
+});
