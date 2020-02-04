@@ -36,7 +36,8 @@ test("getNewItemIds", () => {
 describe("treeReducer", () => {
   test(AT.ADD_TREE_ITEM, () => {
     const parentId = "3-2";
-    const action = addTreeItem(parentId, 1234);
+    const dataToAdd = { timeLimit: 4, times: 2, power: 123 };
+    const action = addTreeItem(parentId, dataToAdd);
     const newTree = treeReducer(tree, action);
     const parentItem = newTree.items[parentId];
 
@@ -46,16 +47,18 @@ describe("treeReducer", () => {
 
     expect(
       newTree.items[parentItem.children[parentItem.children.length - 1]].data
-        .timeLimit
-    ).toEqual(1234);
+    ).toEqual(dataToAdd);
   });
 
   test(AT.REMOVE_ITEM, () => {
-    const removeItemId = "3-2";
-    const action = removeItem(removeItemId);
+    const source = { parentId: "3-2", index: 1 };
+    const action = removeItem(source);
+    const childId = tree.items[source.parentId].children[source.index];
+
     const newTree = treeReducer(tree, action);
-    expect(newTree.items[removeItemId]).toBeUndefined();
-    const childId = tree.items[removeItemId].children[0];
+    expect(newTree.items[source.parentId].children).toHaveLength(
+      tree.items[source.parentId].children.length - 1
+    );
     expect(newTree.items[childId]).toBeUndefined();
     expect(newTree.items["3-1"]).not.toBeUndefined();
   });
