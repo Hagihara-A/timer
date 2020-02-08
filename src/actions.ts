@@ -1,75 +1,21 @@
 import {
   ItemId,
-  TreeData,
   TreeDestinationPosition,
   TreeSourcePosition
 } from "@atlaskit/tree";
-import { Timers, TimerTreeItemData } from "./types";
+import { TimerTreeItemData } from "./types";
 
 export const actionTypes = {
-  START: "START",
-  PAUSE: "PAUSE",
-  RESET: "RESET",
-  FINISH: "FINISH",
-  ADD_TIMER: "ADD_TIMER",
-  SET_TIMERS: "SET_TIMERS",
-  SET_TREE: "SET_TREE",
+  ADD_TIME: "ADD_TIME",
+  // for rootReducer
+  FLATTEN_TREE: "FLATTEN_TREE",
+  // for treeReducer
   ADD_TREE_ITEM: "ADD_TREE_ITEM",
-  ADD_SECTION: "ADD_SECTION",
   REMOVE_ITEM: "REMOVE_ITEM",
   EDIT_ITEM: "EDIT_ITEM",
-  COPY_ITEM: "COPY_ITEM",
   ON_DRAG_END: "ON_DRAG_END",
-  TOGGLE_PROPERTY: "TOGGLE_PROPERTY",
-  FLATTEN_TREE: "FLATTEN_TREE"
+  TOGGLE_PROPERTY: "TOGGLE_PROPERTY"
 } as const;
-
-export const startTimer = () => {
-  return {
-    type: actionTypes.START
-  };
-};
-export const stopTimer = () => {
-  return {
-    type: actionTypes.PAUSE
-  };
-};
-export const resetTimer = () => {
-  return {
-    type: actionTypes.RESET
-  };
-};
-export const finishTimer = () => {
-  return {
-    type: actionTypes.FINISH
-  };
-};
-export const addTimer = (parentId: ItemId, timeLimit: number) => {
-  return {
-    type: actionTypes.ADD_TIMER,
-    payload: {
-      parentId,
-      timeLimit
-    }
-  };
-};
-export const setTimers = (timers: Timers) => {
-  return {
-    type: actionTypes.SET_TIMERS,
-    payload: {
-      timers
-    }
-  };
-};
-
-export const setTree = (tree: TreeData) => {
-  return {
-    type: actionTypes.SET_TREE,
-    payload: {
-      tree
-    }
-  };
-};
 
 export const addTreeItem = (
   parentId: ItemId,
@@ -80,15 +26,6 @@ export const addTreeItem = (
     payload: {
       parentId,
       ...treeItemData
-    }
-  };
-};
-export const addSection = (parentId: ItemId, title: number) => {
-  return {
-    type: actionTypes.ADD_SECTION,
-    payload: {
-      parentId,
-      title
     }
   };
 };
@@ -109,14 +46,6 @@ export const editItem = (
     payload: {
       editItemId,
       data
-    }
-  };
-};
-export const copyItem = (originItemId: ItemId) => {
-  return {
-    type: actionTypes.COPY_ITEM,
-    payload: {
-      originItemId
     }
   };
 };
