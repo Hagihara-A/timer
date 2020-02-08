@@ -5,7 +5,7 @@ import {
   TreeItem,
   TreeSourcePosition
 } from "@atlaskit/tree";
-import produce, { Draft, original } from "immer";
+import produce, { Draft } from "immer";
 import { actionTypes as AT } from "../actions";
 import { Action, TimerTreeData as TreeData } from "../types";
 
@@ -60,7 +60,7 @@ export const treeReducer = produce((tree: Draft<TreeData>, action: Action) => {
     case AT.ADD_TREE_ITEM: {
       const { parentId, ...data } = action.payload;
       setNewItemOnTree(tree, parentId, { ...data });
-      return tree;
+      break;
     }
     case AT.REMOVE_ITEM: {
       const { parentId, index } = action.payload.source;
@@ -74,30 +74,29 @@ export const treeReducer = produce((tree: Draft<TreeData>, action: Action) => {
       for (const id of allChildIds) {
         delete tree.items[id];
       }
-      return tree;
+      break;
     }
     case AT.EDIT_ITEM: {
       const { editItemId, data } = action.payload;
       const originalData = tree.items[editItemId].data;
       tree.items[editItemId].data = { ...originalData, ...data };
-      return tree;
+      break;
     }
     case AT.ON_DRAG_END: {
       const source: TreeSourcePosition = action.payload.source;
       const destination: TreeDestinationPosition = action.payload.destination;
-      if (!destination) return tree;
-      // TODO remove original()
-      return moveItemOnTree(original(original(tree)), source, destination);
+      if (!destination) break;
+      return moveItemOnTree(tree, source, destination);
     }
     case AT.TOGGLE_PROPERTY: {
       const { id, prop } = action.payload;
 
       const flag = tree.items[id][prop];
       tree.items[id][prop] = !flag;
-      return tree;
+      break;
     }
     default: {
-      return tree;
+      break;
     }
   }
 });
