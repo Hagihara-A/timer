@@ -2,9 +2,10 @@ import { ItemId, TreeData, TreeItem } from "@atlaskit/tree";
 import { FlattenedItem } from "@atlaskit/tree/dist/cjs/types";
 import * as actionCreator from "./actions";
 
-export interface State {
-  readonly tree: TimerTreeData;
-  readonly timers: Timers;
+export type State = Readonly<MutableState>;
+export interface MutableState {
+  tree: TimerTreeData;
+  timers: Timers;
 }
 //  state.tree type definition
 export interface TimerTreeData extends TreeData {
@@ -19,6 +20,7 @@ export interface TimerTreeItemData {
   times: number;
   power: number;
   comment: string;
+  time: number;
 }
 
 // state.tree definition

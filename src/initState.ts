@@ -1,6 +1,7 @@
 import { flattenTree } from "@atlaskit/tree/dist/cjs/utils/tree";
+import { MutableState } from "./types";
 
-export const initState = {
+export const initState: MutableState = {
   tree: {
     rootId: "root",
     items: {
@@ -18,6 +19,7 @@ export const initState = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
+          time: 0,
           timeLimit: 3,
           times: 1,
           power: 130,
@@ -31,6 +33,7 @@ export const initState = {
         isExpanded: true,
         isChildrenLoading: false,
         data: {
+          time: 0,
           timeLimit: 0,
           times: 1,
           power: 0,
@@ -44,6 +47,7 @@ export const initState = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
+          time: 0,
           timeLimit: 2,
           times: 1,
           power: 260,
@@ -57,6 +61,7 @@ export const initState = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
+          time: 0,
           timeLimit: 2,
           times: 1,
           power: 260,
@@ -70,6 +75,7 @@ export const initState = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
+          time: 0,
           timeLimit: 5,
           times: 1,
           power: 260,
@@ -83,6 +89,7 @@ export const initState = {
         isExpanded: true,
         isChildrenLoading: false,
         data: {
+          time: 0,
           timeLimit: 0,
           times: 1,
           power: 0,
@@ -96,6 +103,7 @@ export const initState = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
+          time: 0,
           timeLimit: 2,
           times: 1,
           power: 150,
@@ -109,6 +117,7 @@ export const initState = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
+          time: 0,
           timeLimit: 2,
           times: 1,
           power: 150,
@@ -122,6 +131,7 @@ export const initState = {
         isExpanded: true,
         isChildrenLoading: false,
         data: {
+          time: 0,
           timeLimit: 0,
           times: 1,
           power: 0,
@@ -135,6 +145,7 @@ export const initState = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
+          time: 0,
           timeLimit: 3,
           times: 1,
           power: 150,
@@ -148,6 +159,7 @@ export const initState = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
+          time: 0,
           timeLimit: 3,
           times: 1,
           power: 150,
