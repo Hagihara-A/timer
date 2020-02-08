@@ -171,4 +171,7 @@ export const initState: MutableState = {
   timers: undefined
 };
 
-initState.timers = flattenTree(initState.tree);
+initState.timers = {
+  currentTimerIndex: 0,
+  timerList: flattenTree(initState.tree)
+};

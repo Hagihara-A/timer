@@ -23,8 +23,12 @@ export interface TimerTreeItemData {
   time: number;
 }
 
-// state.tree definition
-export type Timers = FlattendTreeItem[];
+// state.timers definition
+export interface Timers {
+  timerList: TimerList;
+  currentTimerIndex: number;
+}
+export type TimerList = FlattendTreeItem[];
 
 interface FlattendTreeItem extends FlattenedItem {
   item: TimerTreeItem;
