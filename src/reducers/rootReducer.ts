@@ -11,14 +11,13 @@ import { treeReducer } from "./treeReducer";
 export const rootReducer = produce((draft: Draft<State>, action: Action) => {
   switch (action.type) {
     case AT.FLATTEN_TREE: {
-      draft.timers = flattenTree(draft.tree);
-      return draft;
+      draft.timers.timerList = flattenTree(draft.tree);
+      break;
     }
     default: {
-      return {
-        tree: treeReducer(draft.tree, action),
-        timers: timersReducer(draft.timers, action)
-      };
+      draft.timers = timersReducer(draft.timers, action);
+      draft.tree = treeReducer(draft.tree, action);
+      break;
     }
   }
 }, initState);

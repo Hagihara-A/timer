@@ -9,6 +9,7 @@ export const actionTypes = {
   ADD_TIME: "ADD_TIME",
   // for rootReducer
   FLATTEN_TREE: "FLATTEN_TREE",
+  CHANGE_FOCUS: "CHANGE_FOCUS",
   // for treeReducer
   ADD_TREE_ITEM: "ADD_TREE_ITEM",
   REMOVE_ITEM: "REMOVE_ITEM",
@@ -17,6 +18,19 @@ export const actionTypes = {
   TOGGLE_PROPERTY: "TOGGLE_PROPERTY"
 } as const;
 
+export const addTime = () => {
+  return {
+    type: actionTypes.ADD_TIME,
+    payload: {}
+  };
+};
+
+export const moveCurrentTimerIndex = (mode: "+" | "-") => {
+  return {
+    type: actionTypes.CHANGE_FOCUS,
+    payload: { mode }
+  };
+};
 export const addTreeItem = (
   parentId: ItemId,
   treeItemData: Pick<TimerTreeItemData, "timeLimit" | "times" | "power">
