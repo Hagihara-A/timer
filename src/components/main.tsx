@@ -1,13 +1,12 @@
 import { styled, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { animated, useTransition } from "react-spring";
 import {
   addTreeItem,
-  finishTimer,
   parseTreeToTimers,
-  startTimer,
-  stopTimer
+  moveCurrentTimerIndex,
+  addTime
 } from "../actions";
 import { AddTimerDialog } from "./AddTimerDialog";
 import { TimerList } from "./Timer/TimerList";
@@ -30,7 +29,6 @@ const TimerApp = () => {
   const toggleIsOpen = () => setIsOpenModal(!isOpenModal);
 
   const dispatch = useDispatch();
-
   // TimerTreeButton callback
   const addTimer = (times: number, timeLimit: number, power: number) => {
     dispatch(addTreeItem("root", { times, power, timeLimit }));
@@ -41,16 +39,25 @@ const TimerApp = () => {
     toggleIsTree();
   };
 
+  // TimerList callback
+  let timerId = useRef<number>();
   const startTimerDispatch = () => {
-    dispatch(startTimer());
+    timerId.current = setInterval(() => dispatch(addTime()), 1000);
   };
 
   const skipTimerDisparch = () => {
-    dispatch(finishTimer());
+    clearInterval(timerId.current);
+    dispatch(moveCurrentTimerIndex("+"));
+    timerId.current = setInterval(() => dispatch(addTime()), 1000);
+  };
+
+  const resetTimerDispatch = () => {
+    clearInterval(timerId.current);
+    toggleIsTree();
   };
 
   const stopTimerDispatch = () => {
-    dispatch(stopTimer());
+    clearInterval(timerId.current);
   };
 
   const transitions = useTransition(isTree, null, {
@@ -101,7 +108,7 @@ const TimerApp = () => {
               onClickStart={startTimerDispatch}
               onClickSkip={skipTimerDisparch}
               onClickStop={stopTimerDispatch}
-              onClickReset={toggleIsTree}
+              onClickReset={resetTimerDispatch}
             />
           )}
         </animated.div>

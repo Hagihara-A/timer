@@ -3,7 +3,7 @@ import PlayCircleFilledWhiteIcon from "@material-ui/icons/PlayCircleFilledWhite"
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
 import SkipNextIcon from "@material-ui/icons/SkipNext";
 import StopIcon from "@material-ui/icons/Stop";
-import React from "react";
+import React, { useState } from "react";
 
 const useIconStyles = makeStyles({
   root: {
@@ -23,17 +23,31 @@ export const TimerListIcons = ({
   onClickReset: () => void;
 }) => {
   const classes = useIconStyles();
-
+  const [isElapsing, setIsElapsing] = useState(false);
   return (
     <div className={classes.root}>
-      <IconButton onClick={onClickStart}>
-        <PlayCircleFilledWhiteIcon className={classes.root} color="primary" />
-      </IconButton>
+      {isElapsing ? (
+        <IconButton
+          onClick={() => {
+            onClickStop();
+            setIsElapsing(!isElapsing);
+          }}
+        >
+          <StopIcon className={classes.root} color="primary" />
+        </IconButton>
+      ) : (
+        <IconButton
+          onClick={() => {
+            onClickStart();
+            setIsElapsing(!isElapsing);
+          }}
+        >
+          <PlayCircleFilledWhiteIcon className={classes.root} color="primary" />
+        </IconButton>
+      )}
+
       <IconButton onClick={onClickSkip}>
         <SkipNextIcon className={classes.root} color="primary" />
-      </IconButton>
-      <IconButton onClick={onClickStop}>
-        <StopIcon className={classes.root} color="primary" />
       </IconButton>
       <IconButton onClick={onClickReset}>
         <RotateLeftIcon className={classes.root} color="primary" />
