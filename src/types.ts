@@ -12,21 +12,25 @@ export interface TimerTreeData extends TreeData {
   items: Record<ItemId, TimerTreeItem>;
 }
 export interface TimerTreeItem extends TreeItem {
-  data?: TimerTreeItemData;
+  data?: TimerTreeItemData | SectionTreeItemData;
 }
 
 export interface TimerTreeItemData {
   timeLimit: number;
-  times: number;
   power: number;
   comment: string;
-  time: number;
+  elapsedTime: number;
+}
+
+export interface SectionTreeItemData {
+  repeat: number;
+  count: number;
 }
 
 // state.timers definition
 export interface Timers {
   timerList: TimerList;
-  currentTimerIndex: number;
+  currentTimerIndex: number | null;
 }
 export type TimerList = FlattendTreeItem[];
 
