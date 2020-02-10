@@ -33,7 +33,7 @@ export const moveCurrentTimerIndex = (mode: "+" | "-") => {
 };
 export const addTreeItem = (
   parentId: ItemId,
-  treeItemData: Pick<TimerTreeItemData, "timeLimit" | "times" | "power">
+  treeItemData: Pick<TimerTreeItemData, "timeLimit" | "power">
 ) => {
   return {
     type: actionTypes.ADD_TREE_ITEM,
