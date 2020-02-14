@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { editItem } from "../../actions";
 import { State } from "../../types";
+import { isSection } from "../../utils";
 
 const EditableInput = ({
   value,
@@ -23,7 +24,7 @@ const EditableInput = ({
   const onBlur = () => {
     setIsEditing(false);
   };
-  const onClick = e => setIsEditing(!isEditing);
+  const onClick = () => setIsEditing(!isEditing);
   return (
     <span>
       {isEditing ? (
@@ -45,7 +46,7 @@ const EditableSection = ({ item }: { item: TreeItem }) => {
   const val = item.data.times;
   const dispatch = useDispatch();
   const onChange = e => {
-    dispatch(editItem(item.id, { times: Number(e.target.value) }));
+    dispatch(editItem(item.id, { repeat: Number(e.target.value) }));
   };
   return (
     <span>
@@ -66,13 +67,13 @@ const EditableTimer = ({ item }: { item: TreeItem }) => {
   const { times, power, timeLimit } = item.data;
 
   const onChangeTimes = e => {
-    dispatch(editItem(itemId, { times: e.target.value }));
+    dispatch(editItem(itemId, { repeat: Number(e.target.value) }));
   };
   const onChangeTimeLimit = e => {
-    dispatch(editItem(itemId, { timeLimit: e.target.value }));
+    dispatch(editItem(itemId, { timeLimit: Number(e.target.value) }));
   };
   const onChangePower = e => {
-    dispatch(editItem(itemId, { power: e.target.value }));
+    dispatch(editItem(itemId, { power: Number(e.target.value) }));
   };
   return (
     <span>
@@ -98,11 +99,9 @@ const EditableTimer = ({ item }: { item: TreeItem }) => {
   );
 };
 
-export const isSection = (item: TreeItem) => item.children.length > 0;
-
 const EditableContent = ({ itemId }: { itemId: ItemId }) => {
   const item = useSelector((state: State) => state.tree.items[itemId]);
-  return isSection(item) ? (
+  return isSection(item.data) ? (
     <EditableSection item={item} />
   ) : (
     <EditableTimer item={item} />
