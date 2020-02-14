@@ -1,20 +1,24 @@
-import { ItemId, TreeData, TreeItem } from "@atlaskit/tree";
+import {
+  ItemId,
+  TreeData as AtlasTreeData,
+  TreeItem as AtlasTreeItem
+} from "@atlaskit/tree";
 import { FlattenedItem } from "@atlaskit/tree/dist/cjs/types";
 import * as actionCreator from "./actions";
 
 export type State = Readonly<MutableState>;
 export interface MutableState {
-  tree: TimerTreeData;
-  timers: Timers;
+  tree: TreeData;
+  timers: TimersListData;
 }
 //  state.tree type definition
-export interface TimerTreeData extends TreeData {
-  items: Record<ItemId, TimerTreeItem>;
+export interface TreeData extends AtlasTreeData {
+  items: Record<ItemId, TreeItem>;
 }
-export interface TimerTreeItem extends TreeItem {
-  data?: TimerTreeItemData | SectionTreeItemData;
+export interface TreeItem extends AtlasTreeItem {
+  data?: TreeItemData;
 }
-
+export type TreeItemData = TimerTreeItemData | SectionTreeItemData;
 export interface TimerTreeItemData {
   timeLimit: number;
   power: number;
@@ -25,17 +29,18 @@ export interface TimerTreeItemData {
 export interface SectionTreeItemData {
   repeat: number;
   count: number;
+  comment: string;
 }
 
 // state.timers definition
-export interface Timers {
+export interface TimersListData {
   timerList: TimerList;
   currentTimerIndex: number | null;
 }
 export type TimerList = FlattendTreeItem[];
 
 interface FlattendTreeItem extends FlattenedItem {
-  item: TimerTreeItem;
+  item: TreeItem;
 }
 
 // Action definition
