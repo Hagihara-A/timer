@@ -19,9 +19,8 @@ export const sampleState: MutableState = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          time: 0,
+          elapsedTime: 0,
           timeLimit: 3,
-          times: 1,
           power: 130,
           comment: ""
         }
@@ -33,10 +32,8 @@ export const sampleState: MutableState = {
         isExpanded: true,
         isChildrenLoading: false,
         data: {
-          time: 0,
-          timeLimit: 0,
-          times: 1,
-          power: 0,
+          repeat: 1,
+          count: 0,
           comment: ""
         }
       },
@@ -47,9 +44,8 @@ export const sampleState: MutableState = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          time: 0,
+          elapsedTime: 0,
           timeLimit: 2,
-          times: 1,
           power: 260,
           comment: ""
         }
@@ -61,9 +57,8 @@ export const sampleState: MutableState = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          time: 0,
+          elapsedTime: 0,
           timeLimit: 2,
-          times: 1,
           power: 260,
           comment: ""
         }
@@ -75,9 +70,8 @@ export const sampleState: MutableState = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          time: 0,
+          elapsedTime: 0,
           timeLimit: 5,
-          times: 1,
           power: 260,
           comment: ""
         }
@@ -89,10 +83,8 @@ export const sampleState: MutableState = {
         isExpanded: true,
         isChildrenLoading: false,
         data: {
-          time: 0,
-          timeLimit: 0,
-          times: 1,
-          power: 0,
+          repeat: 1,
+          count: 0,
           comment: ""
         }
       },
@@ -103,9 +95,8 @@ export const sampleState: MutableState = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          time: 0,
+          elapsedTime: 0,
           timeLimit: 2,
-          times: 1,
           power: 150,
           comment: ""
         }
@@ -117,9 +108,8 @@ export const sampleState: MutableState = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          time: 0,
+          elapsedTime: 0,
           timeLimit: 2,
-          times: 1,
           power: 150,
           comment: ""
         }
@@ -131,11 +121,9 @@ export const sampleState: MutableState = {
         isExpanded: true,
         isChildrenLoading: false,
         data: {
-          time: 0,
-          timeLimit: 0,
-          times: 1,
-          power: 0,
-          comment: ""
+          repeat: 1,
+          comment: "",
+          count: 0
         }
       },
       "3-2-0": {
@@ -145,9 +133,8 @@ export const sampleState: MutableState = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          time: 0,
+          elapsedTime: 0,
           timeLimit: 3,
-          times: 1,
           power: 150,
           comment: ""
         }
@@ -159,9 +146,8 @@ export const sampleState: MutableState = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
-          time: 0,
+          elapsedTime: 0,
           timeLimit: 3,
-          times: 1,
           power: 150,
           comment: ""
         }
