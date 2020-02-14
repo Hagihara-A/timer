@@ -3,7 +3,7 @@ import {
   TreeDestinationPosition,
   TreeSourcePosition
 } from "@atlaskit/tree";
-import { TimerTreeItemData } from "./types";
+import { TimerTreeItemData, TreeItemData } from "./types";
 
 export const actionTypes = {
   ADD_TIME: "ADD_TIME",
@@ -51,10 +51,7 @@ export const removeItem = (source: TreeSourcePosition) => {
     }
   };
 };
-export const editItem = (
-  editItemId: ItemId,
-  data: Partial<TimerTreeItemData>
-) => {
+export const editItem = (editItemId: ItemId, data: Partial<TreeItemData>) => {
   return {
     type: actionTypes.EDIT_ITEM,
     payload: {

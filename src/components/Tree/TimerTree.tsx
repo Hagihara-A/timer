@@ -2,7 +2,6 @@ import Tree, {
   ItemId,
   RenderItemParams,
   TreeDestinationPosition,
-  TreeItem,
   TreeSourcePosition
 } from "@atlaskit/tree";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
@@ -12,8 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import {
   onDragEnd as onDragEndAction,
-  toggleProperty,
-  removeItem
+  removeItem,
+  toggleProperty
 } from "../../actions";
 import { State } from "../../types";
 import EditableContent from "./EditableContent";
@@ -38,10 +37,6 @@ const Icon = ({ item, onExpand, onCollapse, depth }) => {
   }
 };
 
-const Content = ({ item }: { item: TreeItem }) => {
-  return <EditableContent itemId={item.id} />;
-};
-
 const renderItem = ({
   item,
   depth,
@@ -63,7 +58,7 @@ const renderItem = ({
         onCollapse={onCollapse}
         depth={depth}
       />
-      <Content item={item} />
+      <EditableContent itemId={item.id} />
     </ItemContainer>
   );
 };
@@ -71,7 +66,6 @@ const renderItem = ({
 const TimerTree = () => {
   const dispatch = useDispatch();
   const tree = useSelector((state: State) => state.tree);
-  console.log(tree);
 
   const toggleIsExpanded = (itemId: ItemId) => {
     dispatch(toggleProperty(itemId, "isExpanded"));
