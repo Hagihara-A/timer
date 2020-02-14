@@ -3,6 +3,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { animated, useSprings } from "react-spring";
 import { State } from "../../types";
+import { isSection } from "../../utils";
 
 const AnimatedTyporaphy = animated(Typography);
 
@@ -21,12 +22,22 @@ export const TimerList = () => {
 
   const ListItems = springs.map((spring, idx) => {
     const item = timers[idx].item;
-    const { timeLimit, power, times, time } = item.data;
-    return (
-      <AnimatedTyporaphy style={spring} key={item.id}>
-        {`${time}  :: ${times} x ${timeLimit} sec at ${power} W`}
-      </AnimatedTyporaphy>
-    );
+    if (isSection(item.data)) {
+      // must be Section
+      const { repeat, count } = item.data;
+      return (
+        <AnimatedTyporaphy style={spring} key={item.id}>
+          {`${count}/ ${repeat}`}
+        </AnimatedTyporaphy>
+      );
+    } else {
+      const { timeLimit, power, elapsedTime } = item.data;
+      return (
+        <AnimatedTyporaphy style={spring} key={item.id}>
+          {`${elapsedTime} /  ${timeLimit} sec @ ${power} W`}
+        </AnimatedTyporaphy>
+      );
+    }
   });
   return <div style={{ textAlign: "center" }}>{ListItems}</div>;
 };
