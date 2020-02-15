@@ -3,7 +3,7 @@ import React, { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { animated, useTransition } from "react-spring";
 import {
-  addTreeItem,
+  addTimer as addTimerAct,
   parseTreeToTimers,
   moveCurrentTimerIndex,
   addTime
@@ -31,7 +31,7 @@ const TimerApp = () => {
   const dispatch = useDispatch();
   // TimerTreeButton callback
   const addTimer = (timeLimit: number, power: number) => {
-    dispatch(addTreeItem("root", { power, timeLimit }));
+    dispatch(addTimerAct("root", { power, timeLimit, comment: "" }));
   };
 
   const slideToTimerList = () => {
