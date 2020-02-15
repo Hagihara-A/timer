@@ -2,12 +2,11 @@ import {
   ItemId,
   moveItemOnTree,
   TreeDestinationPosition,
-  TreeItem,
   TreeSourcePosition
 } from "@atlaskit/tree";
 import produce, { Draft } from "immer";
 import { actionTypes as AT } from "../actions";
-import { Action, TreeData } from "../types";
+import { Action, TreeData, TreeItem, TimerTreeItemData } from "../types";
 import { isTimer, isSection } from "../utils";
 
 const initTreeItem: TreeItem = {
@@ -30,12 +29,16 @@ export const getNewItemIds = (tree: TreeData, numIds: number) => {
 export const setNewItemOnTree = (
   tree: TreeData,
   parentId: ItemId,
-  data = {}
+  data: Pick<TimerTreeItemData, "power" | "timeLimit">
 ) => {
   const newId = getNewItemIds(tree, 1)[0];
   const newItem = produce(initTreeItem, draft => {
     draft.id = newId;
-    draft.data = data;
+    draft.data = {
+      elapsedTime: 0,
+      comment: "",
+      ...data
+    };
   });
   tree.items[parentId].children.push(newId);
   tree.items[newId] = newItem;
