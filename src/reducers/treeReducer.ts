@@ -6,8 +6,8 @@ import {
 } from "@atlaskit/tree";
 import produce, { Draft } from "immer";
 import { actionTypes as AT } from "../actions";
-import { Action, TreeData, TreeItem, TimerTreeItemData } from "../types";
-import { isTimer, isSection } from "../utils";
+import { Action, EditableTimerData, TreeData, TreeItem } from "../types";
+import { isSection, isTimer } from "../utils";
 
 const initTreeItem: TreeItem = {
   id: undefined,
@@ -29,7 +29,7 @@ export const getNewItemIds = (tree: TreeData, numIds: number) => {
 export const setNewItemOnTree = (
   tree: TreeData,
   parentId: ItemId,
-  data: Pick<TimerTreeItemData, "power" | "timeLimit">
+  data: EditableTimerData
 ) => {
   const newId = getNewItemIds(tree, 1)[0];
   const newItem = produce(initTreeItem, draft => {
@@ -61,7 +61,7 @@ export const getAllChildrenIds = (
 
 export const treeReducer = produce((tree: Draft<TreeData>, action: Action) => {
   switch (action.type) {
-    case AT.ADD_TREE_ITEM: {
+    case AT.ADD_TIMER: {
       const { parentId, ...data } = action.payload;
       setNewItemOnTree(tree, parentId, { ...data });
       break;
@@ -88,7 +88,7 @@ export const treeReducer = produce((tree: Draft<TreeData>, action: Action) => {
         tree.items[editItemId].data = newData;
       } else {
         throw new TypeError(
-          `data:${JSON.stringify(data)} must be TimerTreeItemData`
+          `data:${JSON.stringify(newData)} must be TimerTreeItemData`
         );
       }
       break;

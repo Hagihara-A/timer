@@ -32,6 +32,14 @@ export interface SectionTreeItemData {
   comment: string;
 }
 
+export type EditableTimerData = Pick<
+  TimerTreeItemData,
+  "power" | "timeLimit" | "comment"
+>;
+export type EditableSectionData = Pick<
+  SectionTreeItemData,
+  "repeat" | "comment"
+>;
 // state.timers definition
 export interface TimersListData {
   timerList: TimerList;
