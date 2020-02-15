@@ -7,14 +7,16 @@ import {
 import { sampleState } from "./testData";
 import {
   actionTypes as AT,
-  addTreeItem,
+  addTimer,
   removeItem,
-  toggleProperty
+  toggleProperty,
+  editTimer,
+  editSection
 } from "../actions";
 
 const tree = sampleState.tree;
 test("setNewItemOnTree", () => {
-  const dataToadd = { power: 120, timeLimit: 40 };
+  const dataToadd = { power: 120, timeLimit: 40, comment: "" };
   const parentId = "3-2-1";
   const newTree = produce(tree, draft =>
     setNewItemOnTree(draft, parentId, dataToadd)
@@ -33,10 +35,10 @@ test("getNewItemIds", () => {
 });
 
 describe("treeReducer", () => {
-  test(AT.ADD_TREE_ITEM, () => {
+  test(AT.ADD_TIMER, () => {
     const parentId = "3-2";
-    const dataToAdd = { timeLimit: 4, power: 123 };
-    const action = addTreeItem(parentId, dataToAdd);
+    const dataToAdd = { timeLimit: 4, power: 123, comment: "" };
+    const action = addTimer(parentId, dataToAdd);
     const newTree = treeReducer(tree, action);
     const parentItem = newTree.items[parentId];
 
@@ -62,16 +64,20 @@ describe("treeReducer", () => {
     expect(newTree.items["3-1"]).not.toBeUndefined();
   });
 
-  test(AT.EDIT_ITEM, () => {
-    const id = "3-2";
-    const newData = { title: "edited" };
-    const action = editItem(id, newData);
+  test(AT.EDIT_TIMER, () => {
+    const id = "3-2-0";
+    const data = { power: 30, timeLimit: 345 };
+    const action = editTimer(id, data);
     const newTree = treeReducer(tree, action);
-    expect(newTree.items[id].data.title).toBe(newData.title);
-    expect(newTree.items[id].data).toEqual({
-      ...tree.items[id].data,
-      ...newData
-    });
+    expect(newTree.items[id].data).toMatchObject(data);
+  });
+
+  test(AT.EDIT_SECTION, () => {
+    const id = "3-2";
+    const data = { repeat: 10 };
+    const action = editSection(id, data);
+    const newTree = treeReducer(tree, action);
+    expect(newTree.items[id].data).toMatchObject(data);
   });
 
   test(AT.TOGGLE_PROPERTY, () => {
@@ -79,11 +85,5 @@ describe("treeReducer", () => {
     const action = toggleProperty(id, "isExpanded");
     const newTree = treeReducer(tree, action);
     expect(newTree.items[id].isExpanded).toBe(!tree.items[id].isExpanded);
-  });
-
-  test("unknown action", () => {
-    const action = { unknown: "no action" };
-    const newTree = treeReducer(tree, action);
-    expect(newTree).toBe(tree);
   });
 });
