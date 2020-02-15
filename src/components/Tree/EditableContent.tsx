@@ -1,10 +1,10 @@
-import { ItemId, TreeItem } from "@atlaskit/tree";
+import { ItemId } from "@atlaskit/tree";
 import TextField from "@material-ui/core/TextField";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { editItem } from "../../actions";
-import { State } from "../../types";
-import { isSection } from "../../utils";
+import { editSection, editTimer } from "../../actions";
+import { SectionTreeItemData, State, TimerTreeItemData } from "../../types";
+import { isSection, isTimer } from "../../utils";
 
 const EditableInput = ({
   value,
@@ -42,16 +42,22 @@ const EditableInput = ({
   );
 };
 
-const EditableSection = ({ item }: { item: TreeItem }) => {
-  const val = item.data.times;
+const EditableSection = ({
+  id,
+  data
+}: {
+  id: ItemId;
+  data: SectionTreeItemData;
+}) => {
+  const { repeat } = data;
   const dispatch = useDispatch();
   const onChange = e => {
-    dispatch(editItem(item.id, { repeat: Number(e.target.value) }));
+    dispatch(editSection(id, { repeat: Number(e.target.value) }));
   };
   return (
     <span>
       <EditableInput
-        value={val}
+        value={repeat}
         onChange={onChange}
         inputProps={{ type: "number", min: 1 }}
       />
@@ -60,29 +66,25 @@ const EditableSection = ({ item }: { item: TreeItem }) => {
   );
 };
 
-const EditableTimer = ({ item }: { item: TreeItem }) => {
+const EditableTimer = ({
+  id,
+  data
+}: {
+  id: ItemId;
+  data: TimerTreeItemData;
+}) => {
   const dispatch = useDispatch();
 
-  const itemId = item.id;
-  const { times, power, timeLimit } = item.data;
+  const { power, timeLimit } = data;
 
-  const onChangeTimes = e => {
-    dispatch(editItem(itemId, { repeat: Number(e.target.value) }));
-  };
   const onChangeTimeLimit = e => {
-    dispatch(editItem(itemId, { timeLimit: Number(e.target.value) }));
+    dispatch(editTimer(id, { timeLimit: Number(e.target.value) }));
   };
   const onChangePower = e => {
-    dispatch(editItem(itemId, { power: Number(e.target.value) }));
+    dispatch(editTimer(id, { power: Number(e.target.value) }));
   };
   return (
     <span>
-      <EditableInput
-        value={times}
-        onChange={onChangeTimes}
-        inputProps={{ type: "number", min: 1 }}
-      />
-      {"x"}
       <EditableInput
         value={timeLimit}
         onChange={onChangeTimeLimit}
@@ -101,11 +103,12 @@ const EditableTimer = ({ item }: { item: TreeItem }) => {
 
 const EditableContent = ({ itemId }: { itemId: ItemId }) => {
   const item = useSelector((state: State) => state.tree.items[itemId]);
-  return isSection(item.data) ? (
-    <EditableSection item={item} />
-  ) : (
-    <EditableTimer item={item} />
-  );
+  const { data } = item;
+  if (isSection(data)) {
+    return <EditableSection id={item.id} data={data} />;
+  } else if (isTimer(data)) {
+    return <EditableTimer id={item.id} data={data} />;
+  }
 };
 
 export default EditableContent;
