@@ -9,13 +9,12 @@ import {
   actionTypes as AT,
   addTreeItem,
   removeItem,
-  editItem,
   toggleProperty
 } from "../actions";
 
 const tree = sampleState.tree;
 test("setNewItemOnTree", () => {
-  const dataToadd = { test: "testItem" };
+  const dataToadd = { power: 120, timeLimit: 40 };
   const parentId = "3-2-1";
   const newTree = produce(tree, draft =>
     setNewItemOnTree(draft, parentId, dataToadd)
@@ -25,7 +24,7 @@ test("setNewItemOnTree", () => {
   );
   const parentItem = newTree.items[parentId];
   const childId = parentItem.children[parentItem.children.length - 1];
-  expect(newTree.items[childId].data).toEqual(dataToadd);
+  expect(newTree.items[childId].data).toMatchObject(dataToadd);
 });
 
 test("getNewItemIds", () => {
@@ -36,7 +35,7 @@ test("getNewItemIds", () => {
 describe("treeReducer", () => {
   test(AT.ADD_TREE_ITEM, () => {
     const parentId = "3-2";
-    const dataToAdd = { timeLimit: 4, times: 2, power: 123 };
+    const dataToAdd = { timeLimit: 4, power: 123 };
     const action = addTreeItem(parentId, dataToAdd);
     const newTree = treeReducer(tree, action);
     const parentItem = newTree.items[parentId];
@@ -47,7 +46,7 @@ describe("treeReducer", () => {
 
     expect(
       newTree.items[parentItem.children[parentItem.children.length - 1]].data
-    ).toEqual(dataToAdd);
+    ).toMatchObject(dataToAdd);
   });
 
   test(AT.REMOVE_ITEM, () => {
