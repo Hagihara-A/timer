@@ -7,7 +7,8 @@ import {
 } from "@atlaskit/tree";
 import produce, { Draft } from "immer";
 import { actionTypes as AT } from "../actions";
-import { Action, TimerTreeData as TreeData } from "../types";
+import { Action, TreeData } from "../types";
+import { isTimer, isSection } from "../utils";
 
 const initTreeItem: TreeItem = {
   id: undefined,
@@ -76,10 +77,30 @@ export const treeReducer = produce((tree: Draft<TreeData>, action: Action) => {
       }
       break;
     }
-    case AT.EDIT_ITEM: {
+    case AT.EDIT_TIMER: {
       const { editItemId, data } = action.payload;
       const originalData = tree.items[editItemId].data;
-      tree.items[editItemId].data = { ...originalData, ...data };
+      const newData = { ...originalData, ...data };
+      if (isTimer(newData)) {
+        tree.items[editItemId].data = newData;
+      } else {
+        throw new TypeError(
+          `data:${JSON.stringify(data)} must be TimerTreeItemData`
+        );
+      }
+      break;
+    }
+    case AT.EDIT_SECTION: {
+      const { editItemId, data } = action.payload;
+      const originalData = tree.items[editItemId].data;
+      const newData = { ...originalData, ...data };
+      if (isSection(newData)) {
+        tree.items[editItemId].data = newData;
+      } else {
+        throw new TypeError(
+          `data:${JSON.stringify(data)} must be SectionTreeItemData`
+        );
+      }
       break;
     }
     case AT.ON_DRAG_END: {
