@@ -30,8 +30,8 @@ const TimerApp = () => {
 
   const dispatch = useDispatch();
   // TimerTreeButton callback
-  const addTimer = (times: number, timeLimit: number, power: number) => {
-    dispatch(addTreeItem("root", { times, power, timeLimit }));
+  const addTimer = (timeLimit: number, power: number) => {
+    dispatch(addTreeItem("root", { power, timeLimit }));
   };
 
   const slideToTimerList = () => {
