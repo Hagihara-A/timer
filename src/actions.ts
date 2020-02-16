@@ -26,10 +26,9 @@ export const addTime = () => {
   };
 };
 
-export const moveCurrentTimerIndex = (mode: "+" | "-") => {
+export const forwardCurrentTimerIndex = () => {
   return {
-    type: actionTypes.CHANGE_FOCUS,
-    payload: { mode }
+    type: actionTypes.CHANGE_FOCUS
   };
 };
 export const addTimer = (parentId: ItemId, treeItemData: EditableTimerData) => {
