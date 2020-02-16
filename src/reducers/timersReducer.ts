@@ -1,24 +1,46 @@
 import produce, { Draft } from "immer";
-import { initState } from "../initState";
-import { Action, Timers } from "../types";
 import { actionTypes as AT } from "../actions";
-export const timersReducer = produce((draft: Draft<Timers>, action: Action) => {
-  switch (action.type) {
-    case AT.CHANGE_FOCUS: {
-      const { mode } = action.payload;
-      if (mode === "+") {
-        draft.currentTimerIndex++;
-      } else {
-        draft.currentTimerIndex--;
+import { initState } from "../initState";
+import { Action, TimersListData, TimerList } from "../types";
+import { isTimer } from "../utils";
+
+export const nextFocus = (timerList: TimerList, focus: number) => {
+  return (
+    timerList.slice(focus + 1).findIndex(v => isTimer(v.item.data)) + focus + 1
+  );
+};
+export const timersReducer = produce(
+  (draft: Draft<TimersListData>, action: Action) => {
+    switch (action.type) {
+      case AT.CHANGE_FOCUS: {
+        draft.currentTimerIndex = nextFocus(
+          draft.timerList,
+          draft.currentTimerIndex
+        );
+        break;
       }
-      break;
+      case AT.ADD_TIME: {
+        const focus = draft.currentTimerIndex;
+        const currTimer = draft.timerList[focus].item;
+        if (isTimer(currTimer.data)) {
+          if (currTimer.data.elapsedTime < currTimer.data.timeLimit) {
+            currTimer.data.elapsedTime++;
+          }
+          // do focus++ until item is Timer
+          if (currTimer.data.elapsedTime >= currTimer.data.timeLimit) {
+            const nextTimerIdx = nextFocus(draft.timerList, focus);
+            draft.currentTimerIndex = nextTimerIdx;
+          }
+        } else {
+          throw new TypeError(
+            `currentTimerIndex:${draft.currentTimerIndex}  indecates Section`
+          );
+        }
+        break;
+      }
+      default:
+        break;
     }
-    case AT.ADD_TIME: {
-      const focus = draft.currentTimerIndex;
-      draft.timerList[focus].item.data.time++;
-      break;
-    }
-    default:
-      break;
-  }
-}, initState.timers);
+  },
+  initState.timers
+);
