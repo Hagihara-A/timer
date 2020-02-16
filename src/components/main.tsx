@@ -5,7 +5,7 @@ import { animated, useTransition } from "react-spring";
 import {
   addTimer as addTimerAct,
   parseTreeToTimers,
-  moveCurrentTimerIndex,
+  forwardCurrentTimerIndex,
   addTime
 } from "../actions";
 import { AddTimerDialog } from "./AddTimerDialog";
@@ -47,7 +47,7 @@ const TimerApp = () => {
 
   const skipTimerDisparch = () => {
     clearInterval(timerId.current);
-    dispatch(moveCurrentTimerIndex("+"));
+    dispatch(forwardCurrentTimerIndex());
     timerId.current = setInterval(() => dispatch(addTime()), 1000);
   };
 
