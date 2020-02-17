@@ -1,18 +1,19 @@
 import produce from "immer";
 import {
-  setNewItemOnTree,
-  treeReducer,
-  getNewItemIds
-} from "../reducers/treeReducer";
-import { sampleState } from "./testData";
-import {
   actionTypes as AT,
   addTimer,
-  removeItem,
-  toggleProperty,
+  editSection,
   editTimer,
-  editSection
+  onDragEnd,
+  removeItem,
+  toggleProperty
 } from "../actions";
+import {
+  getNewItemIds,
+  setNewItemOnTree,
+  treeReducer
+} from "../reducers/treeReducer";
+import { sampleState } from "./testData";
 
 const tree = sampleState.tree;
 test("setNewItemOnTree", () => {
@@ -85,5 +86,36 @@ describe("treeReducer", () => {
     const action = toggleProperty(id, "isExpanded");
     const newTree = treeReducer(tree, action);
     expect(newTree.items[id].isExpanded).toBe(!tree.items[id].isExpanded);
+  });
+  test(`${AT.ON_DRAG_END} Timer -> Timer`, () => {
+    const srcPos = { parentId: "1", index: 0 };
+    const dstPos = { parentId: "3-2-0" };
+    const srcId = tree.items[srcPos.parentId].children[srcPos.index];
+    const dstId = dstPos.parentId;
+    const action = onDragEnd(srcPos, dstPos);
+    const newTree = treeReducer(tree, action);
+    const newSrcParent = Object.values(newTree.items).find(item =>
+      item.children.some(id => id === srcId)
+    );
+    const newDstParent = Object.values(newTree.items).find(item =>
+      item.children.some(id => id === dstId)
+    );
+    expect(newSrcParent.id).toBe(newDstParent.id);
+    expect(newTree.items[srcPos.parentId].children).not.toContain(srcId);
+    expect(newTree.items[dstPos.parentId].children).not.toContain(dstId);
+    expect(newSrcParent.children).toEqual([dstId, srcId]);
+  });
+
+  test(`${AT.ON_DRAG_END} Timer -> Section`, () => {
+    const srcPos = { parentId: "1", index: 0 };
+    const dstPos = { parentId: "3" };
+    const srcId = tree.items[srcPos.parentId].children[srcPos.index];
+    const action = onDragEnd(srcPos, dstPos);
+    const newTree = treeReducer(tree, action);
+    const newSrcParent = Object.values(newTree.items).find(item =>
+      item.children.some(id => id === srcId)
+    );
+    expect(newSrcParent.id).toBe(dstPos.parentId);
+    expect(newSrcParent.children).toContain(srcId);
   });
 });
