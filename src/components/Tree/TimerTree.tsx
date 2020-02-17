@@ -74,7 +74,7 @@ const TimerTree = () => {
     source: TreeSourcePosition,
     destination: TreeDestinationPosition
   ) => {
-    if (!destination) dispatch(removeItem(source));
+    // if (!destination) dispatch(removeItem(source));
     dispatch(onDragEndAction(source, destination));
   };
 
