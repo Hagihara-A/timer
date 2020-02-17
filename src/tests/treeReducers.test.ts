@@ -106,6 +106,25 @@ describe("treeReducer", () => {
     expect(newSrcParent.children).toEqual([dstId, srcId]);
   });
 
+  test(`${AT.ON_DRAG_END} Timer -> Timer @ same Level`, () => {
+    const srcPos = { parentId: "1", index: 0 };
+    const dstPos = { parentId: "1-1" };
+    const srcId = tree.items[srcPos.parentId].children[srcPos.index];
+    const dstId = dstPos.parentId;
+    const action = onDragEnd(srcPos, dstPos);
+    const newTree = treeReducer(tree, action);
+    const newSrcParent = Object.values(newTree.items).find(item =>
+      item.children.some(id => id === srcId)
+    );
+    const newDstParent = Object.values(newTree.items).find(item =>
+      item.children.some(id => id === dstId)
+    );
+    expect(newSrcParent.id).toBe(newDstParent.id);
+    expect(newTree.items[srcPos.parentId].children).not.toContain(srcId);
+    expect(newTree.items[dstPos.parentId].children).not.toContain(dstId);
+    expect(newSrcParent.children).toEqual([dstId, srcId]);
+  });
+
   test(`${AT.ON_DRAG_END} Timer -> Section`, () => {
     const srcPos = { parentId: "1", index: 0 };
     const dstPos = { parentId: "3" };
