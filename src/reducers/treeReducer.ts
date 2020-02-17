@@ -6,7 +6,13 @@ import {
 } from "@atlaskit/tree";
 import produce, { Draft } from "immer";
 import { actionTypes as AT } from "../actions";
-import { Action, EditableTimerData, TreeData, TreeItem } from "../types";
+import {
+  Action,
+  EditableTimerData,
+  SectionTreeItemData,
+  TreeData,
+  TreeItem
+} from "../types";
 import { isSection, isTimer } from "../utils";
 
 const initTreeItem: TreeItem = {
@@ -59,6 +65,58 @@ export const getAllChildrenIds = (
   );
 };
 
+export const getItemFromPosition = (
+  tree: TreeData,
+  position: TreeDestinationPosition
+) => {
+  if (typeof position.index === "undefined") {
+    return tree.items[position.parentId];
+  } else {
+    const id = tree.items[position.parentId].children[position.index];
+    return tree.items[id];
+  }
+};
+export const combineTwoTimersIntoSection = (
+  tree: TreeData,
+  src: TreeSourcePosition,
+  dst: TreeDestinationPosition
+) => {
+  // construct new section
+  const dstItem = getItemFromPosition(tree, dst);
+  const srcItem = getItemFromPosition(tree, src);
+  const newSectionId = getNewItemIds(tree, 1)[0];
+  const newSectionData: SectionTreeItemData = {
+    repeat: 1,
+    count: 0,
+    comment: ""
+  };
+  const newSection = {
+    ...initTreeItem,
+    id: newSectionId,
+    data: newSectionData,
+    children: [dstItem.id, srcItem.id]
+  };
+
+  const dstParentItem = Object.values(tree.items).find(item =>
+    item.children.some(id => id === dstItem.id)
+  );
+  const dstItemPosition = {
+    parentId: dstParentItem.id,
+    index: dstParentItem.children.findIndex(id => id === dstItem.id)
+  };
+
+  // remove src deps
+  tree.items[src.parentId].children.splice(src.index, 1);
+  // replace dstItem.id to newSection
+  tree.items[dstItemPosition.parentId].children.splice(
+    dstItemPosition.index,
+    1,
+    newSectionId
+  );
+
+  // add newSection
+  tree.items[newSectionId] = newSection;
+};
 export const treeReducer = produce((tree: Draft<TreeData>, action: Action) => {
   switch (action.type) {
     case AT.ADD_TIMER: {
@@ -107,10 +165,19 @@ export const treeReducer = produce((tree: Draft<TreeData>, action: Action) => {
       break;
     }
     case AT.ON_DRAG_END: {
-      const source: TreeSourcePosition = action.payload.source;
-      const destination: TreeDestinationPosition = action.payload.destination;
-      if (!destination) break;
-      return moveItemOnTree(tree, source, destination);
+      const src = action.payload.source;
+      const dst = action.payload.destination;
+
+      const dstItem = getItemFromPosition(tree, dst);
+
+      if (!dst) break;
+
+      if (typeof dst.index === "undefined" && isTimer(dstItem.data)) {
+        combineTwoTimersIntoSection(tree, src, dst);
+        break;
+      } else {
+        return moveItemOnTree(tree, src, dst);
+      }
     }
     case AT.TOGGLE_PROPERTY: {
       const { id, prop } = action.payload;
