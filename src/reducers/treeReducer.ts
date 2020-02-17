@@ -106,13 +106,13 @@ export const combineTwoTimersIntoSection = (
   };
 
   // remove src deps
-  tree.items[src.parentId].children.splice(src.index, 1);
-  // replace dstItem.id to newSection
-  tree.items[dstItemPosition.parentId].children.splice(
-    dstItemPosition.index,
-    1,
-    newSectionId
+  tree.items[src.parentId].children = tree.items[src.parentId].children.filter(
+    id => id !== srcItem.id
   );
+  // replace dstItem.id to newSection
+  tree.items[dstItemPosition.parentId].children = tree.items[
+    dstItemPosition.parentId
+  ].children.map(id => (id === dstItem.id ? newSectionId : id));
 
   // add newSection
   tree.items[newSectionId] = newSection;
@@ -173,6 +173,8 @@ export const treeReducer = produce((tree: Draft<TreeData>, action: Action) => {
       if (!dst) break;
 
       if (typeof dst.index === "undefined" && isTimer(dstItem.data)) {
+        console.log("combine");
+
         combineTwoTimersIntoSection(tree, src, dst);
         break;
       } else {
