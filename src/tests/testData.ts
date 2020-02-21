@@ -121,7 +121,7 @@ export const sampleState: MutableState = {
         isExpanded: true,
         isChildrenLoading: false,
         data: {
-          repeat: 1,
+          repeat: 3,
           comment: "",
           count: 0
         }
