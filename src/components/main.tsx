@@ -30,7 +30,13 @@ const TimerApp = () => {
 
   const dispatch = useDispatch();
   // TimerTreeButton callback
-  const addTimer = ({ timeLimit, power, comment }) => {
+  const addTimer = ({
+    timeLimit,
+    power
+  }: {
+    timeLimit: number;
+    power: number;
+  }) => {
     dispatch(addTimerAct("root", { power, timeLimit, comment: "" }));
   };
 
