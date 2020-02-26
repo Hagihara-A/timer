@@ -19,11 +19,35 @@ export const isParent = (a: Path, b: Path) => {
     return false;
   }
 };
-export const getAllParentIdxs = (timerList: TimerList, basePath: Path) => {
+export const isSamePath = (a: Path, b: Path) => {
+  if (a.length === b.length) {
+    return a.every((_, i) => a[i] === b[i]);
+  } else {
+    return false;
+  }
+};
+export const getAllParentIdxs = (
+  timerList: TimerList,
+  basePath: Path
+): Path[] => {
   return timerList.reduce((accum, val, idx) => {
     if (isParent(val.path, basePath)) return accum.concat(idx);
     return accum;
   }, []);
+};
+
+export const isLastTimer = (timerList: TimerList, path: Path) => {
+  const lastIdx = path.length - 1;
+  const nextSiblingPath = [...path];
+  nextSiblingPath.splice(lastIdx, 1, path[lastIdx] + 1);
+  const nextSiblingItem = timerList.find(item =>
+    isSamePath(item.path, nextSiblingPath)
+  );
+  if (typeof nextSiblingItem === "undefined") return true;
+  return !isTimer(nextSiblingItem.item.data);
+};
+export const countUpNearestSection = (timerList: TimerList, currPath: Path) => {
+  const parentIdxs = getAllParentIdxs(timerList, currPath);
 };
 export const timersReducer = produce(
   (draft: Draft<TimersListData>, action: Action) => {
@@ -36,16 +60,50 @@ export const timersReducer = produce(
         break;
       }
       case AT.ADD_TIME: {
+        // if ("focusがタイマーを指していたら") {
+        //   if ("経過時間がタイムリミットより小さいなら") {
+        //     "タイマーを1カウントアップ";
+        //   }
+        //   if ("タイムリミットに達したら") {
+        //     if ("階層の最後のタイマーだったら") {
+        //       "一番近い親からカウントアップ";
+        //       if ("全ての親が最大カウントになったら") {
+        //         "次のタイマーへ";
+        //       } else {
+        //         "カウントアップされた親の子タイマーを初期化";
+        //         "カウントアップされた親の、最初の子タイマーへ移動";
+        //       }
+        //     } else {
+        //       "次の弟タイマーへ";
+        //     }
+        //   }
+        // } else {
+        //   "エラー";
+        // }
         const focus = draft.currentTimerIndex;
-        const currTimer = draft.timerList[focus].item;
+        const { item: currTimer, path: currPath } = draft.timerList[focus];
         if (isTimer(currTimer.data)) {
           if (currTimer.data.elapsedTime < currTimer.data.timeLimit) {
             currTimer.data.elapsedTime++;
           }
-          // do focus++ until item is Timer
           if (currTimer.data.elapsedTime >= currTimer.data.timeLimit) {
-            const nextTimerIdx = nextFocus(draft.timerList, focus);
-            draft.currentTimerIndex = nextTimerIdx;
+            if (isLastTimer(draft.timerList, currPath)) {
+              const ltRepeatParentPath = countUpNearestSection(
+                draft.timerList,
+                currPath
+              );
+              if (isFullyCounted(draft.timerList, currPath)) {
+                draft.currentTimerIndex = nextFocus(draft.timerList, focus);
+              } else {
+                initTimers(draft.timerList, ltRepeatParentPath);
+                draft.currentTimerIndex = getFirstTimerIdx(
+                  draft.timerList,
+                  ltRepeatParentPath
+                );
+              }
+            }
+          } else {
+            draft.currentTimerIndex = nextFocus(draft.timerList, focus);
           }
         } else {
           throw new TypeError(
