@@ -2,9 +2,13 @@ import { actionTypes as AT, addTime } from "../actions";
 import {
   timersReducer,
   isParent,
-  getAllParentIdxs
+  getAllParentIdxs,
+  isSamePath,
+  isLastTimer,
+  countUpNearestSection
 } from "../reducers/timersReducer";
 import { sampleState } from "./testData";
+import produce from "immer";
 
 const timers = sampleState.timers;
 
@@ -69,7 +73,64 @@ test(`isParent`, () => {
 
 test(`getAllParentIdxs`, () => {
   const childPath = [3, 2, 1];
-  const ParentIdxs = [5, 8];
+  const parentIdxs = [5, 8];
 
-  expect(getAllParentIdxs(timers.timerList, childPath)).toEqual(ParentIdxs);
+  expect(getAllParentIdxs(timers.timerList, childPath)).toEqual(parentIdxs);
+});
+
+test(`isSamePath`, () => {
+  const a = [1, 2, 3];
+  const b = [1, 2, 3];
+  const c = [1, 2];
+  const d = [1, 2, 3, 4];
+  const e = [1, 2, 4];
+
+  expect(isSamePath(a, b)).toBeTruthy();
+  expect(isSamePath(a, c)).toBeFalsy();
+  expect(isSamePath(a, d)).toBeFalsy();
+  expect(isSamePath(a, e)).toBeFalsy();
+});
+
+test(`isLastTimer`, () => {
+  const { timerList } = timers;
+  const a = timerList.find(item => item.item.id === "1-0").path;
+  const b = timerList.find(item => item.item.id === "1-1").path;
+  const c = timerList.find(item => item.item.id === "3-2-0").path;
+  const d = timerList.find(item => item.item.id === "3-2-1").path;
+
+  expect(isLastTimer(timerList, a)).toBeFalsy();
+  expect(isLastTimer(timerList, b)).toBeTruthy();
+  expect(isLastTimer(timerList, c)).toBeFalsy();
+  expect(isLastTimer(timerList, d)).toBeTruthy();
+});
+
+describe(`countUpNearestSection`, () => {
+  test(`countUpNearestSection once`, () => {
+    const id = "3-2-1";
+    const path = getItemFromId(timers.timerList, id).path;
+    const countUp1 = produce(timers.timerList, draft => {
+      countUpNearestSection(draft, path);
+    });
+    const parents = getAllParentIdxs(timers.timerList, path).reverse();
+    expect(countUp1[parents[0]].item.data.count).toBe(1);
+  });
+
+  test(`countUpNearestSection 5 times`, () => {
+    const id = "3-2-1";
+    const path = getItemFromId(timers.timerList, id).path;
+    let countUp = timers.timerList;
+    for (let i = 0; i++; i < 0) {
+      countUp = produce(timers.timerList, draft => {
+        countUpNearestSection(draft, path);
+      });
+    }
+    const parents = getAllParentIdxs(timers.timerList, path).reverse();
+    expect(countUp[parents[0]].item.data.count).toBe(
+      countUp[parents[0]].item.data.repeat
+    );
+
+    expect(countUp[parents[1]].item.data.count).toBe(
+      countUp[parents[1]].item.data.repeat
+    );
+  });
 });
