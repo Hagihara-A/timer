@@ -13,8 +13,8 @@ import produce from "immer";
 const timers = sampleState.timers;
 
 test(`${AT.ADD_TIME} simply for Timer`, () => {
-  const reduced = timersReducer(timers, addTime());
   const oldTimerData = timers.timerList[timers.currentTimerIndex].item.data;
+  const reduced = timersReducer(timers, addTime());
   expect(oldTimerData.elapsedTime + 1).toBe(
     reduced.timerList[reduced.currentTimerIndex].item.data.elapsedTime
   );
@@ -109,7 +109,8 @@ describe(`countUpNearestSection`, () => {
     const id = "3-2-1";
     const path = getItemFromId(timers.timerList, id).path;
     const countUp1 = produce(timers.timerList, draft => {
-      countUpNearestSection(draft, path);
+      const countedPath = countUpNearestSection(draft, path);
+      expect(countedPath).toEqual([3, 2]);
     });
     const parents = getAllParentIdxs(timers.timerList, path).reverse();
     expect(countUp1[parents[0]].item.data.count).toBe(1);
@@ -118,13 +119,26 @@ describe(`countUpNearestSection`, () => {
   test(`countUpNearestSection 5 times`, () => {
     const id = "3-2-1";
     const path = getItemFromId(timers.timerList, id).path;
-    let countUp = timers.timerList;
-    for (let i = 0; i++; i < 0) {
-      countUp = produce(timers.timerList, draft => {
-        countUpNearestSection(draft, path);
-      });
-    }
-    const parents = getAllParentIdxs(timers.timerList, path).reverse();
+    let counted;
+    let countUp = produce(timers.timerList, draft => {
+      countUpNearestSection(draft, path);
+    });
+    countUp = produce(countUp, draft => {
+      countUpNearestSection(draft, path);
+    });
+    countUp = produce(countUp, draft => {
+      counted = countUpNearestSection(draft, path);
+      expect(counted).toEqual([3, 2]);
+    });
+    countUp = produce(countUp, draft => {
+      const counted = countUpNearestSection(draft, path);
+      expect(counted).toEqual([3]);
+    });
+    countUp = produce(countUp, draft => {
+      const counted = countUpNearestSection(draft, path);
+      expect(counted).toBeUndefined();
+    });
+    const parents = getAllParentIdxs(countUp, path).reverse();
     expect(countUp[parents[0]].item.data.count).toBe(
       countUp[parents[0]].item.data.repeat
     );
