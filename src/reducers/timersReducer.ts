@@ -2,7 +2,7 @@ import produce, { Draft } from "immer";
 import { actionTypes as AT } from "../actions";
 import { initState } from "../initState";
 import { Action, TimersListData, TimerList } from "../types";
-import { isTimer } from "../utils";
+import { isTimer, isSection } from "../utils";
 import { Path } from "@atlaskit/tree";
 
 export const nextFocus = (timerList: TimerList, focus: number) => {
@@ -29,7 +29,7 @@ export const isSamePath = (a: Path, b: Path) => {
 export const getAllParentIdxs = (
   timerList: TimerList,
   basePath: Path
-): Path[] => {
+): number[] => {
   return timerList.reduce((accum, val, idx) => {
     if (isParent(val.path, basePath)) return accum.concat(idx);
     return accum;
@@ -46,8 +46,33 @@ export const isLastTimer = (timerList: TimerList, path: Path) => {
   if (typeof nextSiblingItem === "undefined") return true;
   return !isTimer(nextSiblingItem.item.data);
 };
+export const getItemFromPath = (timerList: TimerList, path: Path) => {
+  return timerList.find(item => isSamePath(item.path, path));
+};
+
+export const isFullyCounted = (timerList: TimerList, path: Path) => {
+  const item = getItemFromPath(timerList, path).item;
+  if (isSection(item.data)) {
+    return item.data.repeat === item.data.count;
+  } else {
+    return item.data.elapsedTime === item.data.elapsedTime;
+  }
+};
+
 export const countUpNearestSection = (timerList: TimerList, currPath: Path) => {
-  const parentIdxs = getAllParentIdxs(timerList, currPath);
+  const parentIdxs = getAllParentIdxs(timerList, currPath).reverse();
+  for (let idx of parentIdxs) {
+    let parentItem = timerList[idx];
+    if (
+      !isFullyCounted(timerList, parentItem.path) &&
+      isSection(parentItem.item.data)
+    ) {
+      parentItem.item.data.count++;
+      return parentItem.path;
+    }
+  }
+
+  return;
 };
 export const timersReducer = produce(
   (draft: Draft<TimersListData>, action: Action) => {
@@ -83,7 +108,7 @@ export const timersReducer = produce(
         const focus = draft.currentTimerIndex;
         const { item: currTimer, path: currPath } = draft.timerList[focus];
         if (isTimer(currTimer.data)) {
-          if (currTimer.data.elapsedTime < currTimer.data.timeLimit) {
+          if (isFullyCounted(draft.timerList, currPath)) {
             currTimer.data.elapsedTime++;
           }
           if (currTimer.data.elapsedTime >= currTimer.data.timeLimit) {
