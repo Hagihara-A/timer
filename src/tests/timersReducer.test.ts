@@ -1,14 +1,14 @@
+import produce from "immer";
 import { actionTypes as AT, addTime } from "../actions";
 import {
-  timersReducer,
-  isParent,
+  countUpNearestSection,
   getAllParentIdxs,
-  isSamePath,
   isLastTimer,
-  countUpNearestSection
+  isParent,
+  isSamePath,
+  timersReducer
 } from "../reducers/timersReducer";
 import { sampleState } from "./testData";
-import produce from "immer";
 
 const timers = sampleState.timers;
 
@@ -40,24 +40,6 @@ test(`${AT.ADD_TIME} 5 times, step over Section`, () => {
 const getItemFromId = (timerList, id) => {
   return timerList.find(item => item.item.id === id);
 };
-test(`${AT.ADD_TIME}: Parent Section is counted up, when child Section finished`, () => {
-  let reduced = timers;
-  // iterate just before count up
-  while (getItemFromId(reduced.timerList, "3-2-1").item.data.elapsedTime < 3) {
-    reduced = timersReducer(reduced, addTime());
-  }
-
-  let shouldBeCountedUp = timersReducer(reduced, addTime());
-
-  expect(
-    getItemFromId(shouldBeCountedUp.timerList, "3-2").item.data.count
-  ).toBe(1);
-
-  expect(getItemFromId(shouldBeCountedUp.timerList, "3").item.data.count).toBe(
-    1
-  );
-});
-
 test(`isParent`, () => {
   const a = [1, 2, 3, 4];
   const b = [1, 2, 3, 4, 5];
