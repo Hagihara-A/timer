@@ -6,7 +6,8 @@ import {
   isLastTimer,
   isParent,
   isSamePath,
-  timersReducer
+  timersReducer,
+  getFirstTimerIdx
 } from "../reducers/timersReducer";
 import { sampleState } from "./testData";
 
@@ -129,4 +130,15 @@ describe(`countUpNearestSection`, () => {
       countUp[parents[1]].item.data.repeat
     );
   });
+});
+
+test(`getFirstTimerIdx`, () => {
+  const path1 = [3];
+  const path2 = [3, 2];
+
+  const idx1 = getFirstTimerIdx(timers.timerList, path1);
+  const idx2 = getFirstTimerIdx(timers.timerList, path2);
+
+  expect(idx1).toBe(6);
+  expect(idx2).toBe(9);
 });
