@@ -74,6 +74,12 @@ export const countUpNearestSection = (timerList: TimerList, currPath: Path) => {
 
   return;
 };
+
+export const getFirstTimerIdx = (timerList: TimerList, path: Path) => {
+  return timerList.findIndex(
+    v => isParent(path, v.path) && isTimer(v.item.data)
+  );
+};
 export const timersReducer = produce(
   (draft: Draft<TimersListData>, action: Action) => {
     switch (action.type) {
@@ -95,7 +101,7 @@ export const timersReducer = produce(
         //       if ("全ての親が最大カウントになったら") {
         //         "次のタイマーへ";
         //       } else {
-        //         "カウントアップされた親の子タイマーを初期化";
+        //         "カウントアップされた親の子アイテムを初期化";
         //         "カウントアップされた親の、最初の子タイマーへ移動";
         //       }
         //     } else {
@@ -108,10 +114,10 @@ export const timersReducer = produce(
         const focus = draft.currentTimerIndex;
         const { item: currTimer, path: currPath } = draft.timerList[focus];
         if (isTimer(currTimer.data)) {
-          if (isFullyCounted(draft.timerList, currPath)) {
+          if (!isFullyCounted(draft.timerList, currPath)) {
             currTimer.data.elapsedTime++;
           }
-          if (currTimer.data.elapsedTime >= currTimer.data.timeLimit) {
+          if (isFullyCounted(draft.timerList, currPath)) {
             if (isLastTimer(draft.timerList, currPath)) {
               const ltRepeatParentPath = countUpNearestSection(
                 draft.timerList,
@@ -120,7 +126,7 @@ export const timersReducer = produce(
               if (isFullyCounted(draft.timerList, currPath)) {
                 draft.currentTimerIndex = nextFocus(draft.timerList, focus);
               } else {
-                initTimers(draft.timerList, ltRepeatParentPath);
+                initItems(draft.timerList, ltRepeatParentPath);
                 draft.currentTimerIndex = getFirstTimerIdx(
                   draft.timerList,
                   ltRepeatParentPath
