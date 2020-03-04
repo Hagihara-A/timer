@@ -10,11 +10,9 @@ export const nextFocus = (timerList: TimerList, focus: number) => {
     timerList.slice(focus + 1).findIndex(v => isTimer(v.item.data)) + focus + 1
   );
 };
-export const isParent = (a: Path, b: Path) => {
-  if (a.length > b.length) {
-    return b.every((n, i) => n === a[i]);
-  } else if (a.length < b.length) {
-    return a.every((n, i) => n === b[i]);
+export const isParent = (child: Path, parent: Path) => {
+  if (child.length > parent.length) {
+    return parent.every((n, i) => n === child[i]);
   } else {
     return false;
   }
@@ -31,7 +29,7 @@ export const getAllParentIdxs = (
   basePath: Path
 ): number[] => {
   return timerList.reduce((accum, val, idx) => {
-    if (isParent(val.path, basePath)) return accum.concat(idx);
+    if (isParent(basePath, val.path)) return accum.concat(idx);
     return accum;
   }, []);
 };
@@ -77,8 +75,22 @@ export const countUpNearestSection = (timerList: TimerList, currPath: Path) => {
 
 export const getFirstTimerIdx = (timerList: TimerList, path: Path) => {
   return timerList.findIndex(
-    v => isParent(path, v.path) && isTimer(v.item.data)
+    v => isParent(v.path, path) && isTimer(v.item.data)
   );
+};
+
+export const initItems = (timerList: TimerList, parentPath: Path) => {
+  for (let i in timerList) {
+    const elem = timerList[i];
+    if (!isParent(elem.path, parentPath)) continue;
+    console.log(elem.path);
+
+    if (isTimer(elem.item.data)) {
+      elem.item.data.elapsedTime = 0;
+    } else {
+      elem.item.data.count = 0;
+    }
+  }
 };
 export const timersReducer = produce(
   (draft: Draft<TimersListData>, action: Action) => {
