@@ -8,7 +8,8 @@ import {
   isSamePath,
   timersReducer,
   getFirstTimerIdx,
-  initItems
+  initItems,
+  isFullyCounted
 } from "../reducers/timersReducer";
 import { sampleState } from "./testData";
 
@@ -17,9 +18,8 @@ const timers = sampleState.timers;
 test(`${AT.ADD_TIME} simply for Timer`, () => {
   const oldTimerData = timers.timerList[timers.currentTimerIndex].item.data;
   const reduced = timersReducer(timers, addTime());
-  expect(oldTimerData.elapsedTime + 1).toBe(
-    reduced.timerList[reduced.currentTimerIndex].item.data.elapsedTime
-  );
+  const newTimerData = reduced.timerList[reduced.currentTimerIndex].item.data;
+  expect(newTimerData.elapsedTime).toBe(oldTimerData.elapsedTime + 1);
 });
 
 test(`${AT.ADD_TIME} 5 times, step over Section`, () => {
@@ -178,4 +178,30 @@ test(`initItems`, () => {
   expect(init2[7].item.data.elapsedTime).toBe(2);
   expect(init2[9].item.data.elapsedTime).toBe(0);
   expect(init2[10].item.data.elapsedTime).toBe(0);
+});
+
+test(`isFullyCounted`, () => {
+  const elapsed = produce(timers.timerList, draft => {
+    draft[0].item.data.elapsedTime = 3;
+    draft[1].item.data.count = 1;
+    draft[2].item.data.elapsedTime = 2;
+    draft[3].item.data.elapsedTime = 1;
+
+    draft[6].item.data.elapsedTime = 2;
+    draft[7].item.data.elapsedTime = 2;
+    draft[8].item.data.count = 2;
+    draft[9].item.data.elapsedTime = 3;
+    draft[10].item.data.elapsedTime = 2;
+  });
+
+  expect(isFullyCounted(elapsed, [0])).toBeTruthy();
+  expect(isFullyCounted(elapsed, [1])).toBeTruthy();
+  expect(isFullyCounted(elapsed, [1, 0])).toBeTruthy();
+  expect(isFullyCounted(elapsed, [1, 1])).toBeFalsy();
+  expect(isFullyCounted(elapsed, [2])).toBeFalsy();
+  expect(isFullyCounted(elapsed, [3, 0])).toBeTruthy();
+  expect(isFullyCounted(elapsed, [3, 1])).toBeTruthy();
+  expect(isFullyCounted(elapsed, [3, 2])).toBeFalsy();
+  expect(isFullyCounted(elapsed, [3, 2, 0])).toBeTruthy();
+  expect(isFullyCounted(elapsed, [3, 2, 1])).toBeFalsy();
 });
