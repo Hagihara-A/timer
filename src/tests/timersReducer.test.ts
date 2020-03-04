@@ -3,17 +3,31 @@ import { actionTypes as AT, addTime } from "../actions";
 import {
   countUpNearestSection,
   getAllParentIdxs,
+  getFirstTimerIdx,
+  initItems,
+  isFullyCounted,
   isLastTimer,
   isParent,
   isSamePath,
-  timersReducer,
-  getFirstTimerIdx,
-  initItems,
-  isFullyCounted
+  nextFocus,
+  timersReducer
 } from "../reducers/timersReducer";
 import { sampleState } from "./testData";
 
 const timers = sampleState.timers;
+
+const elapsed = produce(timers.timerList, draft => {
+  draft[0].item.data.elapsedTime = 3; //[0]
+  draft[1].item.data.count = 1; // [1]
+  draft[2].item.data.elapsedTime = 2; // [1,0]
+  draft[3].item.data.elapsedTime = 1; //[1, 1]
+
+  draft[6].item.data.elapsedTime = 2; // [3, 0]
+  draft[7].item.data.elapsedTime = 2; // [3, 1]
+  draft[8].item.data.count = 2; // [3, 2]
+  draft[9].item.data.elapsedTime = 3; // [3, 2, 0]
+  draft[10].item.data.elapsedTime = 2; // [3, 2, 1]
+});
 
 test(`${AT.ADD_TIME} simply for Timer`, () => {
   const oldTimerData = timers.timerList[timers.currentTimerIndex].item.data;
@@ -22,26 +36,36 @@ test(`${AT.ADD_TIME} simply for Timer`, () => {
   expect(newTimerData.elapsedTime).toBe(oldTimerData.elapsedTime + 1);
 });
 
-test(`${AT.ADD_TIME} 5 times, step over Section`, () => {
-  // iterate 5 times
+test(`${AT.ADD_TIME} 10 times, step over Section`, () => {
+  // iterate 10 times
   let reduced = timers;
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 10; i++) {
     reduced = timersReducer(reduced, addTime());
   }
-  expect(reduced.timerList[0].item.data.elapsedTime).toBe(
-    reduced.timerList[0].item.data.timeLimit
-  );
-  // WIP currently, disabled
+  expect(reduced.timerList[0].item.data.elapsedTime).toBe(3);
   expect(reduced.timerList[1].item.data.count).toBe(1);
 
   expect(reduced.timerList[2].item.data.elapsedTime).toBe(2);
+  expect(reduced.timerList[3].item.data.elapsedTime).toBe(2);
+  expect(reduced.timerList[4].item.data.elapsedTime).toBe(3);
 
-  expect(reduced.currentTimerIndex).toBe(3);
+  expect(reduced.currentTimerIndex).toBe(4);
 });
+test(`${AT.ADD_TIME} 20 times, start from path:[3, 0]`, () => {
+  // iterate 10 times
+  let reduced = produce(timers, draft => {
+    draft.currentTimerIndex = 6;
+  });
+  for (let i = 0; i < 20; i++) {
+    reduced = timersReducer(reduced, addTime());
+  }
+  expect(reduced.timerList[6].item.data.elapsedTime).toBe(2);
+  expect(reduced.timerList[7].item.data.elapsedTime).toBe(2);
 
-const getItemFromId = (timerList, id) => {
-  return timerList.find(item => item.item.id === id);
-};
+  expect(reduced.timerList[8].item.data.count).toBe(2);
+  expect(reduced.timerList[9].item.data.elapsedTime).toBe(3);
+  expect(reduced.timerList[10].item.data.elapsedTime).toBe(1);
+});
 test(`isParent`, () => {
   const a = [1, 2, 3, 4];
   const b = [1, 2, 3, 4, 5];
@@ -90,8 +114,7 @@ test(`isLastTimer`, () => {
 
 describe(`countUpNearestSection`, () => {
   test(`countUpNearestSection once`, () => {
-    const id = "3-2-1";
-    const path = getItemFromId(timers.timerList, id).path;
+    const path = [3, 2, 1];
     const countUp1 = produce(timers.timerList, draft => {
       const countedPath = countUpNearestSection(draft, path);
       expect(countedPath).toEqual([3, 2]);
@@ -101,13 +124,9 @@ describe(`countUpNearestSection`, () => {
   });
 
   test(`countUpNearestSection 5 times`, () => {
-    const id = "3-2-1";
-    const path = getItemFromId(timers.timerList, id).path;
+    const path = [3, 2, 1];
     let counted;
     let countUp = produce(timers.timerList, draft => {
-      countUpNearestSection(draft, path);
-    });
-    countUp = produce(countUp, draft => {
       countUpNearestSection(draft, path);
     });
     countUp = produce(countUp, draft => {
@@ -115,8 +134,11 @@ describe(`countUpNearestSection`, () => {
       expect(counted).toEqual([3, 2]);
     });
     countUp = produce(countUp, draft => {
+      counted = countUpNearestSection(draft, path);
+    });
+    countUp = produce(countUp, draft => {
       const counted = countUpNearestSection(draft, path);
-      expect(counted).toEqual([3]);
+      expect(counted).toBeUndefined();
     });
     countUp = produce(countUp, draft => {
       const counted = countUpNearestSection(draft, path);
@@ -145,19 +167,6 @@ test(`getFirstTimerIdx`, () => {
 });
 
 test(`initItems`, () => {
-  const elapsed = produce(timers.timerList, draft => {
-    draft[0].item.data.elapsedTime = 3;
-    draft[1].item.data.count = 1;
-    draft[2].item.data.elapsedTime = 2;
-    draft[3].item.data.elapsedTime = 1;
-
-    draft[6].item.data.elapsedTime = 2;
-    draft[7].item.data.elapsedTime = 2;
-    draft[8].item.data.count = 2;
-    draft[9].item.data.elapsedTime = 3;
-    draft[10].item.data.elapsedTime = 2;
-  });
-
   const init1 = produce(elapsed, draft => {
     initItems(draft, [1]);
   });
@@ -181,19 +190,6 @@ test(`initItems`, () => {
 });
 
 test(`isFullyCounted`, () => {
-  const elapsed = produce(timers.timerList, draft => {
-    draft[0].item.data.elapsedTime = 3;
-    draft[1].item.data.count = 1;
-    draft[2].item.data.elapsedTime = 2;
-    draft[3].item.data.elapsedTime = 1;
-
-    draft[6].item.data.elapsedTime = 2;
-    draft[7].item.data.elapsedTime = 2;
-    draft[8].item.data.count = 2;
-    draft[9].item.data.elapsedTime = 3;
-    draft[10].item.data.elapsedTime = 2;
-  });
-
   expect(isFullyCounted(elapsed, [0])).toBeTruthy();
   expect(isFullyCounted(elapsed, [1])).toBeTruthy();
   expect(isFullyCounted(elapsed, [1, 0])).toBeTruthy();
@@ -204,4 +200,12 @@ test(`isFullyCounted`, () => {
   expect(isFullyCounted(elapsed, [3, 2])).toBeFalsy();
   expect(isFullyCounted(elapsed, [3, 2, 0])).toBeTruthy();
   expect(isFullyCounted(elapsed, [3, 2, 1])).toBeFalsy();
+});
+
+test(`nextFocus`, () => {
+  expect(nextFocus(timers.timerList, 0)).toBe(2);
+  expect(nextFocus(timers.timerList, 2)).toBe(3);
+  expect(nextFocus(timers.timerList, 7)).toBe(9);
+  expect(nextFocus(timers.timerList, 9)).toBe(10);
+  expect(nextFocus(timers.timerList, timers.timerList.length - 1)).toBe(-1);
 });
