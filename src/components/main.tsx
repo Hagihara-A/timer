@@ -1,6 +1,6 @@
 import { styled, Typography } from "@material-ui/core";
 import React, { useState, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { animated, useTransition } from "react-spring";
 import {
   addTimer as addTimerAct,
@@ -13,6 +13,7 @@ import { TimerList } from "./Timer/TimerList";
 import { TimerListIcons } from "./Timer/TimerListButtons";
 import TimerTree from "./Tree/TimerTree";
 import { TimerTreeIcons } from "./Tree/TimerTreeButtons";
+import { State } from "../types";
 
 const Heading = styled(({ children }) => (
   <Typography variant="h1" align="center">
@@ -65,6 +66,9 @@ const TimerApp = () => {
   const stopTimerDispatch = () => {
     clearInterval(timerId.current);
   };
+
+  const focus = useSelector((state: State) => state.timers.currentTimerIndex);
+  if (focus === -1) clearInterval(timerId.current);
 
   const transitions = useTransition(isTree, null, {
     from: {
