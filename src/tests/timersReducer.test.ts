@@ -7,7 +7,8 @@ import {
   isParent,
   isSamePath,
   timersReducer,
-  getFirstTimerIdx
+  getFirstTimerIdx,
+  initItems
 } from "../reducers/timersReducer";
 import { sampleState } from "./testData";
 
@@ -48,7 +49,7 @@ test(`isParent`, () => {
   const c = [1, 2, 3, 4, 5];
 
   const d = [5, 4, 3, 2, 2];
-  expect(isParent(a, b)).toBeTruthy();
+  expect(isParent(a, b)).toBeFalsy();
   expect(isParent(b, a)).toBeTruthy();
   expect(isParent(b, c)).toBeFalsy();
   expect(isParent(a, d)).toBeFalsy();
@@ -141,4 +142,40 @@ test(`getFirstTimerIdx`, () => {
 
   expect(idx1).toBe(6);
   expect(idx2).toBe(9);
+});
+
+test(`initItems`, () => {
+  const elapsed = produce(timers.timerList, draft => {
+    draft[0].item.data.elapsedTime = 3;
+    draft[1].item.data.count = 1;
+    draft[2].item.data.elapsedTime = 2;
+    draft[3].item.data.elapsedTime = 1;
+
+    draft[6].item.data.elapsedTime = 2;
+    draft[7].item.data.elapsedTime = 2;
+    draft[8].item.data.count = 2;
+    draft[9].item.data.elapsedTime = 3;
+    draft[10].item.data.elapsedTime = 2;
+  });
+
+  const init1 = produce(elapsed, draft => {
+    initItems(draft, [1]);
+  });
+  expect(init1[0].item.data.elapsedTime).toBe(3);
+  expect(init1[1].item.data.count).toBe(1);
+  expect(init1[2].item.data.elapsedTime).toBe(0);
+  expect(init1[3].item.data.elapsedTime).toBe(0);
+  expect(init1[7].item.data.elapsedTime).toBe(2);
+  expect(init1[10].item.data.elapsedTime).toBe(2);
+
+  const init2 = produce(elapsed, draft => {
+    initItems(draft, [3, 2]);
+  });
+  expect(init1[0].item.data.elapsedTime).toBe(3);
+  expect(init2[1].item.data.count).toBe(1);
+  expect(init2[2].item.data.elapsedTime).toBe(2);
+  expect(init2[3].item.data.elapsedTime).toBe(1);
+  expect(init2[7].item.data.elapsedTime).toBe(2);
+  expect(init2[9].item.data.elapsedTime).toBe(0);
+  expect(init2[10].item.data.elapsedTime).toBe(0);
 });
