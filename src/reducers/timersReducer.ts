@@ -53,7 +53,7 @@ export const isFullyCounted = (timerList: TimerList, path: Path) => {
   if (isSection(item.data)) {
     return item.data.repeat === item.data.count;
   } else {
-    return item.data.elapsedTime === item.data.elapsedTime;
+    return item.data.elapsedTime === item.data.timeLimit;
   }
 };
 
@@ -129,6 +129,7 @@ export const timersReducer = produce(
           if (!isFullyCounted(draft.timerList, currPath)) {
             currTimer.data.elapsedTime++;
           }
+
           if (isFullyCounted(draft.timerList, currPath)) {
             if (isLastTimer(draft.timerList, currPath)) {
               const ltRepeatParentPath = countUpNearestSection(
