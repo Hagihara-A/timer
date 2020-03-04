@@ -6,9 +6,12 @@ import { isTimer, isSection } from "../utils";
 import { Path } from "@atlaskit/tree";
 
 export const nextFocus = (timerList: TimerList, focus: number) => {
-  return (
-    timerList.slice(focus + 1).findIndex(v => isTimer(v.item.data)) + focus + 1
-  );
+  return timerList.findIndex((elem, i) => {
+    if (i > focus && isTimer(elem.item.data)) {
+      return true;
+    }
+    return false;
+  });
 };
 export const isParent = (child: Path, parent: Path) => {
   if (child.length > parent.length) {
@@ -66,7 +69,10 @@ export const countUpNearestSection = (timerList: TimerList, currPath: Path) => {
       isSection(parentItem.item.data)
     ) {
       parentItem.item.data.count++;
-      return parentItem.path;
+
+      return parentItem.item.data.count === parentItem.item.data.repeat
+        ? undefined
+        : parentItem.path;
     }
   }
 
@@ -83,7 +89,6 @@ export const initItems = (timerList: TimerList, parentPath: Path) => {
   for (let i in timerList) {
     const elem = timerList[i];
     if (!isParent(elem.path, parentPath)) continue;
-    console.log(elem.path);
 
     if (isTimer(elem.item.data)) {
       elem.item.data.elapsedTime = 0;
@@ -136,7 +141,8 @@ export const timersReducer = produce(
                 draft.timerList,
                 currPath
               );
-              if (isFullyCounted(draft.timerList, currPath)) {
+              // 全ての親のカウントが最大になったら
+              if (typeof ltRepeatParentPath === "undefined") {
                 draft.currentTimerIndex = nextFocus(draft.timerList, focus);
               } else {
                 initItems(draft.timerList, ltRepeatParentPath);
@@ -145,9 +151,9 @@ export const timersReducer = produce(
                   ltRepeatParentPath
                 );
               }
+            } else {
+              draft.currentTimerIndex = nextFocus(draft.timerList, focus);
             }
-          } else {
-            draft.currentTimerIndex = nextFocus(draft.timerList, focus);
           }
         } else {
           throw new TypeError(
