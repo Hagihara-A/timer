@@ -173,8 +173,6 @@ export const treeReducer = produce((tree: Draft<TreeData>, action: Action) => {
       if (!dst) break;
 
       if (typeof dst.index === "undefined" && isTimer(dstItem.data)) {
-        console.log("combine");
-
         combineTwoTimersIntoSection(tree, src, dst);
         break;
       } else {
