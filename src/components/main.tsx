@@ -1,7 +1,6 @@
 import { styled, Typography } from "@material-ui/core";
 import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { animated, useTransition } from "react-spring";
 import {
   addTimer as addTimerAct,
   parseTreeToTimers,
@@ -24,10 +23,10 @@ const Heading = styled(({ children }) => (
 });
 
 const TimerApp = () => {
-  const [isTree, setIsTree] = useState(true);
-  const [isOpenModal, setIsOpenModal] = useState(false);
-  const toggleIsTree = () => setIsTree(!isTree);
-  const toggleIsOpen = () => setIsOpenModal(!isOpenModal);
+  // const [isTree, setIsTree] = useState(true);
+  // const toggleIsTree = () => setIsTree(!isTree);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const toggleIsOpen = () => setIsModalOpen(!isModalOpen);
 
   const dispatch = useDispatch();
   // TimerTreeButton callback
@@ -43,7 +42,7 @@ const TimerApp = () => {
 
   const slideToTimerList = () => {
     dispatch(parseTreeToTimers());
-    toggleIsTree();
+    // toggleIsTree();
   };
 
   // TimerList callback
@@ -60,7 +59,7 @@ const TimerApp = () => {
 
   const resetTimerDispatch = () => {
     clearInterval(timerId.current);
-    toggleIsTree();
+    // toggleIsTree();
   };
 
   const stopTimerDispatch = () => {
@@ -70,68 +69,23 @@ const TimerApp = () => {
   const focus = useSelector((state: State) => state.timers.currentTimerIndex);
   if (focus === -1) clearInterval(timerId.current);
 
-  const transitions = useTransition(isTree, null, {
-    from: {
-      opacity: 0,
-      xy: isTree ? [-100, 0] : [100, 0]
-    },
-    enter: { opacity: 1, xy: [0, 0] },
-    leave: {
-      opacity: 0,
-      xy: isTree ? [50, 0] : [-50, 0]
-    }
-  });
-
-  const View = transitions.map(({ item, key, props }) => {
-    return (
-      <div key={key}>
-        <animated.div
-          style={{
-            ...props,
-            transform: props.xy.to((x, y) =>
-              x === 0 && y === 0 ? "none" : `translate(${x}%, ${y}%)`
-            ),
-            position: "absolute",
-            left: 0,
-            right: 0
-          }}
-        >
-          {item ? <TimerTree /> : <TimerList />}
-        </animated.div>
-
-        <animated.div
-          style={{
-            opacity: props.opacity,
-            position: "fixed",
-            width: "100%",
-            textAlign: "center",
-            bottom: "10px"
-          }}
-        >
-          {item ? (
-            <TimerTreeIcons
-              onClickAdd={toggleIsOpen}
-              onClickComplete={slideToTimerList}
-            />
-          ) : (
-            <TimerListIcons
-              onClickStart={startTimerDispatch}
-              onClickSkip={skipTimerDisparch}
-              onClickStop={stopTimerDispatch}
-              onClickReset={resetTimerDispatch}
-            />
-          )}
-        </animated.div>
-      </div>
-    );
-  });
-
   return (
     <div>
       <Heading>Training Timer</Heading>
-      {View}
+      <TimerTree />
+      <TimerList />
+      <TimerTreeIcons
+        onClickAdd={toggleIsOpen}
+        onClickComplete={slideToTimerList}
+      />
+      <TimerListIcons
+        onClickStart={startTimerDispatch}
+        onClickSkip={skipTimerDisparch}
+        onClickStop={stopTimerDispatch}
+        onClickReset={resetTimerDispatch}
+      />
       <AddTimerDialog
-        open={isOpenModal}
+        open={isModalOpen}
         onClose={toggleIsOpen}
         onSubmit={addTimer}
       />
