@@ -12,9 +12,8 @@ import {
   nextFocus,
   timersReducer
 } from "../reducers/timersReducer";
-import { sampleState } from "./testData";
-
-const timers = sampleState.timers;
+import { initState } from "../initState";
+const { timers } = initState;
 
 const elapsed = produce(timers.timerList, draft => {
   draft[0].item.data.elapsedTime = 3; //[0]

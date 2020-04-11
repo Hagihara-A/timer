@@ -8,14 +8,14 @@ import {
   removeItem,
   toggleProperty
 } from "../actions";
+import { initState } from "../initState";
 import {
   getNewItemIds,
   setNewItemOnTree,
   treeReducer
 } from "../reducers/treeReducer";
-import { sampleState } from "./testData";
+const { tree } = initState;
 
-const tree = sampleState.tree;
 test("setNewItemOnTree", () => {
   const dataToadd = { power: 120, timeLimit: 40, comment: "" };
   const parentId = "3-2-1";
