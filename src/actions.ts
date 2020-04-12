@@ -17,7 +17,6 @@ export const actionTypes = {
   TOGGLE_PROPERTY: "TOGGLE_PROPERTY",
   // for timersReducer
   ADD_TIME: "ADD_TIME",
-  FORWARD_FOCUS: "FORWARD_FOCUS",
 } as const;
 
 export const addTime = () => {
@@ -27,11 +26,6 @@ export const addTime = () => {
   };
 };
 
-export const forwardCurrentTimerIndex = () => {
-  return {
-    type: actionTypes.FORWARD_FOCUS,
-  };
-};
 export const addTimer = (parentId: ItemId, treeItemData: EditableTimerData) => {
   return {
     type: actionTypes.ADD_TIMER,

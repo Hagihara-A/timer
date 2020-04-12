@@ -1,12 +1,7 @@
 import { styled, Typography } from "@material-ui/core";
 import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addTimer as addTimerAct,
-  parseTree,
-  forwardCurrentTimerIndex,
-  addTime,
-} from "../actions";
+import { addTimer as addTimerAct, parseTree, addTime } from "../actions";
 import { AddTimerDialog } from "./AddTimerDialog";
 import { TimerList } from "./Timer/TimerList";
 import { TimerListIcons } from "./Timer/TimerListButtons";
@@ -46,19 +41,14 @@ const TimerApp = () => {
   };
 
   // TimerList callback
-  let timerId = useRef<NodeJS.Timeout>();
+  const timerId = useRef<NodeJS.Timeout>();
   const startTimerDispatch = () => {
-    timerId.current = setInterval(() => dispatch(addTime()), 1000);
-  };
-
-  const skipTimerDisparch = () => {
-    clearInterval(timerId.current);
-    dispatch(forwardCurrentTimerIndex());
     timerId.current = setInterval(() => dispatch(addTime()), 1000);
   };
 
   const resetTimerDispatch = () => {
     clearInterval(timerId.current);
+    dispatch(parseTree());
     // toggleIsTree();
   };
 
@@ -80,7 +70,6 @@ const TimerApp = () => {
       />
       <TimerListIcons
         onClickStart={startTimerDispatch}
-        onClickSkip={skipTimerDisparch}
         onClickStop={stopTimerDispatch}
         onClickReset={resetTimerDispatch}
       />
