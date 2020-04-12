@@ -3,28 +3,36 @@ import produce, { Draft } from "immer";
 import { actionTypes as AT } from "../actions";
 import { initState } from "../initState";
 import { Action, State, TreeData } from "../types";
-import { timersReducer } from "./timersReducer";
+import { timersReducer, traverse } from "./timersReducer";
 import { treeReducer } from "./treeReducer";
-import { isTimer, isSection } from "../utils";
+import { isSection } from "../utils";
 
 export const normalizeTree = (tree: TreeData) => {
   for (const id of Object.keys(tree.items)) {
     const item = tree.items[id];
     if (item.children.length === 0 && isSection(item.data)) {
+      // remove item from its parent
+      const parentItem = Object.values(tree.items).find(it =>
+        it.children.includes(item.id)
+      );
+      const parentId = parentItem.id;
+      const index = parentItem.children.findIndex(id => id === item.id);
+      tree.items[parentId].children.splice(index, 1);
       delete tree.items[id];
     }
   }
 };
+
 // Child reducer should return draft state passed from parent reducer.
 // It doen't make a difference between `return draft` and `break`.Former is preferred.
 export const rootReducer = produce((draft: Draft<State>, action: Action) => {
   switch (action.type) {
-    case AT.FLATTEN_TREE: {
-      // TODO: refactor
+    case AT.PARSE_TREE: {
       normalizeTree(draft.tree);
       draft.timers.timerList = flattenTree(draft.tree);
-      draft.timers.currentTimerIndex = draft.timers.timerList.findIndex(elem =>
-        isTimer(elem.item.data)
+      draft.timers.currentTimerId = traverse(
+        draft.timers.timerTree,
+        draft.timers.timerTree.rootId
       );
       break;
     }
