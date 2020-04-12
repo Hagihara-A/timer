@@ -46,7 +46,7 @@ const TimerApp = () => {
   };
 
   // TimerList callback
-  let timerId = useRef<number>();
+  let timerId = useRef<NodeJS.Timeout>();
   const startTimerDispatch = () => {
     timerId.current = setInterval(() => dispatch(addTime()), 1000);
   };
