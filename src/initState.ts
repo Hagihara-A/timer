@@ -83,7 +83,7 @@ export const initState: MutableState = {
         isExpanded: true,
         isChildrenLoading: false,
         data: {
-          repeat: 1,
+          repeat: 2,
           count: 0,
           comment: ""
         }
@@ -121,7 +121,7 @@ export const initState: MutableState = {
         isExpanded: true,
         isChildrenLoading: false,
         data: {
-          repeat: 1,
+          repeat: 2,
           comment: "",
           count: 0
         }
