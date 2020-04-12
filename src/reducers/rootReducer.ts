@@ -12,11 +12,11 @@ export const normalizeTree = (tree: TreeData) => {
     const item = tree.items[id];
     if (item.children.length === 0 && isSection(item.data)) {
       // remove item from its parent
-      const parentItem = Object.values(tree.items).find(it =>
+      const parentItem = Object.values(tree.items).find((it) =>
         it.children.includes(item.id)
       );
       const parentId = parentItem.id;
-      const index = parentItem.children.findIndex(id => id === item.id);
+      const index = parentItem.children.findIndex((id) => id === item.id);
       tree.items[parentId].children.splice(index, 1);
       delete tree.items[id];
     }

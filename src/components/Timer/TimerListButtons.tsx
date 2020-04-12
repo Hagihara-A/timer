@@ -7,15 +7,15 @@ import React, { useState } from "react";
 
 const useIconStyles = makeStyles({
   root: {
-    fontSize: "5rem"
-  }
+    fontSize: "5rem",
+  },
 });
 
 export const TimerListIcons = ({
   onClickStart,
   onClickSkip,
   onClickStop,
-  onClickReset
+  onClickReset,
 }: {
   onClickStart: () => void;
   onClickSkip: () => void;

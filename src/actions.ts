@@ -1,7 +1,7 @@
 import {
   ItemId,
   TreeDestinationPosition,
-  TreeSourcePosition
+  TreeSourcePosition,
 } from "@atlaskit/tree";
 import { EditableSectionData, EditableTimerData } from "./types";
 
@@ -17,19 +17,19 @@ export const actionTypes = {
   TOGGLE_PROPERTY: "TOGGLE_PROPERTY",
   // for timersReducer
   ADD_TIME: "ADD_TIME",
-  FORWARD_FOCUS: "FORWARD_FOCUS"
+  FORWARD_FOCUS: "FORWARD_FOCUS",
 } as const;
 
 export const addTime = () => {
   return {
     type: actionTypes.ADD_TIME,
-    payload: {}
+    payload: {},
   };
 };
 
 export const forwardCurrentTimerIndex = () => {
   return {
-    type: actionTypes.FORWARD_FOCUS
+    type: actionTypes.FORWARD_FOCUS,
   };
 };
 export const addTimer = (parentId: ItemId, treeItemData: EditableTimerData) => {
@@ -37,16 +37,16 @@ export const addTimer = (parentId: ItemId, treeItemData: EditableTimerData) => {
     type: actionTypes.ADD_TIMER,
     payload: {
       parentId,
-      ...treeItemData
-    }
+      ...treeItemData,
+    },
   };
 };
 export const removeItem = (source: TreeSourcePosition) => {
   return {
     type: actionTypes.REMOVE_ITEM,
     payload: {
-      source
-    }
+      source,
+    },
   };
 };
 export const editTimer = (
@@ -57,8 +57,8 @@ export const editTimer = (
     type: actionTypes.EDIT_TIMER,
     payload: {
       editItemId,
-      data
-    }
+      data,
+    },
   };
 };
 
@@ -70,8 +70,8 @@ export const editSection = (
     type: actionTypes.EDIT_SECTION,
     payload: {
       editItemId,
-      data
-    }
+      data,
+    },
   };
 };
 export const onDragEnd = (
@@ -82,8 +82,8 @@ export const onDragEnd = (
     type: actionTypes.ON_DRAG_END,
     payload: {
       source,
-      destination
-    }
+      destination,
+    },
   };
 };
 
@@ -95,13 +95,13 @@ export const toggleProperty = (
     type: actionTypes.TOGGLE_PROPERTY,
     payload: {
       id,
-      prop
-    }
+      prop,
+    },
   };
 };
 
 export const parseTree = () => {
   return {
-    type: actionTypes.PARSE_TREE
+    type: actionTypes.PARSE_TREE,
   };
 };

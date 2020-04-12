@@ -5,13 +5,13 @@ import React from "react";
 
 const useIconStyles = makeStyles({
   root: {
-    fontSize: "5rem"
-  }
+    fontSize: "5rem",
+  },
 });
 
 export const TimerTreeIcons = ({
   onClickAdd,
-  onClickComplete
+  onClickComplete,
 }: {
   onClickAdd: () => void;
   onClickComplete: () => void;

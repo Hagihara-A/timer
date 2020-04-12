@@ -9,12 +9,12 @@ import { store } from "./store";
 let theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#f55333"
+      main: "#f55333",
     },
     secondary: {
-      main: "#062457"
-    }
-  }
+      main: "#062457",
+    },
+  },
 });
 
 theme = responsiveFontSizes(theme);

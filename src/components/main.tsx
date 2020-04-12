@@ -5,7 +5,7 @@ import {
   addTimer as addTimerAct,
   parseTree,
   forwardCurrentTimerIndex,
-  addTime
+  addTime,
 } from "../actions";
 import { AddTimerDialog } from "./AddTimerDialog";
 import { TimerList } from "./Timer/TimerList";
@@ -19,7 +19,7 @@ const Heading = styled(({ children }) => (
     {children}
   </Typography>
 ))({
-  lineHeight: "initial"
+  lineHeight: "initial",
 });
 
 const TimerApp = () => {
@@ -32,7 +32,7 @@ const TimerApp = () => {
   // TimerTreeButton callback
   const addTimer = ({
     timeLimit,
-    power
+    power,
   }: {
     timeLimit: number;
     power: number;

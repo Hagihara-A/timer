@@ -9,14 +9,14 @@ import { isSection, isTimer } from "../../utils";
 const EditableInput = ({
   value,
   onChange,
-  inputProps
+  inputProps,
 }: {
   value: string | number;
   onChange: any;
   inputProps?: any;
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const onKeyDown = e => {
+  const onKeyDown = (e) => {
     if (e.keyCode === 13) {
       setIsEditing(!isEditing);
     }
@@ -44,14 +44,14 @@ const EditableInput = ({
 
 const EditableSection = ({
   id,
-  data
+  data,
 }: {
   id: ItemId;
   data: SectionTreeItemData;
 }) => {
   const { repeat } = data;
   const dispatch = useDispatch();
-  const onChange = e => {
+  const onChange = (e) => {
     dispatch(editSection(id, { repeat: Number(e.target.value) }));
   };
   return (
@@ -68,7 +68,7 @@ const EditableSection = ({
 
 const EditableTimer = ({
   id,
-  data
+  data,
 }: {
   id: ItemId;
   data: TimerTreeItemData;
@@ -77,10 +77,10 @@ const EditableTimer = ({
 
   const { power, timeLimit } = data;
 
-  const onChangeTimeLimit = e => {
+  const onChangeTimeLimit = (e) => {
     dispatch(editTimer(id, { timeLimit: Number(e.target.value) }));
   };
-  const onChangePower = e => {
+  const onChangePower = (e) => {
     dispatch(editTimer(id, { power: Number(e.target.value) }));
   };
   return (

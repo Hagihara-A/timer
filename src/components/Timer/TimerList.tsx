@@ -11,13 +11,13 @@ export const TimerList = () => {
   const { timerList, currentTimerId } = useSelector(
     (state: State) => state.timers
   );
-  const focus = timerList.findIndex(elem => elem.item.id === currentTimerId);
+  const focus = timerList.findIndex((elem) => elem.item.id === currentTimerId);
 
   const springs = useSprings(
     timerList.length,
     timerList.map((_, index) => {
       return {
-        fontSize: index === focus ? "2rem" : "1rem"
+        fontSize: index === focus ? "2rem" : "1rem",
       };
     })
   );

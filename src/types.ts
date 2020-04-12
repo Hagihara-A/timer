@@ -1,7 +1,7 @@
 import {
   ItemId,
   TreeData as AtlasTreeData,
-  TreeItem as AtlasTreeItem
+  TreeItem as AtlasTreeItem,
 } from "@atlaskit/tree";
 import { FlattenedItem } from "@atlaskit/tree/dist/cjs/types";
 import * as actionCreator from "./actions";

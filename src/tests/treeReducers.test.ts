@@ -6,20 +6,20 @@ import {
   editTimer,
   onDragEnd,
   removeItem,
-  toggleProperty
+  toggleProperty,
 } from "../actions";
 import { initState } from "../initState";
 import {
   getNewItemIds,
   setNewItemOnTree,
-  treeReducer
+  treeReducer,
 } from "../reducers/treeReducer";
 const { tree } = initState;
 
 test("setNewItemOnTree", () => {
   const dataToadd = { power: 120, timeLimit: 40, comment: "" };
   const parentId = "3-2-1";
-  const newTree = produce(tree, draft =>
+  const newTree = produce(tree, (draft) =>
     setNewItemOnTree(draft, parentId, dataToadd)
   );
   expect(Object.keys(newTree.items)).toHaveLength(
@@ -94,11 +94,11 @@ describe("treeReducer", () => {
     const dstId = dstPos.parentId;
     const action = onDragEnd(srcPos, dstPos);
     const newTree = treeReducer(tree, action);
-    const newSrcParent = Object.values(newTree.items).find(item =>
-      item.children.some(id => id === srcId)
+    const newSrcParent = Object.values(newTree.items).find((item) =>
+      item.children.some((id) => id === srcId)
     );
-    const newDstParent = Object.values(newTree.items).find(item =>
-      item.children.some(id => id === dstId)
+    const newDstParent = Object.values(newTree.items).find((item) =>
+      item.children.some((id) => id === dstId)
     );
     expect(newSrcParent.id).toBe(newDstParent.id);
     expect(newTree.items[srcPos.parentId].children).not.toContain(srcId);
@@ -113,11 +113,11 @@ describe("treeReducer", () => {
     const dstId = dstPos.parentId;
     const action = onDragEnd(srcPos, dstPos);
     const newTree = treeReducer(tree, action);
-    const newSrcParent = Object.values(newTree.items).find(item =>
-      item.children.some(id => id === srcId)
+    const newSrcParent = Object.values(newTree.items).find((item) =>
+      item.children.some((id) => id === srcId)
     );
-    const newDstParent = Object.values(newTree.items).find(item =>
-      item.children.some(id => id === dstId)
+    const newDstParent = Object.values(newTree.items).find((item) =>
+      item.children.some((id) => id === dstId)
     );
     expect(newSrcParent.id).toBe(newDstParent.id);
     expect(newTree.items[srcPos.parentId].children).not.toContain(srcId);
@@ -131,8 +131,8 @@ describe("treeReducer", () => {
     const srcId = tree.items[srcPos.parentId].children[srcPos.index];
     const action = onDragEnd(srcPos, dstPos);
     const newTree = treeReducer(tree, action);
-    const newSrcParent = Object.values(newTree.items).find(item =>
-      item.children.some(id => id === srcId)
+    const newSrcParent = Object.values(newTree.items).find((item) =>
+      item.children.some((id) => id === srcId)
     );
     expect(newSrcParent.id).toBe(dstPos.parentId);
     expect(newSrcParent.children).toContain(srcId);

@@ -5,19 +5,19 @@ import {
   DialogContent,
   DialogTitle,
   makeStyles,
-  TextField
+  TextField,
 } from "@material-ui/core";
 import React, { useState } from "react";
 import { EditableTimerData } from "../types";
 const useStyles = makeStyles({
   root: {
-    margin: "10px"
-  }
+    margin: "10px",
+  },
 });
 export const AddTimerDialog = ({
   open,
   onClose,
-  onSubmit
+  onSubmit,
 }: {
   open: boolean;
   onClose: () => void;
@@ -39,7 +39,7 @@ export const AddTimerDialog = ({
       <DialogContent>
         <TextField
           value={timeLimit}
-          onChange={e => setTimeLimit(Number(e.target.value))}
+          onChange={(e) => setTimeLimit(Number(e.target.value))}
           variant="outlined"
           label="TimeLimit"
           inputProps={{ type: "number", min: 1 }}
@@ -48,7 +48,7 @@ export const AddTimerDialog = ({
         <br />
         <TextField
           value={power}
-          onChange={e => setPower(Number(e.target.value))}
+          onChange={(e) => setPower(Number(e.target.value))}
           variant="outlined"
           label="Power"
           inputProps={{ type: "number", min: 1 }}

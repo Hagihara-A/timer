@@ -2,7 +2,7 @@ import {
   ItemId,
   moveItemOnTree,
   TreeDestinationPosition,
-  TreeSourcePosition
+  TreeSourcePosition,
 } from "@atlaskit/tree";
 import produce, { Draft } from "immer";
 import { actionTypes as AT } from "../actions";
@@ -11,7 +11,7 @@ import {
   EditableTimerData,
   SectionTreeItemData,
   TreeData,
-  TreeItem
+  TreeItem,
 } from "../types";
 import { isSection, isTimer } from "../utils";
 
@@ -20,7 +20,7 @@ const initTreeItem: TreeItem = {
   children: [],
   hasChildren: false,
   isExpanded: false,
-  isChildrenLoading: false
+  isChildrenLoading: false,
 };
 
 export const getNewItemIds = (tree: TreeData, numIds: number) => {
@@ -38,12 +38,12 @@ export const setNewItemOnTree = (
   data: EditableTimerData
 ) => {
   const newId = getNewItemIds(tree, 1)[0];
-  const newItem = produce(initTreeItem, draft => {
+  const newItem = produce(initTreeItem, (draft) => {
     draft.id = newId;
     draft.data = {
       elapsedTime: 0,
       comment: "",
-      ...data
+      ...data,
     };
   });
   tree.items[parentId].children.push(newId);
@@ -88,31 +88,31 @@ export const combineTwoTimersIntoSection = (
   const newSectionData: SectionTreeItemData = {
     repeat: 1,
     count: 0,
-    comment: ""
+    comment: "",
   };
   const newSection = {
     ...initTreeItem,
     id: newSectionId,
     data: newSectionData,
-    children: [dstItem.id, srcItem.id]
+    children: [dstItem.id, srcItem.id],
   };
 
-  const dstParentItem = Object.values(tree.items).find(item =>
-    item.children.some(id => id === dstItem.id)
+  const dstParentItem = Object.values(tree.items).find((item) =>
+    item.children.some((id) => id === dstItem.id)
   );
   const dstItemPosition = {
     parentId: dstParentItem.id,
-    index: dstParentItem.children.findIndex(id => id === dstItem.id)
+    index: dstParentItem.children.findIndex((id) => id === dstItem.id),
   };
 
   // remove src deps
   tree.items[src.parentId].children = tree.items[src.parentId].children.filter(
-    id => id !== srcItem.id
+    (id) => id !== srcItem.id
   );
   // replace dstItem.id to newSection
   tree.items[dstItemPosition.parentId].children = tree.items[
     dstItemPosition.parentId
-  ].children.map(id => (id === dstItem.id ? newSectionId : id));
+  ].children.map((id) => (id === dstItem.id ? newSectionId : id));
 
   // add newSection
   tree.items[newSectionId] = newSection;

@@ -6,7 +6,7 @@ import {
   countUp,
   timersReducer,
   traverse,
-  resetDescendant
+  resetDescendant,
 } from "../reducers/timersReducer";
 import { TreeData, TreeItem } from "../types";
 import { isTimer } from "../utils";
@@ -39,7 +39,7 @@ expect.extend({
       }
       return {
         pass,
-        message: () => `expected ${expected} but got ${actual}`
+        message: () => `expected ${expected} but got ${actual}`,
       };
     } else {
       if (isTimer(received.data)) {
@@ -51,10 +51,10 @@ expect.extend({
 
       return {
         pass,
-        message: () => `expected ${count} but got ${actual}`
+        message: () => `expected ${count} but got ${actual}`,
       };
     }
-  }
+  },
 });
 
 describe(`${AT.ADD_TIME}`, () => {
@@ -103,7 +103,7 @@ describe(`traverse`, () => {
   });
 
   test(`traverse tree elapsed till "1-0"`, () => {
-    const elapsedTree = produce(timers.timerTree, draft => {
+    const elapsedTree = produce(timers.timerTree, (draft) => {
       draft.items["0"].data.elapsedTime = draft.items["0"].data.timeLimit;
       draft.items["1-0"].data.elapsedTime = draft.items["1-0"].data.timeLimit;
     });
@@ -112,7 +112,7 @@ describe(`traverse`, () => {
   });
 
   test(`traverse tree elapsed till "1-1"`, () => {
-    const elapsedTree = produce(timers.timerTree, draft => {
+    const elapsedTree = produce(timers.timerTree, (draft) => {
       draft.items["0"].data.elapsedTime = draft.items["0"].data.timeLimit;
       draft.items["1-0"].data.elapsedTime = draft.items["1-0"].data.timeLimit;
       draft.items["1-1"].data.elapsedTime = draft.items["1-1"].data.timeLimit;
@@ -122,7 +122,7 @@ describe(`traverse`, () => {
   });
 
   test(`traverse tree elapsed till "1"`, () => {
-    const elapsedTree = produce(timers.timerTree, draft => {
+    const elapsedTree = produce(timers.timerTree, (draft) => {
       draft.items["0"].data.elapsedTime = draft.items["0"].data.timeLimit;
       draft.items["1"].data.count = draft.items["1"].data.repeat;
       draft.items["1-0"].data.elapsedTime = draft.items["1-0"].data.timeLimit;
@@ -133,7 +133,7 @@ describe(`traverse`, () => {
   });
 
   test(`traverse tree elapsed till "2"`, () => {
-    const elapsedTree = produce(timers.timerTree, draft => {
+    const elapsedTree = produce(timers.timerTree, (draft) => {
       draft.items["0"].data.elapsedTime = draft.items["0"].data.timeLimit;
       draft.items["1"].data.count = draft.items["1"].data.repeat;
       draft.items["1-0"].data.elapsedTime = draft.items["1-0"].data.timeLimit;
@@ -147,7 +147,7 @@ describe(`traverse`, () => {
 
 describe(`countUp`, () => {
   test(`countUp initState`, () => {
-    const counted = produce(timers.timerTree, draft => countUp(draft));
+    const counted = produce(timers.timerTree, (draft) => countUp(draft));
     expect(counted.items["0"]).toBeCountedTo(1);
   });
 });
@@ -165,14 +165,14 @@ const elapse = (tree: TreeData, ids: ItemId[], count?: number) => {
   }
 };
 test(`resetDescendant`, () => {
-  const elapsedTree = produce(timerTree, draft => {
+  const elapsedTree = produce(timerTree, (draft) => {
     elapse(
       draft,
-      Object.keys(timerTree.items).filter(id => id !== timerTree.rootId)
+      Object.keys(timerTree.items).filter((id) => id !== timerTree.rootId)
     );
   });
 
-  const resetUnder3 = produce(elapsedTree, draft => {
+  const resetUnder3 = produce(elapsedTree, (draft) => {
     resetDescendant(draft, "3");
   });
 

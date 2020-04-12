@@ -10,7 +10,7 @@ export const initState: MutableState = {
         children: ["0", "1", "2", "3"],
         hasChildren: true,
         isExpanded: true,
-        isChildrenLoading: false
+        isChildrenLoading: false,
       },
       "0": {
         id: "0",
@@ -22,8 +22,8 @@ export const initState: MutableState = {
           elapsedTime: 0,
           timeLimit: 3,
           power: 130,
-          comment: ""
-        }
+          comment: "",
+        },
       },
       "1": {
         id: "1",
@@ -34,8 +34,8 @@ export const initState: MutableState = {
         data: {
           repeat: 1,
           count: 0,
-          comment: ""
-        }
+          comment: "",
+        },
       },
       "1-0": {
         id: "1-0",
@@ -47,8 +47,8 @@ export const initState: MutableState = {
           elapsedTime: 0,
           timeLimit: 2,
           power: 260,
-          comment: ""
-        }
+          comment: "",
+        },
       },
       "1-1": {
         id: "1-1",
@@ -60,8 +60,8 @@ export const initState: MutableState = {
           elapsedTime: 0,
           timeLimit: 2,
           power: 260,
-          comment: ""
-        }
+          comment: "",
+        },
       },
       "2": {
         id: "2",
@@ -73,8 +73,8 @@ export const initState: MutableState = {
           elapsedTime: 0,
           timeLimit: 5,
           power: 260,
-          comment: ""
-        }
+          comment: "",
+        },
       },
       "3": {
         id: "3",
@@ -85,8 +85,8 @@ export const initState: MutableState = {
         data: {
           repeat: 2,
           count: 0,
-          comment: ""
-        }
+          comment: "",
+        },
       },
       "3-0": {
         id: "3-0",
@@ -98,8 +98,8 @@ export const initState: MutableState = {
           elapsedTime: 0,
           timeLimit: 2,
           power: 150,
-          comment: ""
-        }
+          comment: "",
+        },
       },
       "3-1": {
         id: "3-1",
@@ -111,8 +111,8 @@ export const initState: MutableState = {
           elapsedTime: 0,
           timeLimit: 2,
           power: 150,
-          comment: ""
-        }
+          comment: "",
+        },
       },
       "3-2": {
         id: "3-2",
@@ -123,8 +123,8 @@ export const initState: MutableState = {
         data: {
           repeat: 2,
           comment: "",
-          count: 0
-        }
+          count: 0,
+        },
       },
       "3-2-0": {
         id: "3-2-0",
@@ -136,8 +136,8 @@ export const initState: MutableState = {
           elapsedTime: 0,
           timeLimit: 3,
           power: 150,
-          comment: ""
-        }
+          comment: "",
+        },
       },
       "3-2-1": {
         id: "3-2-1",
@@ -149,16 +149,16 @@ export const initState: MutableState = {
           elapsedTime: 0,
           timeLimit: 3,
           power: 150,
-          comment: ""
-        }
-      }
-    }
+          comment: "",
+        },
+      },
+    },
   },
-  timers: undefined
+  timers: undefined,
 };
 
 initState.timers = {
   currentTimerId: "0",
   timerList: flattenTree(initState.tree),
-  timerTree: initState.tree
+  timerTree: initState.tree,
 };

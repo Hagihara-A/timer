@@ -2,7 +2,7 @@ import Tree, {
   ItemId,
   RenderItemParams,
   TreeDestinationPosition,
-  TreeSourcePosition
+  TreeSourcePosition,
 } from "@atlaskit/tree";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
@@ -12,7 +12,7 @@ import styled from "styled-components";
 import {
   onDragEnd as onDragEndAction,
   removeItem,
-  toggleProperty
+  toggleProperty,
 } from "../../actions";
 import { State } from "../../types";
 import EditableContent from "./EditableContent";
@@ -23,7 +23,7 @@ const TreeContainer = styled.div`
 const ItemContainer = styled.div<any>`
   border-radius: 2px;
   margin: 1px 0;
-  background-color: hsl(${props => 40 - props.depth * 15}, 50%, 50%);
+  background-color: hsl(${(props) => 40 - props.depth * 15}, 50%, 50%);
 `;
 const Icon = ({ item, onExpand, onCollapse, depth }) => {
   if (item.children && item.children.length > 0) {
@@ -43,7 +43,7 @@ const renderItem = ({
   onExpand,
   onCollapse,
   provided,
-  snapshot
+  snapshot,
 }: RenderItemParams) => {
   return (
     <ItemContainer
