@@ -3,7 +3,7 @@ import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addTimer as addTimerAct,
-  parseTreeToTimers,
+  parseTree,
   forwardCurrentTimerIndex,
   addTime
 } from "../actions";
@@ -26,9 +26,9 @@ const TimerApp = () => {
   // const [isTree, setIsTree] = useState(true);
   // const toggleIsTree = () => setIsTree(!isTree);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const toggleIsOpen = () => setIsModalOpen(!isModalOpen);
-
+  const toggleIsModalOpen = () => setIsModalOpen(!isModalOpen);
   const dispatch = useDispatch();
+
   // TimerTreeButton callback
   const addTimer = ({
     timeLimit,
@@ -41,7 +41,7 @@ const TimerApp = () => {
   };
 
   const slideToTimerList = () => {
-    dispatch(parseTreeToTimers());
+    dispatch(parseTree());
     // toggleIsTree();
   };
 
@@ -66,8 +66,8 @@ const TimerApp = () => {
     clearInterval(timerId.current);
   };
 
-  const focus = useSelector((state: State) => state.timers.currentTimerIndex);
-  if (focus === -1) clearInterval(timerId.current);
+  const focus = useSelector((state: State) => state.timers.currentTimerId);
+  if (focus == null) clearInterval(timerId.current);
 
   return (
     <div>
@@ -75,7 +75,7 @@ const TimerApp = () => {
       <TimerTree />
       <TimerList />
       <TimerTreeIcons
-        onClickAdd={toggleIsOpen}
+        onClickAdd={toggleIsModalOpen}
         onClickComplete={slideToTimerList}
       />
       <TimerListIcons
@@ -86,7 +86,7 @@ const TimerApp = () => {
       />
       <AddTimerDialog
         open={isModalOpen}
-        onClose={toggleIsOpen}
+        onClose={toggleIsModalOpen}
         onSubmit={addTimer}
       />
     </div>
