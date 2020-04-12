@@ -29,6 +29,7 @@ export const rootReducer = produce((draft: Draft<State>, action: Action) => {
   switch (action.type) {
     case AT.PARSE_TREE: {
       normalizeTree(draft.tree);
+      draft.timers.timerTree = draft.tree;
       draft.timers.timerList = flattenTree(draft.tree);
       draft.timers.currentTimerId = traverse(
         draft.timers.timerTree,
