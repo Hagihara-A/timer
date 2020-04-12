@@ -17,6 +17,8 @@ test(`normalizeTree`, () => {
         comment: ""
       }
     };
+
+    draft.items["3"].children.push("someId");
   });
 
   const normalizedTree = produce(unNormalizedTree, draft =>
@@ -24,4 +26,5 @@ test(`normalizeTree`, () => {
   );
   expect(normalizedTree.items["someId"]).toBeUndefined();
   expect(normalizedTree).toEqual(tree);
+  expect(normalizedTree.items["3"].children).not.toContain("someId");
 });
