@@ -57,6 +57,19 @@ expect.extend({
   },
 });
 
+const elapse = (tree: TreeData, ids: ItemId[], count?: number) => {
+  for (const id of ids) {
+    const item = tree.items[id];
+    if (typeof count === "undefined") {
+      if (isTimer(item.data)) item.data.elapsedTime = item.data.timeLimit;
+      else item.data.count = item.data.repeat;
+    } else {
+      if (isTimer(item.data)) item.data.elapsedTime = count;
+      else item.data.count = count;
+    }
+  }
+};
+
 describe(`${AT.ADD_TIME}`, () => {
   test(`${AT.ADD_TIME} simply for Timer`, () => {
     const reduced = timersReducer(timers, addTime());
@@ -104,8 +117,7 @@ describe(`traverse`, () => {
 
   test(`traverse tree elapsed till "1-0"`, () => {
     const elapsedTree = produce(timers.timerTree, (draft) => {
-      draft.items["0"].data.elapsedTime = draft.items["0"].data.timeLimit;
-      draft.items["1-0"].data.elapsedTime = draft.items["1-0"].data.timeLimit;
+      elapse(draft, ["0", "1-0"]);
     });
     const toBeCountedId = traverse(elapsedTree, elapsedTree.rootId);
     expect(toBeCountedId).toBe("1-1");
@@ -113,9 +125,7 @@ describe(`traverse`, () => {
 
   test(`traverse tree elapsed till "1-1"`, () => {
     const elapsedTree = produce(timers.timerTree, (draft) => {
-      draft.items["0"].data.elapsedTime = draft.items["0"].data.timeLimit;
-      draft.items["1-0"].data.elapsedTime = draft.items["1-0"].data.timeLimit;
-      draft.items["1-1"].data.elapsedTime = draft.items["1-1"].data.timeLimit;
+      elapse(draft, ["0", "1-0", "1-1"]);
     });
     const toBeCountedId = traverse(elapsedTree, elapsedTree.rootId);
     expect(toBeCountedId).toBe("1");
@@ -123,10 +133,7 @@ describe(`traverse`, () => {
 
   test(`traverse tree elapsed till "1"`, () => {
     const elapsedTree = produce(timers.timerTree, (draft) => {
-      draft.items["0"].data.elapsedTime = draft.items["0"].data.timeLimit;
-      draft.items["1"].data.count = draft.items["1"].data.repeat;
-      draft.items["1-0"].data.elapsedTime = draft.items["1-0"].data.timeLimit;
-      draft.items["1-1"].data.elapsedTime = draft.items["1-1"].data.timeLimit;
+      elapse(draft, ["0", "1", "1-0", "1-1"]);
     });
     const toBeCountedId = traverse(elapsedTree, elapsedTree.rootId);
     expect(toBeCountedId).toBe("2");
@@ -134,11 +141,7 @@ describe(`traverse`, () => {
 
   test(`traverse tree elapsed till "2"`, () => {
     const elapsedTree = produce(timers.timerTree, (draft) => {
-      draft.items["0"].data.elapsedTime = draft.items["0"].data.timeLimit;
-      draft.items["1"].data.count = draft.items["1"].data.repeat;
-      draft.items["1-0"].data.elapsedTime = draft.items["1-0"].data.timeLimit;
-      draft.items["1-1"].data.elapsedTime = draft.items["1-1"].data.timeLimit;
-      draft.items["2"].data.elapsedTime = draft.items["2"].data.timeLimit;
+      elapse(draft, ["0", "1", "1-0", "1-1", "2"]);
     });
     const toBeCountedId = traverse(elapsedTree, elapsedTree.rootId);
     expect(toBeCountedId).toBe("3-0");
@@ -152,18 +155,6 @@ describe(`countUp`, () => {
   });
 });
 
-const elapse = (tree: TreeData, ids: ItemId[], count?: number) => {
-  for (const id of ids) {
-    const item = tree.items[id];
-    if (typeof count === "undefined") {
-      if (isTimer(item.data)) item.data.elapsedTime = item.data.timeLimit;
-      else item.data.count = item.data.repeat;
-    } else {
-      if (isTimer(item.data)) item.data.elapsedTime = count;
-      else item.data.count = count;
-    }
-  }
-};
 test(`resetDescendant`, () => {
   const elapsedTree = produce(timerTree, (draft) => {
     elapse(
