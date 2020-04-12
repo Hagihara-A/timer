@@ -19,23 +19,30 @@ export const resetDescendant = (tree: TreeData, parentId: ItemId) => {
   for (const id of parent.children) {
     const child = tree.items[id];
     if (isTimer(child.data)) child.data.elapsedTime = 0;
-    else resetDescendant(tree, child.id);
+    else {
+      child.data.count = 0;
+      resetDescendant(tree, child.id);
+    }
   }
 };
 
-export const countUp = (timers: TimersListData) => {
-  const { timerTree } = timers;
+export const countUp = (timerTree: TreeData) => {
+  const toBeCountedId = traverse(timerTree, timerTree.rootId);
 
-  let toBeCountedId = traverse(timerTree, timerTree.rootId);
-
-  if (toBeCountedId === timers.timerTree.rootId) return;
+  if (typeof toBeCountedId === "undefined") return;
   const item = timerTree.items[toBeCountedId];
+
   if (isTimer(item.data)) {
     item.data.elapsedTime++;
   } else {
     item.data.count++;
-    resetDescendant(timerTree, item.id);
-    toBeCountedId = traverse(timerTree, timerTree.rootId);
+    if (!isFullyCounted(item)) {
+      resetDescendant(timerTree, item.id);
+    }
+  }
+  const nextId = traverse(timerTree, timerTree.rootId);
+  if (nextId && isSection(timerTree.items[nextId].data)) {
+    countUp(timerTree);
   }
 };
 
@@ -61,7 +68,7 @@ export const timersReducer = produce(
     switch (action.type) {
       case AT.ADD_TIME: {
         // TODO reduce expensive computation
-        countUp(draft); //update draft.timerTree
+        countUp(draft.timerTree); //update draft.timerTree
         draft.timerList = flattenTree(draft.timerTree);
         draft.currentTimerId = traverse(
           draft.timerTree,
