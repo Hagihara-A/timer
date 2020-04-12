@@ -43,7 +43,8 @@ export type EditableSectionData = Pick<
 // state.timers definition
 export interface TimersListData {
   timerList: TimerList;
-  currentTimerIndex: number | null;
+  currentTimerId: ItemId | null;
+  timerTree: TreeData;
 }
 export type TimerList = FlattendTreeItem[];
 
