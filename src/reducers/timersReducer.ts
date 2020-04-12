@@ -1,165 +1,72 @@
+import { ItemId } from "@atlaskit/tree";
+import { flattenTree } from "@atlaskit/tree/dist/cjs/utils/tree";
 import produce, { Draft } from "immer";
 import { actionTypes as AT } from "../actions";
 import { initState } from "../initState";
-import { Action, TimersListData, TimerList } from "../types";
-import { isTimer, isSection } from "../utils";
-import { Path } from "@atlaskit/tree";
+import { Action, TimersListData, TreeData, TreeItem } from "../types";
+import { isSection, isTimer } from "../utils";
 
-export const nextFocus = (timerList: TimerList, focus: number) => {
-  return timerList.findIndex((elem, i) => {
-    if (i > focus && isTimer(elem.item.data)) {
-      return true;
-    }
-    return false;
-  });
-};
-export const isParent = (child: Path, parent: Path) => {
-  if (child.length > parent.length) {
-    return parent.every((n, i) => n === child[i]);
-  } else {
-    return false;
-  }
-};
-export const isSamePath = (a: Path, b: Path) => {
-  if (a.length === b.length) {
-    return a.every((_, i) => a[i] === b[i]);
-  } else {
-    return false;
-  }
-};
-export const getAllParentIdxs = (
-  timerList: TimerList,
-  basePath: Path
-): number[] => {
-  return timerList.reduce((accum, val, idx) => {
-    if (isParent(basePath, val.path)) return accum.concat(idx);
-    return accum;
-  }, []);
-};
-
-export const isLastTimer = (timerList: TimerList, path: Path) => {
-  const lastIdx = path.length - 1;
-  const nextSiblingPath = [...path];
-  nextSiblingPath.splice(lastIdx, 1, path[lastIdx] + 1);
-  const nextSiblingItem = timerList.find(item =>
-    isSamePath(item.path, nextSiblingPath)
-  );
-  if (typeof nextSiblingItem === "undefined") return true;
-  return !isTimer(nextSiblingItem.item.data);
-};
-export const getItemFromPath = (timerList: TimerList, path: Path) => {
-  return timerList.find(item => isSamePath(item.path, path));
-};
-
-export const isFullyCounted = (timerList: TimerList, path: Path) => {
-  const item = getItemFromPath(timerList, path).item;
+export const isFullyCounted = (item: TreeItem) => {
   if (isSection(item.data)) {
-    return item.data.repeat === item.data.count;
+    return item.data.count >= item.data.repeat;
   } else {
-    return item.data.elapsedTime === item.data.timeLimit;
+    return item.data.elapsedTime >= item.data.timeLimit;
   }
 };
 
-export const countUpNearestSection = (timerList: TimerList, currPath: Path) => {
-  const parentIdxs = getAllParentIdxs(timerList, currPath).reverse();
-  for (let idx of parentIdxs) {
-    let parentItem = timerList[idx];
-    if (
-      !isFullyCounted(timerList, parentItem.path) &&
-      isSection(parentItem.item.data)
-    ) {
-      parentItem.item.data.count++;
-
-      return parentItem.item.data.count === parentItem.item.data.repeat
-        ? undefined
-        : parentItem.path;
-    }
+export const resetDescendant = (tree: TreeData, parentId: ItemId) => {
+  const parent = tree.items[parentId];
+  for (const id of parent.children) {
+    const child = tree.items[id];
+    if (isTimer(child.data)) child.data.elapsedTime = 0;
+    else resetDescendant(tree, child.id);
   }
-
-  return;
 };
 
-export const getFirstTimerIdx = (timerList: TimerList, path: Path) => {
-  return timerList.findIndex(
-    v => isParent(v.path, path) && isTimer(v.item.data)
-  );
+export const countUp = (timers: TimersListData) => {
+  const { timerTree } = timers;
+
+  let toBeCountedId = traverse(timerTree, timerTree.rootId);
+
+  if (toBeCountedId === timers.timerTree.rootId) return;
+  const item = timerTree.items[toBeCountedId];
+  if (isTimer(item.data)) {
+    item.data.elapsedTime++;
+  } else {
+    item.data.count++;
+    resetDescendant(timerTree, item.id);
+    toBeCountedId = traverse(timerTree, timerTree.rootId);
+  }
 };
 
-export const initItems = (timerList: TimerList, parentPath: Path) => {
-  for (let i in timerList) {
-    const elem = timerList[i];
-    if (!isParent(elem.path, parentPath)) continue;
+export const traverse = (
+  tree: TreeData,
+  rootId: ItemId
+): ItemId | undefined => {
+  const childIds = tree.items[rootId].children;
+  for (const id of childIds) {
+    const currItem = tree.items[id];
+    const isBelowRepeat = !isFullyCounted(currItem);
 
-    if (isTimer(elem.item.data)) {
-      elem.item.data.elapsedTime = 0;
-    } else {
-      elem.item.data.count = 0;
+    if (isTimer(currItem.data) && isBelowRepeat) return currItem.id;
+    else if (isSection(currItem.data)) {
+      const toBeCountedId = traverse(tree, currItem.id);
+      if (typeof toBeCountedId !== "undefined") return toBeCountedId;
+      else if (isBelowRepeat) return currItem.id;
     }
   }
 };
 export const timersReducer = produce(
   (draft: Draft<TimersListData>, action: Action) => {
     switch (action.type) {
-      case AT.FORWARD_FOCUS: {
-        draft.currentTimerIndex = nextFocus(
-          draft.timerList,
-          draft.currentTimerIndex
-        );
-        break;
-      }
       case AT.ADD_TIME: {
-        // if ("focusがタイマーを指していたら") {
-        //   if ("経過時間がタイムリミットより小さいなら") {
-        //     "タイマーを1カウントアップ";
-        //   }
-        //   if ("タイムリミットに達したら") {
-        //     if ("階層の最後のタイマーだったら") {
-        //       "一番近い親からカウントアップ";
-        //       if ("全ての親が最大カウントになったら") {
-        //         "次のタイマーへ";
-        //       } else {
-        //         "カウントアップされた親の子アイテムを初期化";
-        //         "カウントアップされた親の、最初の子タイマーへ移動";
-        //       }
-        //     } else {
-        //       "次の弟タイマーへ";
-        //     }
-        //   }
-        // } else {
-        //   "エラー";
-        // }
-        const focus = draft.currentTimerIndex;
-        const { item: currTimer, path: currPath } = draft.timerList[focus];
-        if (isTimer(currTimer.data)) {
-          if (!isFullyCounted(draft.timerList, currPath)) {
-            currTimer.data.elapsedTime++;
-          }
-
-          if (isFullyCounted(draft.timerList, currPath)) {
-            if (isLastTimer(draft.timerList, currPath)) {
-              const ltRepeatParentPath = countUpNearestSection(
-                draft.timerList,
-                currPath
-              );
-              // 全ての親のカウントが最大になったら
-              if (typeof ltRepeatParentPath === "undefined") {
-                draft.currentTimerIndex = nextFocus(draft.timerList, focus);
-              } else {
-                initItems(draft.timerList, ltRepeatParentPath);
-                draft.currentTimerIndex = getFirstTimerIdx(
-                  draft.timerList,
-                  ltRepeatParentPath
-                );
-              }
-            } else {
-              draft.currentTimerIndex = nextFocus(draft.timerList, focus);
-            }
-          }
-        } else {
-          throw new TypeError(
-            `currentTimerIndex:${draft.currentTimerIndex}  indecates Section`
-          );
-        }
+        // TODO reduce expensive computation
+        countUp(draft); //update draft.timerTree
+        draft.timerList = flattenTree(draft.timerTree);
+        draft.currentTimerId = traverse(
+          draft.timerTree,
+          draft.timerTree.rootId
+        );
         break;
       }
       default:
