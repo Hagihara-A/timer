@@ -7,7 +7,7 @@ import { EditableSectionData, EditableTimerData } from "./types";
 
 export const actionTypes = {
   // for rootReducer
-  FLATTEN_TREE: "FLATTEN_TREE",
+  PARSE_TREE: "PARSE_TREE",
   // for treeReducer
   ADD_TIMER: "ADD_TIMER",
   REMOVE_ITEM: "REMOVE_ITEM",
@@ -100,8 +100,8 @@ export const toggleProperty = (
   };
 };
 
-export const parseTreeToTimers = () => {
+export const parseTree = () => {
   return {
-    type: actionTypes.FLATTEN_TREE
+    type: actionTypes.PARSE_TREE
   };
 };
