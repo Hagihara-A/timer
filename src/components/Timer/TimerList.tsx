@@ -8,12 +8,14 @@ import { isSection } from "../../utils";
 const AnimatedTyporaphy = animated(Typography);
 
 export const TimerList = () => {
-  const timers = useSelector((state: State) => state.timers.timerList);
-  const focus = useSelector((state: State) => state.timers.currentTimerIndex);
+  const { timerList, currentTimerId } = useSelector(
+    (state: State) => state.timers
+  );
+  const focus = timerList.findIndex(elem => elem.item.id === currentTimerId);
 
   const springs = useSprings(
-    timers.length,
-    timers.map((_, index) => {
+    timerList.length,
+    timerList.map((_, index) => {
       return {
         fontSize: index === focus ? "2rem" : "1rem"
       };
@@ -21,7 +23,7 @@ export const TimerList = () => {
   );
 
   const ListItems = springs.map((spring, idx) => {
-    const item = timers[idx].item;
+    const item = timerList[idx].item;
     if (isSection(item.data)) {
       // must be Section
       const { repeat, count } = item.data;
