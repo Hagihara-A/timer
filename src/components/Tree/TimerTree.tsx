@@ -4,33 +4,43 @@ import Tree, {
   TreeDestinationPosition,
   TreeSourcePosition,
 } from "@atlaskit/tree";
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import DeleteIconInner from "@material-ui/icons/Delete";
+import ExpandLessIconInner from "@material-ui/icons/ExpandLess";
+import ExpandMoreIconInner from "@material-ui/icons/ExpandMore";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import {
-  onDragEnd as onDragEndAction,
-  removeItem,
-  toggleProperty,
-} from "../../actions";
+import { onDragEnd as onDragEndAction, toggleProperty } from "../../actions";
 import { State } from "../../types";
 import EditableContent from "./EditableContent";
+
 const TreeContainer = styled.div`
-  max-width: 300px;
+  width: 300px;
   margin: auto;
 `;
+
 const ItemContainer = styled.div<any>`
+  width: 300px;
   border-radius: 2px;
   margin: 1px 0;
   background-color: hsl(${(props) => 40 - props.depth * 15}, 50%, 50%);
 `;
+const DeleteIcon = styled(DeleteIconInner)`
+  opacity: 0;
+  :hover {
+    opacity: 1;
+  }
+  transition: opacity 0.1s 0s ease;
+`;
+
+const ExpandLessIcon = styled(ExpandLessIconInner)``;
+const ExpandMoreIcon = styled(ExpandMoreIconInner)``;
 const Icon = ({ item, onExpand, onCollapse, depth }) => {
   if (item.children && item.children.length > 0) {
     return item.isExpanded ? (
-      <ArrowDropDownIcon onClick={() => onCollapse(item.id)} color="primary" />
+      <ExpandLessIcon onClick={() => onCollapse(item.id)} color="secondary" />
     ) : (
-      <ArrowRightIcon onClick={() => onExpand(item.id)} color="primary" />
+      <ExpandMoreIcon onClick={() => onExpand(item.id)} color="secondary" />
     );
   } else {
     return <span> &bull; </span>;
@@ -59,6 +69,7 @@ const renderItem = ({
         depth={depth}
       />
       <EditableContent itemId={item.id} />
+      <DeleteIcon />
     </ItemContainer>
   );
 };
@@ -74,7 +85,6 @@ const TimerTree = () => {
     source: TreeSourcePosition,
     destination: TreeDestinationPosition
   ) => {
-    // if (!destination) dispatch(removeItem(source));
     dispatch(onDragEndAction(source, destination));
   };
 
