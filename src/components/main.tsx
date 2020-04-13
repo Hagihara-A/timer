@@ -1,4 +1,5 @@
-import { styled, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
+import styled from "styled-components";
 import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addTimer as addTimerAct, parseTree, addTime } from "../actions";
@@ -17,6 +18,9 @@ const Heading = styled(({ children }) => (
   lineHeight: "initial",
 });
 
+const MainAppContainer = styled.div`
+  display: flex;
+`;
 const TimerApp = () => {
   // const [isTree, setIsTree] = useState(true);
   // const toggleIsTree = () => setIsTree(!isTree);
@@ -41,7 +45,7 @@ const TimerApp = () => {
   };
 
   // TimerList callback
-  const timerId = useRef<NodeJS.Timeout>();
+  const timerId = useRef<number>();
   const startTimerDispatch = () => {
     timerId.current = setInterval(() => dispatch(addTime()), 1000);
   };
@@ -62,8 +66,10 @@ const TimerApp = () => {
   return (
     <div>
       <Heading>Training Timer</Heading>
-      <TimerTree />
-      <TimerList />
+      <MainAppContainer>
+        <TimerTree />
+        <TimerList />
+      </MainAppContainer>
       <TimerTreeIcons
         onClickAdd={toggleIsModalOpen}
         onClickComplete={slideToTimerList}
