@@ -6,17 +6,15 @@ import {
 import { EditableSectionData, EditableTimerData } from "./types";
 
 export const actionTypes = {
-  // for rootReducer
   PARSE_TREE: "PARSE_TREE",
-  // for treeReducer
   ADD_TIMER: "ADD_TIMER",
   REMOVE_ITEM: "REMOVE_ITEM",
   EDIT_TIMER: "EDIT_TIMER",
   EDIT_SECTION: "EDIT_SECTION",
   ON_DRAG_END: "ON_DRAG_END",
   TOGGLE_PROPERTY: "TOGGLE_PROPERTY",
-  // for timersReducer
   ADD_TIME: "ADD_TIME",
+  TOGGLE_IS_DRAG_ENABLED: "TOGGLE_IS_DRAG_ENABLED",
 } as const;
 
 export const addTime = () => {
@@ -97,5 +95,11 @@ export const toggleProperty = (
 export const parseTree = () => {
   return {
     type: actionTypes.PARSE_TREE,
+  };
+};
+
+export const toggleIsDragEnabled = () => {
+  return {
+    type: actionTypes.TOGGLE_IS_DRAG_ENABLED,
   };
 };
