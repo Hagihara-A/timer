@@ -74,9 +74,12 @@ const renderItem = ({
   );
 };
 
-const TimerTree = ({ isDragEnabled }: { isDragEnabled: boolean }) => {
+const TimerTree = () => {
   const dispatch = useDispatch();
   const tree = useSelector((state: State) => state.tree);
+  const isDragEnabled = useSelector(
+    (state: State) => state.options.isDragEnabled
+  );
 
   const toggleIsExpanded = (itemId: ItemId) => {
     dispatch(toggleProperty(itemId, "isExpanded"));

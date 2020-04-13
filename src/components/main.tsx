@@ -8,8 +8,6 @@ import TimerTree from "./Tree/TimerTree";
 import { TimerTreeIcons } from "./Tree/TimerTreeButtons";
 
 const TimerApp = () => {
-  const [isDragEnabled, setIsDragEnabled] = useState(true);
-  const toggleIsTree = () => setIsDragEnabled(!isDragEnabled);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toggleIsModalOpen = () => setIsModalOpen(!isModalOpen);
   const dispatch = useDispatch();
@@ -27,7 +25,6 @@ const TimerApp = () => {
 
   const slideToTimerList = () => {
     dispatch(parseTree());
-    toggleIsTree();
   };
 
   // TimerList callback
@@ -39,7 +36,6 @@ const TimerApp = () => {
   const resetTimerDispatch = () => {
     clearInterval(timerId.current);
     dispatch(parseTree());
-    toggleIsTree();
   };
 
   const stopTimerDispatch = () => {
@@ -54,7 +50,7 @@ const TimerApp = () => {
       <Typography variant="h1" paragraph align="center">
         Training Timer
       </Typography>
-      <TimerTree isDragEnabled={isDragEnabled} />
+      <TimerTree />
       <TimerTreeIcons
         onClickAdd={toggleIsModalOpen}
         onClickComplete={slideToTimerList}
