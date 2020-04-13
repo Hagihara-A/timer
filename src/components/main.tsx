@@ -1,18 +1,15 @@
 import { Typography } from "@material-ui/core";
-import styled from "styled-components";
-import React, { useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addTimer as addTimerAct, parseTree, addTime } from "../actions";
+import React, { useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { addTime, addTimer as addTimerAct, parseTree } from "../actions";
 import { AddTimerDialog } from "./AddTimerDialog";
-import { TimerList } from "./Timer/TimerList";
 import { TimerListIcons } from "./Timer/TimerListButtons";
 import TimerTree from "./Tree/TimerTree";
 import { TimerTreeIcons } from "./Tree/TimerTreeButtons";
-import { State } from "../types";
 
 const TimerApp = () => {
-  const [isTree, setIsTree] = useState(true);
-  const toggleIsTree = () => setIsTree(!isTree);
+  const [isDragEnabled, setIsDragEnabled] = useState(true);
+  const toggleIsTree = () => setIsDragEnabled(!isDragEnabled);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toggleIsModalOpen = () => setIsModalOpen(!isModalOpen);
   const dispatch = useDispatch();
@@ -49,16 +46,15 @@ const TimerApp = () => {
     clearInterval(timerId.current);
   };
 
-  const focus = useSelector((state: State) => state.timers.currentTimerId);
-  if (focus == null) clearInterval(timerId.current);
+  // const focus = useSelector((state: State) => state.timers.currentTimerId);
+  // if (focus == null) clearInterval(timerId.current);
 
   return (
     <div>
       <Typography variant="h1" paragraph align="center">
         Training Timer
       </Typography>
-      <TimerTree />
-      <TimerList />
+      <TimerTree isDragEnabled={isDragEnabled} />
       <TimerTreeIcons
         onClickAdd={toggleIsModalOpen}
         onClickComplete={slideToTimerList}

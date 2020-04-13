@@ -11,7 +11,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { onDragEnd as onDragEndAction, toggleProperty } from "../../actions";
-import { State } from "../../types";
+import { TreeData } from "../../types";
 import EditableContent from "./EditableContent";
 
 const TreeContainer = styled.div`
@@ -74,9 +74,9 @@ const renderItem = ({
   );
 };
 
-const TimerTree = () => {
+const TimerTree = ({ isDragEnabled }: { isDragEnabled: boolean }) => {
   const dispatch = useDispatch();
-  const tree = useSelector((state: State) => state.tree);
+  const tree = useSelector((state: TreeData) => state);
 
   const toggleIsExpanded = (itemId: ItemId) => {
     dispatch(toggleProperty(itemId, "isExpanded"));
@@ -93,7 +93,7 @@ const TimerTree = () => {
       <Tree
         tree={tree}
         renderItem={renderItem}
-        isDragEnabled
+        isDragEnabled={isDragEnabled}
         isNestingEnabled
         onCollapse={toggleIsExpanded}
         onExpand={toggleIsExpanded}
