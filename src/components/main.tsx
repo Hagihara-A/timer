@@ -1,7 +1,11 @@
 import { Typography } from "@material-ui/core";
 import React, { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { addTime, addTimer as addTimerAct, parseTree } from "../actions";
+import {
+  addTime,
+  addTimer as addTimerAct,
+  toggleIsDragEnabled as toggleDragAct,
+} from "../actions";
 import { AddTimerDialog } from "./AddTimerDialog";
 import { TimerListIcons } from "./Timer/TimerListButtons";
 import TimerTree from "./Tree/TimerTree";
@@ -23,8 +27,8 @@ const TimerApp = () => {
     dispatch(addTimerAct("root", { power, timeLimit, comment: "" }));
   };
 
-  const slideToTimerList = () => {
-    dispatch(parseTree());
+  const toggleIsDragEnabled = () => {
+    dispatch(toggleDragAct());
   };
 
   // TimerList callback
@@ -35,15 +39,12 @@ const TimerApp = () => {
 
   const resetTimerDispatch = () => {
     clearInterval(timerId.current);
-    dispatch(parseTree());
+    toggleIsDragEnabled();
   };
 
   const stopTimerDispatch = () => {
     clearInterval(timerId.current);
   };
-
-  // const focus = useSelector((state: State) => state.timers.currentTimerId);
-  // if (focus == null) clearInterval(timerId.current);
 
   return (
     <div>
@@ -53,7 +54,7 @@ const TimerApp = () => {
       <TimerTree />
       <TimerTreeIcons
         onClickAdd={toggleIsModalOpen}
-        onClickComplete={slideToTimerList}
+        onClickComplete={toggleIsDragEnabled}
       />
       <TimerListIcons
         onClickStart={startTimerDispatch}
