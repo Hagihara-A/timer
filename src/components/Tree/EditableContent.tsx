@@ -102,7 +102,7 @@ const EditableTimer = ({
 };
 
 const EditableContent = ({ itemId }: { itemId: ItemId }) => {
-  const item = useSelector((state: State) => state.items[itemId]);
+  const item = useSelector((state: State) => state.tree.items[itemId]);
   const { data } = item;
   if (isSection(data)) {
     return <EditableSection id={item.id} data={data} />;
