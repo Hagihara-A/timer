@@ -167,10 +167,9 @@ export const treeReducer = produce((tree: Draft<TreeData>, action: Action) => {
     case AT.ON_DRAG_END: {
       const src = action.payload.source;
       const dst = action.payload.destination;
+      if (!dst) break;
 
       const dstItem = getItemFromPosition(tree, dst);
-
-      if (!dst) break;
 
       if (typeof dst.index === "undefined" && isTimer(dstItem.data)) {
         combineTwoTimersIntoSection(tree, src, dst);
