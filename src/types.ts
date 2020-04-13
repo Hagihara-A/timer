@@ -5,7 +5,14 @@ import {
 } from "@atlaskit/tree";
 import * as actionCreator from "./actions";
 
-export type State = Readonly<TreeData>;
+export type State = Readonly<MutableState>;
+export interface MutableState {
+  tree: TreeData;
+  options: Options;
+}
+export interface Options {
+  isDragEnabled: boolean;
+}
 export interface TreeData extends AtlasTreeData {
   items: Record<ItemId, TreeItem>;
 }
