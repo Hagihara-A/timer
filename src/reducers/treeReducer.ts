@@ -273,4 +273,4 @@ export const treeReducer = produce((tree: Draft<TreeData>, action: Action) => {
       break;
     }
   }
-}, initState);
+}, initState.tree);
