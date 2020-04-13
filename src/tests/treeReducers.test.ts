@@ -22,7 +22,9 @@ import {
 } from "../reducers/treeReducer";
 import { TreeData, TreeItem } from "../types";
 import { isTimer } from "../utils";
-const tree = initState;
+
+const { tree } = initState;
+
 declare global {
   namespace jest {
     interface Matchers<R> {
@@ -30,6 +32,7 @@ declare global {
     }
   }
 }
+
 expect.extend({
   toBeCountedTo(received: TreeItem, count: number | "max") {
     let pass: boolean;
