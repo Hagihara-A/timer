@@ -1,6 +1,8 @@
+import { ItemId } from "@atlaskit/tree";
 import produce from "immer";
 import {
   actionTypes as AT,
+  addTime,
   addTimer,
   editSection,
   editTimer,
@@ -10,12 +12,71 @@ import {
 } from "../actions";
 import { initState } from "../initState";
 import {
+  countUp,
   getNewItemIds,
+  normalizeTree,
+  resetDescendant,
   setNewItemOnTree,
+  traverse,
   treeReducer,
 } from "../reducers/treeReducer";
-const { tree } = initState;
+import { TreeData, TreeItem } from "../types";
+import { isTimer } from "../utils";
+const tree = initState;
+declare global {
+  namespace jest {
+    interface Matchers<R> {
+      toBeCountedTo(count: number | "max"): R;
+    }
+  }
+}
+expect.extend({
+  toBeCountedTo(received: TreeItem, count: number | "max") {
+    let pass: boolean;
+    let expected: number;
+    let actual: number;
+    if (count === "max") {
+      if (isTimer(received.data)) {
+        expected = received.data.timeLimit;
+        actual = received.data.elapsedTime;
+        pass = actual === expected;
+      } else {
+        expected = received.data.repeat;
+        actual = received.data.count;
+        pass = actual === expected;
+      }
+      return {
+        pass,
+        message: () => `expected ${expected} but got ${actual}`,
+      };
+    } else {
+      if (isTimer(received.data)) {
+        actual = received.data.elapsedTime;
+      } else {
+        actual = received.data.count;
+      }
+      pass = actual === count;
 
+      return {
+        pass,
+        message: () => `expected ${count} but got ${actual}`,
+      };
+    }
+  },
+});
+
+const elapse = (tree: TreeData, ids: ItemId[], count?: number) => {
+  for (const id of ids) {
+    const item = tree.items[id];
+    if (typeof count === "undefined") {
+      if (isTimer(item.data)) item.data.elapsedTime = item.data.timeLimit;
+      else item.data.count = item.data.repeat;
+    } else {
+      if (isTimer(item.data)) item.data.elapsedTime = count;
+      else item.data.count = count;
+    }
+  }
+};
 test("setNewItemOnTree", () => {
   const dataToadd = { power: 120, timeLimit: 40, comment: "" };
   const parentId = "3-2-1";
@@ -137,4 +198,134 @@ describe("treeReducer", () => {
     expect(newSrcParent.id).toBe(dstPos.parentId);
     expect(newSrcParent.children).toContain(srcId);
   });
+});
+
+test(`normalizeTree`, () => {
+  const unNormalizedTree = produce(tree, (draft) => {
+    draft.items["someId"] = {
+      id: "someId",
+      children: [],
+      hasChildren: false,
+      isExpanded: false,
+      isChildrenLoading: false,
+      data: {
+        repeat: 1,
+        count: 0,
+        comment: "",
+      },
+    };
+
+    draft.items["3"].children.push("someId");
+  });
+
+  const normalizedTree = produce(unNormalizedTree, (draft) =>
+    normalizeTree(draft)
+  );
+  expect(normalizedTree.items["someId"]).toBeUndefined();
+  expect(normalizedTree).toEqual(tree);
+  expect(normalizedTree.items["3"].children).not.toContain("someId");
+});
+
+describe(`${AT.ADD_TIME}`, () => {
+  test(`${AT.ADD_TIME} simply for Timer`, () => {
+    const reduced = treeReducer(tree, addTime());
+    expect(reduced.items["0"]).toBeCountedTo(1);
+  });
+
+  test(`${AT.ADD_TIME} 40 times`, () => {
+    // iterate 40 times
+    let reduced = tree;
+    for (let i = 0; i < 40; i++) {
+      reduced = treeReducer(reduced, addTime());
+    }
+    const reducedItems = reduced.items;
+
+    expect(reducedItems["0"]).toBeCountedTo("max");
+    expect(reducedItems["1"]).toBeCountedTo("max");
+    expect(reducedItems["1-0"]).toBeCountedTo("max");
+    expect(reducedItems["3"]).toBeCountedTo(1);
+    expect(reducedItems["3-2"]).toBeCountedTo(1);
+    expect(reducedItems["3-2-0"]).toBeCountedTo(2);
+    expect(reducedItems["3-2-1"]).toBeCountedTo(0);
+  });
+
+  test(`${AT.ADD_TIME} 50 times, should be ended`, () => {
+    //` iterate 50 times`;
+    let reduced = tree;
+    for (let i = 0; i < 50; i++) {
+      reduced = treeReducer(reduced, addTime());
+    }
+    const reducedItems = reduced.items;
+    expect(reducedItems["0"]).toBeCountedTo("max");
+    expect(reducedItems["1"]).toBeCountedTo("max");
+    expect(reducedItems["1-0"]).toBeCountedTo("max");
+    expect(reducedItems["3"]).toBeCountedTo("max");
+    expect(reducedItems["3-2-1"]).toBeCountedTo("max");
+    expect(reducedItems["3-2"]).toBeCountedTo("max");
+  });
+});
+
+describe(`traverse`, () => {
+  test(`traverse initState`, () => {
+    const toBeCountedId = traverse(tree, tree.rootId);
+    expect(toBeCountedId).toBe("0");
+  });
+
+  test(`traverse tree elapsed till "1-0"`, () => {
+    const elapsedTree = produce(tree, (draft) => {
+      elapse(draft, ["0", "1-0"]);
+    });
+    const toBeCountedId = traverse(elapsedTree, elapsedTree.rootId);
+    expect(toBeCountedId).toBe("1-1");
+  });
+
+  test(`traverse tree elapsed till "1-1"`, () => {
+    const elapsedTree = produce(tree, (draft) => {
+      elapse(draft, ["0", "1-0", "1-1"]);
+    });
+    const toBeCountedId = traverse(elapsedTree, elapsedTree.rootId);
+    expect(toBeCountedId).toBe("1");
+  });
+
+  test(`traverse tree elapsed till "1"`, () => {
+    const elapsedTree = produce(tree, (draft) => {
+      elapse(draft, ["0", "1", "1-0", "1-1"]);
+    });
+    const toBeCountedId = traverse(elapsedTree, elapsedTree.rootId);
+    expect(toBeCountedId).toBe("2");
+  });
+
+  test(`traverse tree elapsed till "2"`, () => {
+    const elapsedTree = produce(tree, (draft) => {
+      elapse(draft, ["0", "1", "1-0", "1-1", "2"]);
+    });
+    const toBeCountedId = traverse(elapsedTree, elapsedTree.rootId);
+    expect(toBeCountedId).toBe("3-0");
+  });
+});
+
+describe(`countUp`, () => {
+  test(`countUp initState`, () => {
+    const counted = produce(tree, (draft) => countUp(draft));
+    expect(counted.items["0"]).toBeCountedTo(1);
+  });
+});
+
+test(`resetDescendant`, () => {
+  const elapsedTree = produce(tree, (draft) => {
+    elapse(
+      draft,
+      Object.keys(tree.items).filter((id) => id !== tree.rootId)
+    );
+  });
+
+  const resetUnder3 = produce(elapsedTree, (draft) => {
+    resetDescendant(draft, "3");
+  });
+
+  expect(resetUnder3.items["1-0"]).toBeCountedTo("max");
+  expect(resetUnder3.items["3"]).toBeCountedTo("max");
+  expect(resetUnder3.items["3-1"]).toBeCountedTo(0);
+  expect(resetUnder3.items["3-2"]).toBeCountedTo(0);
+  expect(resetUnder3.items["3-2-1"]).toBeCountedTo(0);
 });
