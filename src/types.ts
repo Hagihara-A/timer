@@ -3,15 +3,9 @@ import {
   TreeData as AtlasTreeData,
   TreeItem as AtlasTreeItem,
 } from "@atlaskit/tree";
-import { FlattenedItem } from "@atlaskit/tree/dist/cjs/types";
 import * as actionCreator from "./actions";
 
-export type State = Readonly<MutableState>;
-export interface MutableState {
-  tree: TreeData;
-  timers: TimersListData;
-}
-//  state.tree type definition
+export type State = Readonly<TreeData>;
 export interface TreeData extends AtlasTreeData {
   items: Record<ItemId, TreeItem>;
 }
@@ -40,17 +34,6 @@ export type EditableSectionData = Pick<
   SectionTreeItemData,
   "repeat" | "comment"
 >;
-// state.timers definition
-export interface TimersListData {
-  timerList: TimerList;
-  currentTimerId: ItemId | null;
-  timerTree: TreeData;
-}
-export type TimerList = FlattendTreeItem[];
-
-interface FlattendTreeItem extends FlattenedItem {
-  item: TreeItem;
-}
 
 // Action definition
 type ReturnTypes<T> = {
