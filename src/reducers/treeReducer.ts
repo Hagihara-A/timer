@@ -14,6 +14,7 @@ import {
   TreeItem,
 } from "../types";
 import { isSection, isTimer } from "../utils";
+import { initState } from "../initState";
 
 const initTreeItem: TreeItem = {
   id: undefined,
@@ -117,6 +118,81 @@ export const combineTwoTimersIntoSection = (
   // add newSection
   tree.items[newSectionId] = newSection;
 };
+
+export const normalizeTree = (tree: TreeData) => {
+  for (const id of Object.keys(tree.items)) {
+    const item = tree.items[id];
+    if (item.children.length === 0 && isSection(item.data)) {
+      // remove item from its parent
+      const parentItem = Object.values(tree.items).find((it) =>
+        it.children.includes(item.id)
+      );
+      const parentId = parentItem.id;
+      const index = parentItem.children.findIndex((id) => id === item.id);
+      tree.items[parentId].children.splice(index, 1);
+      delete tree.items[id];
+    }
+  }
+};
+
+export const isFullyCounted = (item: TreeItem) => {
+  if (isSection(item.data)) {
+    return item.data.count >= item.data.repeat;
+  } else {
+    return item.data.elapsedTime >= item.data.timeLimit;
+  }
+};
+
+export const resetDescendant = (tree: TreeData, parentId: ItemId) => {
+  const parent = tree.items[parentId];
+  for (const id of parent.children) {
+    const child = tree.items[id];
+    if (isTimer(child.data)) child.data.elapsedTime = 0;
+    else {
+      child.data.count = 0;
+      resetDescendant(tree, child.id);
+    }
+  }
+};
+
+export const countUp = (timerTree: TreeData) => {
+  const toBeCountedId = traverse(timerTree, timerTree.rootId);
+
+  if (typeof toBeCountedId === "undefined") return;
+  const item = timerTree.items[toBeCountedId];
+
+  if (isTimer(item.data)) {
+    item.data.elapsedTime++;
+  } else {
+    item.data.count++;
+    if (!isFullyCounted(item)) {
+      resetDescendant(timerTree, item.id);
+    }
+  }
+  const nextId = traverse(timerTree, timerTree.rootId);
+  if (nextId && isSection(timerTree.items[nextId].data)) {
+    countUp(timerTree);
+  }
+};
+
+export const traverse = (
+  tree: TreeData,
+  rootId: ItemId
+): ItemId | undefined => {
+  const childIds = tree.items[rootId].children;
+  for (const id of childIds) {
+    const currItem = tree.items[id];
+    const isBelowRepeat = !isFullyCounted(currItem);
+
+    if (isTimer(currItem.data) && isBelowRepeat) return currItem.id;
+    else if (isSection(currItem.data)) {
+      const toBeCountedId = traverse(tree, currItem.id);
+      if (typeof toBeCountedId !== "undefined") return toBeCountedId;
+      else if (isBelowRepeat) return currItem.id;
+    }
+  }
+};
+
 export const treeReducer = produce((tree: Draft<TreeData>, action: Action) => {
   switch (action.type) {
     case AT.ADD_TIMER: {
@@ -185,8 +261,16 @@ export const treeReducer = produce((tree: Draft<TreeData>, action: Action) => {
       tree.items[id][prop] = !flag;
       break;
     }
+    case AT.PARSE_TREE: {
+      normalizeTree(tree);
+      break;
+    }
+    case AT.ADD_TIME: {
+      countUp(tree);
+      break;
+    }
     default: {
       break;
     }
   }
-});
+}, initState);
