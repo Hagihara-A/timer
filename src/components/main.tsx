@@ -5,6 +5,7 @@ import {
   addTime,
   addTimer as addTimerAct,
   toggleIsDragEnabled as toggleDragAct,
+  cleanseTree,
 } from "../actions";
 import { AddTimerDialog } from "./AddTimerDialog";
 import { TimerListIcons } from "./Timer/TimerListButtons";
@@ -28,6 +29,7 @@ const TimerApp = () => {
   };
 
   const toggleIsDragEnabled = () => {
+    dispatch(cleanseTree());
     dispatch(toggleDragAct());
   };
 

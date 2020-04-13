@@ -14,7 +14,7 @@ import { initState } from "../initState";
 import {
   countUp,
   getNewItemIds,
-  normalizeTree,
+  cleanseTree,
   resetDescendant,
   setNewItemOnTree,
   traverse,
@@ -222,7 +222,7 @@ test(`normalizeTree`, () => {
   });
 
   const normalizedTree = produce(unNormalizedTree, (draft) =>
-    normalizeTree(draft)
+    cleanseTree(draft)
   );
   expect(normalizedTree.items["someId"]).toBeUndefined();
   expect(normalizedTree).toEqual(tree);

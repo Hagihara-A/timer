@@ -119,7 +119,7 @@ export const combineTwoTimersIntoSection = (
   tree.items[newSectionId] = newSection;
 };
 
-export const normalizeTree = (tree: TreeData) => {
+export const cleanseTree = (tree: TreeData) => {
   for (const id of Object.keys(tree.items)) {
     const item = tree.items[id];
     if (item.children.length === 0 && isSection(item.data)) {
@@ -261,8 +261,8 @@ export const treeReducer = produce((tree: Draft<TreeData>, action: Action) => {
       tree.items[id][prop] = !flag;
       break;
     }
-    case AT.PARSE_TREE: {
-      normalizeTree(tree);
+    case AT.CLEANSE_TREE: {
+      cleanseTree(tree);
       break;
     }
     case AT.ADD_TIME: {
