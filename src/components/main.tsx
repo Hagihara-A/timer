@@ -10,20 +10,9 @@ import TimerTree from "./Tree/TimerTree";
 import { TimerTreeIcons } from "./Tree/TimerTreeButtons";
 import { State } from "../types";
 
-const Heading = styled(({ children }) => (
-  <Typography variant="h1" align="center">
-    {children}
-  </Typography>
-))({
-  lineHeight: "initial",
-});
-
-const MainAppContainer = styled.div`
-  display: flex;
-`;
 const TimerApp = () => {
-  // const [isTree, setIsTree] = useState(true);
-  // const toggleIsTree = () => setIsTree(!isTree);
+  const [isTree, setIsTree] = useState(true);
+  const toggleIsTree = () => setIsTree(!isTree);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toggleIsModalOpen = () => setIsModalOpen(!isModalOpen);
   const dispatch = useDispatch();
@@ -41,7 +30,7 @@ const TimerApp = () => {
 
   const slideToTimerList = () => {
     dispatch(parseTree());
-    // toggleIsTree();
+    toggleIsTree();
   };
 
   // TimerList callback
@@ -53,7 +42,7 @@ const TimerApp = () => {
   const resetTimerDispatch = () => {
     clearInterval(timerId.current);
     dispatch(parseTree());
-    // toggleIsTree();
+    toggleIsTree();
   };
 
   const stopTimerDispatch = () => {
@@ -65,11 +54,11 @@ const TimerApp = () => {
 
   return (
     <div>
-      <Heading>Training Timer</Heading>
-      <MainAppContainer>
-        <TimerTree />
-        <TimerList />
-      </MainAppContainer>
+      <Typography variant="h1" paragraph align="center">
+        Training Timer
+      </Typography>
+      <TimerTree />
+      <TimerList />
       <TimerTreeIcons
         onClickAdd={toggleIsModalOpen}
         onClickComplete={slideToTimerList}
