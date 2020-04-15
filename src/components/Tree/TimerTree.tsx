@@ -5,8 +5,8 @@ import Tree, {
   TreeSourcePosition,
 } from "@atlaskit/tree";
 import DeleteIconInner from "@material-ui/icons/Delete";
-import ExpandLessIconInner from "@material-ui/icons/ExpandLess";
-import ExpandMoreIconInner from "@material-ui/icons/ExpandMore";
+import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
@@ -14,16 +14,24 @@ import { onDragEnd as onDragEndAction, toggleProperty } from "../../actions";
 import { State } from "../../types";
 import EditableContent from "./EditableContent";
 
+const rgb = ({ powerPerFTP }: { powerPerFTP: number | undefined }) => {
+  if (powerPerFTP < 0.75) return "#338cff";
+  else if (powerPerFTP < 0.9) return "#59bf59";
+  else if (powerPerFTP < 1.05) return "#ffcc3f";
+  else if (powerPerFTP < 1.2) return "#ff6639";
+  else if (powerPerFTP < 1.5) return "#ff330c";
+  return "#7d7c78";
+};
 const TreeContainer = styled.div`
   width: 300px;
   margin: auto;
 `;
 
-const ItemContainer = styled.div<any>`
+const ItemContainer = styled.div<{ powerPerFTP: number }>`
   width: 300px;
   border-radius: 2px;
   margin: 1px 0;
-  background-color: hsl(${(props) => 40 - props.depth * 15}, 50%, 50%);
+  background-color: ${(props) => rgb(props)};
 `;
 const DeleteIcon = styled(DeleteIconInner)`
   opacity: 0;
@@ -33,14 +41,18 @@ const DeleteIcon = styled(DeleteIconInner)`
   transition: opacity 0.1s 0s ease;
 `;
 
-const ExpandLessIcon = styled(ExpandLessIconInner)``;
-const ExpandMoreIcon = styled(ExpandMoreIconInner)``;
-const Icon = ({ item, onExpand, onCollapse, depth }) => {
+const Icon = ({ item, onExpand, onCollapse }) => {
   if (item.children && item.children.length > 0) {
     return item.isExpanded ? (
-      <ExpandLessIcon onClick={() => onCollapse(item.id)} color="secondary" />
+      <KeyboardArrowDownIcon
+        onClick={() => onCollapse(item.id)}
+        color="secondary"
+      />
     ) : (
-      <ExpandMoreIcon onClick={() => onExpand(item.id)} color="secondary" />
+      <KeyboardArrowRightIcon
+        onClick={() => onExpand(item.id)}
+        color="secondary"
+      />
     );
   } else {
     return <span> &bull; </span>;
@@ -60,14 +72,9 @@ const renderItem = ({
       ref={provided.innerRef}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
-      depth={depth}
+      powerPerFTP={item.data.power / 250}
     >
-      <Icon
-        item={item}
-        onExpand={onExpand}
-        onCollapse={onCollapse}
-        depth={depth}
-      />
+      <Icon item={item} onExpand={onExpand} onCollapse={onCollapse} />
       <EditableContent itemId={item.id} />
       <DeleteIcon />
     </ItemContainer>
