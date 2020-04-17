@@ -9,19 +9,12 @@ import { store } from "./store";
 let theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#555555"
+      main: "#f55333",
     },
     secondary: {
-      main: "#e57373"
-    }
+      main: "#062457",
+    },
   },
-  overrides: {
-    MuiTextField: {
-      root: {
-        maxWidth: "50px"
-      }
-    }
-  }
 });
 
 theme = responsiveFontSizes(theme);

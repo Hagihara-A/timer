@@ -1,7 +1,9 @@
-import { flattenTree } from "@atlaskit/tree/dist/cjs/utils/tree";
-import produce from "immer";
+import { State } from "./types";
 
-const state = {
+export const initState: State = {
+  options: {
+    isDragEnabled: true,
+  },
   tree: {
     rootId: "root",
     items: {
@@ -10,7 +12,7 @@ const state = {
         children: ["0", "1", "2", "3"],
         hasChildren: true,
         isExpanded: true,
-        isChildrenLoading: false
+        isChildrenLoading: false,
       },
       "0": {
         id: "0",
@@ -19,11 +21,11 @@ const state = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
+          elapsedTime: 0,
           timeLimit: 3,
-          times: 1,
           power: 130,
-          comment: ""
-        }
+          comment: "",
+        },
       },
       "1": {
         id: "1",
@@ -32,11 +34,10 @@ const state = {
         isExpanded: true,
         isChildrenLoading: false,
         data: {
-          timeLimit: 0,
-          times: 1,
-          power: 0,
-          comment: ""
-        }
+          repeat: 1,
+          count: 0,
+          comment: "",
+        },
       },
       "1-0": {
         id: "1-0",
@@ -45,11 +46,11 @@ const state = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
+          elapsedTime: 0,
           timeLimit: 2,
-          times: 1,
           power: 260,
-          comment: ""
-        }
+          comment: "",
+        },
       },
       "1-1": {
         id: "1-1",
@@ -58,11 +59,11 @@ const state = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
+          elapsedTime: 0,
           timeLimit: 2,
-          times: 1,
           power: 260,
-          comment: ""
-        }
+          comment: "",
+        },
       },
       "2": {
         id: "2",
@@ -71,11 +72,11 @@ const state = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
+          elapsedTime: 0,
           timeLimit: 5,
-          times: 1,
           power: 260,
-          comment: ""
-        }
+          comment: "",
+        },
       },
       "3": {
         id: "3",
@@ -84,11 +85,10 @@ const state = {
         isExpanded: true,
         isChildrenLoading: false,
         data: {
-          timeLimit: 0,
-          times: 1,
-          power: 0,
-          comment: ""
-        }
+          repeat: 2,
+          count: 0,
+          comment: "",
+        },
       },
       "3-0": {
         id: "3-0",
@@ -97,11 +97,11 @@ const state = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
+          elapsedTime: 0,
           timeLimit: 2,
-          times: 1,
           power: 150,
-          comment: ""
-        }
+          comment: "",
+        },
       },
       "3-1": {
         id: "3-1",
@@ -110,11 +110,11 @@ const state = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
+          elapsedTime: 0,
           timeLimit: 2,
-          times: 1,
           power: 150,
-          comment: ""
-        }
+          comment: "",
+        },
       },
       "3-2": {
         id: "3-2",
@@ -123,11 +123,10 @@ const state = {
         isExpanded: true,
         isChildrenLoading: false,
         data: {
-          timeLimit: 0,
-          times: 1,
-          power: 0,
-          comment: ""
-        }
+          repeat: 2,
+          comment: "",
+          count: 0,
+        },
       },
       "3-2-0": {
         id: "3-2-0",
@@ -136,11 +135,11 @@ const state = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
+          elapsedTime: 0,
           timeLimit: 3,
-          times: 1,
           power: 150,
-          comment: ""
-        }
+          comment: "",
+        },
       },
       "3-2-1": {
         id: "3-2-1",
@@ -149,17 +148,12 @@ const state = {
         isExpanded: false,
         isChildrenLoading: false,
         data: {
+          elapsedTime: 0,
           timeLimit: 3,
-          times: 1,
           power: 150,
-          comment: ""
-        }
-      }
-    }
+          comment: "",
+        },
+      },
+    },
   },
-  timers: undefined
 };
-
-export const initState = produce(state, draft => {
-  draft.timers = flattenTree(draft.tree);
-});

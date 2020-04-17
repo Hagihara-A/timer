@@ -1,128 +1,70 @@
 import {
   ItemId,
-  TreeData,
   TreeDestinationPosition,
-  TreeSourcePosition
+  TreeSourcePosition,
 } from "@atlaskit/tree";
-import { Timers, TimerTreeItemData } from "./types";
+import { EditableSectionData, EditableTimerData } from "./types";
 
 export const actionTypes = {
-  ADD: "ADD",
-  START: "START",
-  PAUSE: "PAUSE",
-  RESET: "RESET",
-  FINISH: "FINISH",
   ADD_TIMER: "ADD_TIMER",
-  SET_TIMERS: "SET_TIMERS",
-  SET_TREE: "SET_TREE",
-  ADD_TREE_ITEM: "ADD_TREE_ITEM",
-  ADD_SECTION: "ADD_SECTION",
   REMOVE_ITEM: "REMOVE_ITEM",
-  EDIT_ITEM: "EDIT_ITEM",
-  COPY_ITEM: "COPY_ITEM",
+  EDIT_TIMER: "EDIT_TIMER",
+  EDIT_SECTION: "EDIT_SECTION",
   ON_DRAG_END: "ON_DRAG_END",
   TOGGLE_PROPERTY: "TOGGLE_PROPERTY",
-  FLATTEN_TREE: "FLATTEN_TREE"
+  ADD_TIME: "ADD_TIME",
+  RESET_TIMER: "RESET_TIMER",
+  CLEANSE_TREE: "CLEANSE_TREE",
+  TOGGLE_IS_DRAG_ENABLED: "TOGGLE_IS_DRAG_ENABLED",
 } as const;
-export const addTime = (time: number) => {
+
+export const addTime = () => {
   return {
-    type: actionTypes.ADD,
-    payload: {
-      time
-    }
+    type: actionTypes.ADD_TIME,
+    payload: {},
   };
 };
-export const startTimer = () => {
-  return {
-    type: actionTypes.START
-  };
-};
-export const stopTimer = () => {
-  return {
-    type: actionTypes.PAUSE
-  };
-};
-export const resetTimer = () => {
-  return {
-    type: actionTypes.RESET
-  };
-};
-export const finishTimer = () => {
-  return {
-    type: actionTypes.FINISH
-  };
-};
-export const addTimer = (parentId: ItemId, timeLimit: number) => {
+
+export const addTimer = (parentId: ItemId, treeItemData: EditableTimerData) => {
   return {
     type: actionTypes.ADD_TIMER,
     payload: {
       parentId,
-      timeLimit
-    }
+      ...treeItemData,
+    },
   };
 };
-export const setTimers = (timers: Timers) => {
-  return {
-    type: actionTypes.SET_TIMERS,
-    payload: {
-      timers
-    }
-  };
-};
-
-export const setTree = (tree: TreeData) => {
-  return {
-    type: actionTypes.SET_TREE,
-    payload: {
-      tree
-    }
-  };
-};
-
-export const addTreeItem = (parentId: ItemId, timeLimit: number) => {
-  return {
-    type: actionTypes.ADD_TREE_ITEM,
-    payload: {
-      parentId,
-      timeLimit
-    }
-  };
-};
-export const addSection = (parentId: ItemId, title: number) => {
-  return {
-    type: actionTypes.ADD_SECTION,
-    payload: {
-      parentId,
-      title
-    }
-  };
-};
-export const removeItem = (removeItemId: ItemId) => {
+export const removeItem = (id: ItemId) => {
   return {
     type: actionTypes.REMOVE_ITEM,
     payload: {
-      removeItemId
-    }
+      id,
+    },
   };
 };
-export const editItem = (
+export const editTimer = (
   editItemId: ItemId,
-  data: Partial<TimerTreeItemData>
+  data: Partial<EditableTimerData>
 ) => {
   return {
-    type: actionTypes.EDIT_ITEM,
+    type: actionTypes.EDIT_TIMER,
     payload: {
       editItemId,
-      data
-    }
+      data,
+    },
   };
 };
-export const copyItem = (originItemId: ItemId) => {
+
+export const editSection = (
+  editItemId: ItemId,
+  data: Partial<EditableSectionData>
+) => {
   return {
-    type: actionTypes.COPY_ITEM,
+    type: actionTypes.EDIT_SECTION,
     payload: {
-      originItemId
-    }
+      editItemId,
+      data,
+    },
   };
 };
 export const onDragEnd = (
@@ -133,8 +75,8 @@ export const onDragEnd = (
     type: actionTypes.ON_DRAG_END,
     payload: {
       source,
-      destination
-    }
+      destination,
+    },
   };
 };
 
@@ -146,16 +88,25 @@ export const toggleProperty = (
     type: actionTypes.TOGGLE_PROPERTY,
     payload: {
       id,
-      prop
-    }
+      prop,
+    },
   };
 };
 
-export const parseTimers = (sourceTree: TreeData) => {
+export const toggleIsDragEnabled = () => {
   return {
-    type: actionTypes.FLATTEN_TREE,
-    payload: {
-      sourceTree
-    }
+    type: actionTypes.TOGGLE_IS_DRAG_ENABLED,
+  };
+};
+
+export const resetTimer = () => {
+  return {
+    type: actionTypes.RESET_TIMER,
+  };
+};
+
+export const cleanseTree = () => {
+  return {
+    type: actionTypes.CLEANSE_TREE,
   };
 };

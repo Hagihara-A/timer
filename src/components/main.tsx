@@ -1,88 +1,80 @@
 import { Typography } from "@material-ui/core";
-import PlayCircleFilledWhiteIcon from "@material-ui/icons/PlayCircleFilledWhite";
-import StopIcon from "@material-ui/icons/Stop";
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { animated, useTransition } from "react-spring";
-import { parseTimers } from "../actions";
-import { State } from "../types";
-import { TimerList } from "./Timer/TimerList";
+import React, { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addTime,
+  addTimer as addTimerAct,
+  toggleIsDragEnabled as toggleDragAct,
+  cleanseTree,
+} from "../actions";
+import { AddTimerDialog } from "./AddTimerDialog";
+import { ElapsingButtons } from "./Buttons/ElapsingButtons";
 import TimerTree from "./Tree/TimerTree";
+import { TreeButtons } from "./Buttons/TreeButtons";
+import { State } from "../types";
 
 const TimerApp = () => {
-  const [isTree, setIsTree] = useState(true);
-  const toggleIsTree = () => setIsTree(!isTree);
-  const toggle = () => {
-    if (isTree) {
-      parseTimers(tree);
-    }
-    toggleIsTree();
-  };
-  const tree = useSelector((state: State) => state.tree);
-  const transitions = useTransition(isTree, null, {
-    from: {
-      opacity: 0,
-      xy: isTree ? [-100, 0] : [100, 0]
-    },
-    enter: { opacity: 1, xy: [0, 0] },
-    leave: {
-      opacity: 0,
-      xy: isTree ? [50, 0] : [-50, 0]
-    }
-  });
+  const isDragEnabled = useSelector(
+    (state: State) => state.options.isDragEnabled
+  );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const toggleIsModalOpen = () => setIsModalOpen(!isModalOpen);
+  const dispatch = useDispatch();
 
-  const iconStyles = {
-    color: "primary",
-    onClick: toggle,
-    cursor: "pointer",
-    style: { height: "100px", width: "100px" }
-  } as const;
-
-  const translate = (x: Number, y: Number) => {
-    if (x === 0 && y === 0) return "none";
-    return `translate(${x}%, ${y}%`;
+  // TimerTreeButton callback
+  const addTimer = ({
+    timeLimit,
+    power,
+  }: {
+    timeLimit: number;
+    power: number;
+  }) => {
+    dispatch(addTimerAct("root", { power, timeLimit, comment: "" }));
   };
 
-  const View = transitions.map(({ item, key, props }) => {
-    return (
-      <div key={key}>
-        <animated.div
-          style={{
-            ...props,
-            transform: props.xy.to(translate),
-            position: "absolute",
-            left: 0,
-            right: 0
-          }}
-        >
-          {item ? <TimerTree /> : <TimerList />}
-        </animated.div>
+  const toggleIsDragEnabled = () => {
+    dispatch(cleanseTree());
+    dispatch(toggleDragAct());
+  };
 
-        <animated.div
-          key={key}
-          style={{
-            ...props,
-            position: "fixed",
-            bottom: "10px",
-            width: "100%",
-            textAlign: "center"
-          }}
-        >
-          {item ? (
-            <PlayCircleFilledWhiteIcon {...iconStyles} />
-          ) : (
-            <StopIcon {...iconStyles} />
-          )}
-        </animated.div>
-      </div>
-    );
-  });
+  // TimerList callback
+  const timerId = useRef<number>();
+  const startTimerDispatch = () => {
+    timerId.current = setInterval(() => dispatch(addTime()), 1000);
+  };
+
+  const resetTimerDispatch = () => {
+    clearInterval(timerId.current);
+    toggleIsDragEnabled();
+  };
+
+  const stopTimerDispatch = () => {
+    clearInterval(timerId.current);
+  };
+
   return (
     <div>
-      <Typography variant="h1" align="center" style={{ lineHeight: "initial" }}>
+      <Typography variant="h1" paragraph align="center">
         Training Timer
       </Typography>
-      {View}
+      <TimerTree />
+      {isDragEnabled ? (
+        <TreeButtons
+          onClickAdd={toggleIsModalOpen}
+          onClickComplete={toggleIsDragEnabled}
+        />
+      ) : (
+        <ElapsingButtons
+          onClickStart={startTimerDispatch}
+          onClickStop={stopTimerDispatch}
+          onClickReset={resetTimerDispatch}
+        />
+      )}
+      <AddTimerDialog
+        open={isModalOpen}
+        onClose={toggleIsModalOpen}
+        onSubmit={addTimer}
+      />
     </div>
   );
 };

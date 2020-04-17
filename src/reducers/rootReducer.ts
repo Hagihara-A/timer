@@ -1,8 +1,7 @@
 import { combineReducers } from "redux";
-import { timersReducer } from "./timersReducer";
 import { treeReducer } from "./treeReducer";
-
-export const rootReducer = combineReducers({
+import { optionsReducer } from "./optionsReducer";
+export const reducer = combineReducers({
   tree: treeReducer,
-  timers: timersReducer
+  options: optionsReducer,
 });

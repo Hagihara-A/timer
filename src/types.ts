@@ -1,32 +1,46 @@
-import { ItemId, TreeData, TreeItem } from "@atlaskit/tree";
-import { FlattenedItem } from "@atlaskit/tree/dist/cjs/types";
+import {
+  ItemId,
+  TreeData as AtlasTreeData,
+  TreeItem as AtlasTreeItem,
+} from "@atlaskit/tree";
 import * as actionCreator from "./actions";
 
-export interface State {
-  readonly tree: TimerTreeData;
-  readonly timers: Timers;
+export type State = Readonly<MutableState>;
+export interface MutableState {
+  tree: TreeData;
+  options: Options;
 }
-//  state.tree type definition
-export interface TimerTreeData extends TreeData {
-  items: Record<ItemId, TimerTreeItem>;
+export interface Options {
+  isDragEnabled: boolean;
 }
-export interface TimerTreeItem extends TreeItem {
-  data?: TimerTreeItemData;
+export interface TreeData extends AtlasTreeData {
+  items: Record<ItemId, TreeItem>;
 }
-
+export interface TreeItem extends AtlasTreeItem {
+  data?: TreeItemData;
+}
+export type TreeItemData = TimerTreeItemData | SectionTreeItemData;
 export interface TimerTreeItemData {
   timeLimit: number;
-  times: number;
   power: number;
+  comment: string;
+  elapsedTime: number;
+}
+
+export interface SectionTreeItemData {
+  repeat: number;
+  count: number;
   comment: string;
 }
 
-// state.tree definition
-export type Timers = FlattendTreeItem[];
-
-interface FlattendTreeItem extends FlattenedItem {
-  item: TimerTreeItem;
-}
+export type EditableTimerData = Pick<
+  TimerTreeItemData,
+  "power" | "timeLimit" | "comment"
+>;
+export type EditableSectionData = Pick<
+  SectionTreeItemData,
+  "repeat" | "comment"
+>;
 
 // Action definition
 type ReturnTypes<T> = {
