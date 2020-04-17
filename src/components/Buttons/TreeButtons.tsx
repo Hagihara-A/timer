@@ -1,13 +1,24 @@
-import { IconButton, makeStyles } from "@material-ui/core";
+import { IconButton } from "@material-ui/core";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import React from "react";
+import styled, { keyframes } from "styled-components";
 
-const useIconStyles = makeStyles({
-  root: {
-    fontSize: "5rem",
-  },
-});
+const floatUp = keyframes`
+  from{
+    opacity: 0;
+  }
+  to{
+    opacity: 1;
+  }
+`;
+export const ButtonsContainer = styled.div`
+  animation: ${floatUp} 1s ease;
+  display: flex;
+  justify-content: space-around;
+`;
+
+export const fontSize = "5rem";
 
 export const TreeButtons = ({
   onClickAdd,
@@ -16,15 +27,16 @@ export const TreeButtons = ({
   onClickAdd: () => void;
   onClickComplete: () => void;
 }) => {
-  const classes = useIconStyles();
   return (
-    <div>
-      <IconButton onClick={onClickAdd}>
-        <AddCircleIcon className={classes.root} color="primary" />
-      </IconButton>
-      <IconButton onClick={onClickComplete}>
-        <CheckCircleIcon className={classes.root} color="primary" />
-      </IconButton>
-    </div>
+    <ButtonsContainer>
+      <div>
+        <IconButton onClick={onClickAdd}>
+          <AddCircleIcon color="primary" style={{ fontSize }} />
+        </IconButton>
+        <IconButton onClick={onClickComplete}>
+          <CheckCircleIcon color="primary" style={{ fontSize }} />
+        </IconButton>
+      </div>
+    </ButtonsContainer>
   );
 };

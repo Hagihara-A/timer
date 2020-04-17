@@ -1,14 +1,9 @@
-import { IconButton, makeStyles } from "@material-ui/core";
+import { IconButton } from "@material-ui/core";
 import PlayCircleFilledWhiteIcon from "@material-ui/icons/PlayCircleFilledWhite";
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
 import StopIcon from "@material-ui/icons/Stop";
 import React, { useState } from "react";
-
-const useIconStyles = makeStyles({
-  root: {
-    fontSize: "5rem",
-  },
-});
+import { ButtonsContainer, fontSize } from "./TreeButtons";
 
 export const ElapsingButtons = ({
   onClickStart,
@@ -19,33 +14,34 @@ export const ElapsingButtons = ({
   onClickStop: () => void;
   onClickReset: () => void;
 }) => {
-  const classes = useIconStyles();
   const [isElapsing, setIsElapsing] = useState(false);
   return (
-    <div className={classes.root}>
-      {isElapsing ? (
-        <IconButton
-          onClick={() => {
-            onClickStop();
-            setIsElapsing(!isElapsing);
-          }}
-        >
-          <StopIcon className={classes.root} color="primary" />
-        </IconButton>
-      ) : (
-        <IconButton
-          onClick={() => {
-            onClickStart();
-            setIsElapsing(!isElapsing);
-          }}
-        >
-          <PlayCircleFilledWhiteIcon className={classes.root} color="primary" />
-        </IconButton>
-      )}
+    <ButtonsContainer>
+      <div>
+        {isElapsing ? (
+          <IconButton
+            onClick={() => {
+              onClickStop();
+              setIsElapsing(!isElapsing);
+            }}
+          >
+            <StopIcon color="primary" style={{ fontSize }} />
+          </IconButton>
+        ) : (
+          <IconButton
+            onClick={() => {
+              onClickStart();
+              setIsElapsing(!isElapsing);
+            }}
+          >
+            <PlayCircleFilledWhiteIcon color="primary" style={{ fontSize }} />
+          </IconButton>
+        )}
 
-      <IconButton onClick={onClickReset}>
-        <RotateLeftIcon className={classes.root} color="primary" />
-      </IconButton>
-    </div>
+        <IconButton onClick={onClickReset}>
+          <RotateLeftIcon color="primary" style={{ fontSize }} />
+        </IconButton>
+      </div>
+    </ButtonsContainer>
   );
 };
