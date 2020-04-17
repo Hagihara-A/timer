@@ -116,19 +116,29 @@ describe("treeReducer", () => {
     ).toMatchObject(dataToAdd);
   });
 
-  test(AT.REMOVE_ITEM, () => {
-    const source = { parentId: "3-2", index: 1 };
-    const action = removeItem(source);
-    const childId = tree.items[source.parentId].children[source.index];
+  describe(AT.REMOVE_ITEM, () => {
+    test("remove 3-2", () => {
+      const removeId = "3-2";
+      const parentId = "3";
+      const action = removeItem(removeId);
 
-    const newTree = treeReducer(tree, action);
-    expect(newTree.items[source.parentId].children).toHaveLength(
-      tree.items[source.parentId].children.length - 1
-    );
-    expect(newTree.items[childId]).toBeUndefined();
-    expect(newTree.items["3-1"]).not.toBeUndefined();
+      const newTree = treeReducer(tree, action);
+      expect(newTree.items[parentId].children).toHaveLength(
+        tree.items[parentId].children.length - 1
+      );
+      expect(newTree.items[removeId]).toBeUndefined();
+      expect(newTree.items["3-1"]).not.toBeUndefined();
+    });
+
+    test("confirm hasChildren is altered", () => {
+      const removeIds = ["3-2-0", "3-2-1"];
+      const parentId = "3-2";
+      let newTree = treeReducer(tree, removeItem(removeIds[0]));
+      newTree = treeReducer(newTree, removeItem(removeIds[1]));
+
+      expect(newTree.items[parentId].hasChildren).toBeFalsy();
+    });
   });
-
   test(AT.EDIT_TIMER, () => {
     const id = "3-2-0";
     const data = { power: 30, timeLimit: 345 };
