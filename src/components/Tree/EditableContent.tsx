@@ -1,47 +1,16 @@
 import { ItemId } from "@atlaskit/tree";
 import TextField from "@material-ui/core/TextField";
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
 import { editSection, editTimer } from "../../actions";
 import { SectionTreeItemData, State, TimerTreeItemData } from "../../types";
 import { isSection, isTimer } from "../../utils";
 
-const EditableInput = ({
-  value,
-  onChange,
-  inputProps,
-}: {
-  value: string | number;
-  onChange: any;
-  inputProps?: any;
-}) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const onKeyDown = (e) => {
-    if (e.keyCode === 13) {
-      setIsEditing(!isEditing);
-    }
-  };
-  const onBlur = () => {
-    setIsEditing(false);
-  };
-  const onClick = () => setIsEditing(!isEditing);
-  return (
-    <span>
-      {isEditing ? (
-        <TextField
-          value={value}
-          inputProps={inputProps}
-          onChange={onChange}
-          onKeyDown={onKeyDown}
-          onBlur={onBlur}
-        />
-      ) : (
-        <span onClick={onClick}>&nbsp; {value} &nbsp;</span>
-      )}
-    </span>
-  );
-};
-
+const numInputProps = { type: "number", min: 1 };
+const NarrowTextField = styled(TextField)`
+  width: 55px;
+`;
 const EditableSection = ({
   id,
   data,
@@ -49,20 +18,29 @@ const EditableSection = ({
   id: ItemId;
   data: SectionTreeItemData;
 }) => {
-  const { repeat } = data;
+  const { repeat, count } = data;
   const dispatch = useDispatch();
+  const isDraggable = useSelector(
+    (state: State) => state.options.isDragEnabled
+  );
   const onChange = (e) => {
     dispatch(editSection(id, { repeat: Number(e.target.value) }));
   };
   return (
-    <span>
-      <EditableInput
-        value={repeat}
-        onChange={onChange}
-        inputProps={{ type: "number", min: 1 }}
-      />
-      {" Times"}
-    </span>
+    <>
+      {isDraggable ? (
+        <>
+          <NarrowTextField
+            value={repeat}
+            inputProps={numInputProps}
+            onChange={onChange}
+          />
+          {"Times"}
+        </>
+      ) : (
+        `${count}  /  ${repeat}`
+      )}
+    </>
   );
 };
 
@@ -74,8 +52,11 @@ const EditableTimer = ({
   data: TimerTreeItemData;
 }) => {
   const dispatch = useDispatch();
+  const isDraggable = useSelector(
+    (state: State) => state.options.isDragEnabled
+  );
 
-  const { power, timeLimit } = data;
+  const { power, timeLimit, elapsedTime } = data;
 
   const onChangeTimeLimit = (e) => {
     dispatch(editTimer(id, { timeLimit: Number(e.target.value) }));
@@ -84,20 +65,26 @@ const EditableTimer = ({
     dispatch(editTimer(id, { power: Number(e.target.value) }));
   };
   return (
-    <span>
-      <EditableInput
-        value={timeLimit}
-        onChange={onChangeTimeLimit}
-        inputProps={{ type: "number", min: 1 }}
-      />
-      {"Sec @"}
-      <EditableInput
-        value={power}
-        onChange={onChangePower}
-        inputProps={{ type: "number", min: 1 }}
-      />
-      {" W"}
-    </span>
+    <>
+      {isDraggable ? (
+        <>
+          <NarrowTextField
+            value={timeLimit}
+            inputProps={numInputProps}
+            onChange={onChangeTimeLimit}
+          />
+          {"Sec @"}
+          <NarrowTextField
+            value={power}
+            inputProps={numInputProps}
+            onChange={onChangePower}
+          />
+          {" W"}
+        </>
+      ) : (
+        `${elapsedTime} / ${timeLimit}  Sec @ ${power} W`
+      )}
+    </>
   );
 };
 
