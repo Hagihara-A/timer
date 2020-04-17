@@ -193,6 +193,26 @@ export const traverse = (
   }
 };
 
+const removeItem = (tree: TreeData, id: ItemId) => {
+  const item = tree.items[id];
+  delete tree.items[id];
+  const { id: parentId, children } = Object.values(tree.items).find((v) =>
+    v.children.includes(id)
+  );
+  const itemIdx = children.findIndex((child) => child === id);
+  tree.items[parentId].children.splice(itemIdx, 1);
+  tree.items[parentId].hasChildren = tree.items[parentId].children.length > 0;
+  removeItemRecursive(tree, item.children);
+};
+
+const removeItemRecursive = (tree: TreeData, ids: ItemId[]) => {
+  for (const id of ids) {
+    const item = tree.items[id];
+    delete tree.items[id];
+    if (isSection(item.data)) removeItemRecursive(tree, item.children);
+  }
+};
+
 export const treeReducer = produce((tree: Draft<TreeData>, action: Action) => {
   switch (action.type) {
     case AT.ADD_TIMER: {
@@ -201,17 +221,9 @@ export const treeReducer = produce((tree: Draft<TreeData>, action: Action) => {
       break;
     }
     case AT.REMOVE_ITEM: {
-      const { parentId, index } = action.payload.source;
+      const { id } = action.payload;
 
-      const allChildIds = getAllChildrenIds(
-        tree,
-        tree.items[parentId].children[index]
-      );
-      tree.items[parentId].children.splice(index, 1);
-
-      for (const id of allChildIds) {
-        delete tree.items[id];
-      }
+      removeItem(tree, id);
       break;
     }
     case AT.EDIT_TIMER: {
