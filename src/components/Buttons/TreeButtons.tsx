@@ -9,7 +9,7 @@ const useIconStyles = makeStyles({
   },
 });
 
-export const TimerTreeIcons = ({
+export const TreeButtons = ({
   onClickAdd,
   onClickComplete,
 }: {

@@ -10,7 +10,7 @@ const useIconStyles = makeStyles({
   },
 });
 
-export const TimerListIcons = ({
+export const ElapsingButtons = ({
   onClickStart,
   onClickStop,
   onClickReset,

@@ -8,9 +8,9 @@ import {
   cleanseTree,
 } from "../actions";
 import { AddTimerDialog } from "./AddTimerDialog";
-import { TimerListIcons } from "./Timer/TimerListButtons";
+import { ElapsingButtons } from "./Buttons/ElapsingButtons";
 import TimerTree from "./Tree/TimerTree";
-import { TimerTreeIcons } from "./Tree/TimerTreeButtons";
+import { TreeButtons } from "./Buttons/TreeButtons";
 import { State } from "../types";
 
 const TimerApp = () => {
@@ -59,12 +59,12 @@ const TimerApp = () => {
       </Typography>
       <TimerTree />
       {isDragEnabled ? (
-        <TimerTreeIcons
+        <TreeButtons
           onClickAdd={toggleIsModalOpen}
           onClickComplete={toggleIsDragEnabled}
         />
       ) : (
-        <TimerListIcons
+        <ElapsingButtons
           onClickStart={startTimerDispatch}
           onClickStop={stopTimerDispatch}
           onClickReset={resetTimerDispatch}
