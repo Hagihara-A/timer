@@ -17,6 +17,7 @@ import {
 } from "../../actions";
 import { State } from "../../types";
 import EditableContent from "./EditableContent";
+import { IconButton } from "@material-ui/core";
 
 const rgb = ({ powerPerFTP }: { powerPerFTP: number | undefined }) => {
   if (powerPerFTP < 0.75) return "#338cff";
@@ -104,7 +105,9 @@ const TimerTree = () => {
           <Icon item={item} onExpand={onExpand} onCollapse={onCollapse} />
           <EditableContent itemId={item.id} />
         </div>
-        <DeleteIcon onClick={() => remove(item.id)} />
+        <IconButton onClick={() => remove(item.id)} size="small">
+          <DeleteIcon />
+        </IconButton>
       </ItemContainer>
     );
   };
