@@ -34,11 +34,11 @@ export const addTimer = (parentId: ItemId, treeItemData: EditableTimerData) => {
     },
   };
 };
-export const removeItem = (source: TreeSourcePosition) => {
+export const removeItem = (id: ItemId) => {
   return {
     type: actionTypes.REMOVE_ITEM,
     payload: {
-      source,
+      id,
     },
   };
 };
