@@ -46,8 +46,8 @@ const DeleteIcon = styled(DeleteIconInner)`
   transition: opacity 0.1s 0s ease;
 `;
 
-const Icon = ({ item, onExpand, onCollapse }) => {
-  if (item.children && item.children.length > 0) {
+const IconInner = ({ item, onExpand, onCollapse }) => {
+  if (item?.children?.length > 0) {
     return item.isExpanded ? (
       <KeyboardArrowDownIcon
         onClick={() => onCollapse(item.id)}
@@ -64,6 +64,9 @@ const Icon = ({ item, onExpand, onCollapse }) => {
   }
 };
 
+const Icon = styled(IconInner)`
+  vertical-align: text-bottom;
+`;
 const TimerTree = () => {
   const dispatch = useDispatch();
   const tree = useSelector((state: State) => state.tree);
