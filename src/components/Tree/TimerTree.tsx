@@ -10,7 +10,11 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { onDragEnd as onDragEndAction, toggleProperty } from "../../actions";
+import {
+  onDragEnd as onDragEndAction,
+  toggleProperty,
+  removeItem,
+} from "../../actions";
 import { State } from "../../types";
 import EditableContent from "./EditableContent";
 
@@ -23,15 +27,16 @@ const rgb = ({ powerPerFTP }: { powerPerFTP: number | undefined }) => {
   return "#7d7c78";
 };
 const TreeContainer = styled.div`
-  width: 300px;
+  max-width: 20%;
   margin: auto;
 `;
 
 const ItemContainer = styled.div<{ powerPerFTP: number }>`
-  width: 300px;
   border-radius: 2px;
   margin: 1px 0;
   background-color: ${(props) => rgb(props)};
+  display: flex;
+  justify-content: space-between;
 `;
 const DeleteIcon = styled(DeleteIconInner)`
   opacity: 0;
@@ -59,28 +64,6 @@ const Icon = ({ item, onExpand, onCollapse }) => {
   }
 };
 
-const renderItem = ({
-  item,
-  depth,
-  onExpand,
-  onCollapse,
-  provided,
-  snapshot,
-}: RenderItemParams) => {
-  return (
-    <ItemContainer
-      ref={provided.innerRef}
-      {...provided.draggableProps}
-      {...provided.dragHandleProps}
-      powerPerFTP={item.data.power / 250}
-    >
-      <Icon item={item} onExpand={onExpand} onCollapse={onCollapse} />
-      <EditableContent itemId={item.id} />
-      <DeleteIcon />
-    </ItemContainer>
-  );
-};
-
 const TimerTree = () => {
   const dispatch = useDispatch();
   const tree = useSelector((state: State) => state.tree);
@@ -97,7 +80,31 @@ const TimerTree = () => {
   ) => {
     dispatch(onDragEndAction(source, destination));
   };
+  const remove = (id: ItemId) => {
+    dispatch(removeItem(id));
+  };
 
+  const renderItem = ({
+    item,
+    onExpand,
+    onCollapse,
+    provided,
+  }: RenderItemParams) => {
+    return (
+      <ItemContainer
+        ref={provided.innerRef}
+        {...provided.draggableProps}
+        {...provided.dragHandleProps}
+        powerPerFTP={item.data.power / 250}
+      >
+        <div>
+          <Icon item={item} onExpand={onExpand} onCollapse={onCollapse} />
+          <EditableContent itemId={item.id} />
+        </div>
+        <DeleteIcon onClick={() => remove(item.id)} />
+      </ItemContainer>
+    );
+  };
   return (
     <TreeContainer>
       <Tree
