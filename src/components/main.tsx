@@ -21,7 +21,6 @@ const TimerApp = () => {
   const toggleIsModalOpen = () => setIsModalOpen(!isModalOpen);
   const dispatch = useDispatch();
 
-  // TimerTreeButton callback
   const addTimer = ({
     timeLimit,
     power,
@@ -33,11 +32,12 @@ const TimerApp = () => {
   };
 
   const toggleIsDragEnabled = () => {
-    dispatch(cleanseTree());
+    if (isDragEnabled) {
+      dispatch(cleanseTree());
+    }
     dispatch(toggleDragAct());
   };
 
-  // TimerList callback
   const timerId = useRef<number>();
   const startTimerDispatch = () => {
     timerId.current = setInterval(() => dispatch(addTime()), 1000);

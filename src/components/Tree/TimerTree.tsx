@@ -76,7 +76,7 @@ const TimerTree = () => {
   );
 
   const toggleIsExpanded = (itemId: ItemId) => {
-    dispatch(toggleProperty(itemId, "isExpanded"));
+    if (isDragEnabled) dispatch(toggleProperty(itemId, "isExpanded"));
   };
   const onDragEnd = (
     source: TreeSourcePosition,
@@ -85,7 +85,7 @@ const TimerTree = () => {
     dispatch(onDragEndAction(source, destination));
   };
   const remove = (id: ItemId) => {
-    dispatch(removeItem(id));
+    if (isDragEnabled) dispatch(removeItem(id));
   };
 
   const renderItem = ({
@@ -105,9 +105,11 @@ const TimerTree = () => {
           <Icon item={item} onExpand={onExpand} onCollapse={onCollapse} />
           <EditableContent itemId={item.id} />
         </div>
-        <IconButton onClick={() => remove(item.id)} size="small">
-          <DeleteIcon />
-        </IconButton>
+        {isDragEnabled ? (
+          <IconButton onClick={() => remove(item.id)} size="small">
+            <DeleteIcon />
+          </IconButton>
+        ) : undefined}
       </ItemContainer>
     );
   };
