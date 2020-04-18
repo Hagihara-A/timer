@@ -213,6 +213,15 @@ const removeItemRecursive = (tree: TreeData, ids: ItemId[]) => {
   }
 };
 
+const expandAllItems = (tree: TreeData) => {
+  for (const id of Object.keys(tree.items)) {
+    const item = tree.items[id];
+    if (item.children.length > 0 && item.isExpanded === false) {
+      tree.items[id].isExpanded = true;
+    }
+  }
+};
+
 export const treeReducer = produce((tree: Draft<TreeData>, action: Action) => {
   switch (action.type) {
     case AT.ADD_TIMER: {
@@ -275,6 +284,7 @@ export const treeReducer = produce((tree: Draft<TreeData>, action: Action) => {
     }
     case AT.CLEANSE_TREE: {
       cleanseTree(tree);
+      expandAllItems(tree);
       break;
     }
     case AT.ADD_TIME: {
