@@ -4,7 +4,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { editSection, editTimer } from "../../actions";
-import { SectionTreeItemData, State, TimerTreeItemData } from "../../types";
+import { SectionTreeItemData, TimerTreeItemData } from "../../types";
 import { isSection, isTimer, useAppState } from "../../utils";
 
 const numInputProps = { type: "number", min: 1 };
