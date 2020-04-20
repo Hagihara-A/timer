@@ -1,21 +1,31 @@
+import { AppBar, Button, Link, Toolbar } from "@material-ui/core";
 import React from "react";
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import {
+  BrowserRouter,
+  Redirect,
+  Route,
+  Switch,
+  useHistory,
+} from "react-router-dom";
+import styled from "styled-components";
 import { Login } from "./Login";
 import { TimerApp } from "./TimerApp";
-import { Typography, AppBar, Toolbar, Button } from "@material-ui/core";
-import styled from "styled-components";
 
 const RightButton = styled(Button)`
   margin-left: auto;
 `;
 const Bar = () => {
+  const hist = useHistory();
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography variant="h6" align="left">
+        <Link href="/" color="initial" underline="none" variant="h6">
           Training Timer
-        </Typography>
-        <RightButton variant="outlined"> Login</RightButton>
+        </Link>
+        <RightButton variant="outlined" onClick={() => hist.push("/login")}>
+          {" "}
+          Login
+        </RightButton>
       </Toolbar>
     </AppBar>
   );
