@@ -4,20 +4,20 @@ import Tree, {
   TreeDestinationPosition,
   TreeSourcePosition,
 } from "@atlaskit/tree";
+import { IconButton } from "@material-ui/core";
 import DeleteIconInner from "@material-ui/icons/Delete";
-import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import {
   onDragEnd as onDragEndAction,
-  toggleProperty,
   removeItem,
+  toggleProperty,
 } from "../../actions";
-import { State } from "../../types";
+import { useAppState } from "../../utils";
 import EditableContent from "./EditableContent";
-import { IconButton } from "@material-ui/core";
 
 const rgb = ({ powerPerFTP }: { powerPerFTP: number | undefined }) => {
   if (powerPerFTP < 0.75) return "#338cff";
@@ -70,10 +70,8 @@ const Icon = styled(IconInner)`
 `;
 const TimerTree = () => {
   const dispatch = useDispatch();
-  const tree = useSelector((state: State) => state.tree);
-  const isDragEnabled = useSelector(
-    (state: State) => state.options.isDragEnabled
-  );
+  const tree = useAppState((state) => state.tree);
+  const isDragEnabled = useAppState((state) => state.options.isDragEnabled);
 
   const toggleIsExpanded = (itemId: ItemId) => {
     if (isDragEnabled) dispatch(toggleProperty(itemId, "isExpanded"));

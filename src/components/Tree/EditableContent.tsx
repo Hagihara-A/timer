@@ -1,11 +1,11 @@
 import { ItemId } from "@atlaskit/tree";
 import TextField from "@material-ui/core/TextField";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { editSection, editTimer } from "../../actions";
 import { SectionTreeItemData, State, TimerTreeItemData } from "../../types";
-import { isSection, isTimer } from "../../utils";
+import { isSection, isTimer, useAppState } from "../../utils";
 
 const numInputProps = { type: "number", min: 1 };
 const NarrowTextField = styled(TextField)`
@@ -20,9 +20,7 @@ const EditableSection = ({
 }) => {
   const { repeat, count } = data;
   const dispatch = useDispatch();
-  const isDraggable = useSelector(
-    (state: State) => state.options.isDragEnabled
-  );
+  const isDraggable = useAppState((state) => state.options.isDragEnabled);
   const onChange = (e) => {
     dispatch(editSection(id, { repeat: Number(e.target.value) }));
   };
@@ -52,9 +50,7 @@ const EditableTimer = ({
   data: TimerTreeItemData;
 }) => {
   const dispatch = useDispatch();
-  const isDraggable = useSelector(
-    (state: State) => state.options.isDragEnabled
-  );
+  const isDraggable = useAppState((state) => state.options.isDragEnabled);
 
   const { power, timeLimit, elapsedTime } = data;
 
@@ -89,7 +85,7 @@ const EditableTimer = ({
 };
 
 const EditableContent = ({ itemId }: { itemId: ItemId }) => {
-  const item = useSelector((state: State) => state.tree.items[itemId]);
+  const item = useAppState((state) => state.tree.items[itemId]);
   const { data } = item;
   if (isSection(data)) {
     return <EditableSection id={item.id} data={data} />;

@@ -1,4 +1,10 @@
-import { SectionTreeItemData, TimerTreeItemData, TreeItemData } from "./types";
+import {
+  SectionTreeItemData,
+  TimerTreeItemData,
+  TreeItemData,
+  State,
+} from "./types";
+import { useSelector } from "react-redux";
 
 export const isSection = (data: TreeItemData): data is SectionTreeItemData => {
   if ("repeat" in data && "count" in data && !("timeLimit" in data))
@@ -11,3 +17,5 @@ export const isTimer = (data: TreeItemData): data is TimerTreeItemData => {
     return true;
   else return false;
 };
+
+export const useAppState = (fn: (state: State) => any) => useSelector(fn);

@@ -1,21 +1,19 @@
 import React, { useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   addTime,
   addTimer as addTimerAct,
   cleanseTree,
   toggleIsDragEnabled as toggleDragAct,
 } from "../actions";
-import { State } from "../types";
+import { useAppState } from "../utils";
 import { AddTimerDialog } from "./AddTimerDialog";
 import { ElapsingButtons } from "./Buttons/ElapsingButtons";
 import { TreeButtons } from "./Buttons/TreeButtons";
 import TimerTree from "./Tree/TimerTree";
 
 export const TimerApp = () => {
-  const isDragEnabled = useSelector(
-    (state: State) => state.options.isDragEnabled
-  );
+  const isDragEnabled = useAppState((state) => state.options.isDragEnabled);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toggleIsModalOpen = () => setIsModalOpen(!isModalOpen);
   const dispatch = useDispatch();
