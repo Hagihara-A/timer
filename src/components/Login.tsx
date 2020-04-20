@@ -1,5 +1,7 @@
 import React from "react";
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
+import { AuthConfig } from "../firebase";
 
 export const Login = () => {
-  return <div>{"Login"}</div>;
+  return <StyledFirebaseAuth {...AuthConfig} />;
 };
