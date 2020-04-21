@@ -3,6 +3,7 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import React from "react";
 import styled, { keyframes } from "styled-components";
+import SaveIcon from "@material-ui/icons/Save";
 
 const floatUp = keyframes`
   from{
@@ -23,9 +24,11 @@ export const fontSize = "5rem";
 export const TreeButtons = ({
   onClickAdd,
   onClickComplete,
+  onClickSave,
 }: {
   onClickAdd: () => void;
   onClickComplete: () => void;
+  onClickSave: () => void;
 }) => {
   return (
     <ButtonsContainer>
@@ -35,6 +38,9 @@ export const TreeButtons = ({
         </IconButton>
         <IconButton onClick={onClickComplete}>
           <CheckCircleIcon color="primary" style={{ fontSize }} />
+        </IconButton>
+        <IconButton onClick={onClickSave}>
+          <SaveIcon color="primary" style={{ fontSize }} />
         </IconButton>
       </div>
     </ButtonsContainer>
