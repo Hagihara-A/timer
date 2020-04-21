@@ -1,4 +1,5 @@
 import * as firebase from "firebase";
+import { Props } from "react-firebaseui";
 const firebaseConfig = {
   apiKey: "AIzaSyAEIrFxIw7erxv1dYkyPVPOxITepvivbZE",
   authDomain: "arark-timer.firebaseapp.com",
@@ -13,7 +14,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 export const db = firebase.firestore();
-export const AuthConfig = {
+export const AuthConfig: Props = {
   uiConfig: {
     // Popup signin flow rather than redirect flow.
     signInFlow: "popup",
