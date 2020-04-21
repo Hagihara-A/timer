@@ -17,13 +17,7 @@ export const TimerApp = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toggleIsModalOpen = () => setIsModalOpen(!isModalOpen);
   const dispatch = useDispatch();
-  const addTimer = ({
-    timeLimit,
-    power,
-  }: {
-    timeLimit: number;
-    power: number;
-  }) => {
+  const addTimer = (timeLimit: number, power: number) => {
     dispatch(addTimerAct("root", { power, timeLimit, comment: "" }));
   };
   const toggleIsDragEnabled = () => {
@@ -33,30 +27,31 @@ export const TimerApp = () => {
     dispatch(toggleDragAct());
   };
   const timerId = useRef<number>();
-  const startTimerDispatch = () => {
-    timerId.current = setInterval(() => dispatch(addTime()), 1000);
+
+  const TreeButtonsProps = {
+    onClickAdd: toggleIsModalOpen,
+    onClickComplete: toggleIsDragEnabled,
+    onClickSave: async () => {},
   };
-  const resetTimerDispatch = () => {
-    clearInterval(timerId.current);
-    toggleIsDragEnabled();
-  };
-  const stopTimerDispatch = () => {
-    clearInterval(timerId.current);
+  const ElapsingButtonsProps = {
+    onClickStart: () => {
+      timerId.current = setInterval(() => dispatch(addTime()), 1000);
+    },
+    onClickStop: () => {
+      clearInterval(timerId.current);
+    },
+    onClickReset: () => {
+      clearInterval(timerId.current);
+      toggleIsDragEnabled();
+    },
   };
   return (
     <div>
       <TimerTree />
       {isDragEnabled ? (
-        <TreeButtons
-          onClickAdd={toggleIsModalOpen}
-          onClickComplete={toggleIsDragEnabled}
-        />
+        <TreeButtons {...TreeButtonsProps} />
       ) : (
-        <ElapsingButtons
-          onClickStart={startTimerDispatch}
-          onClickStop={stopTimerDispatch}
-          onClickReset={resetTimerDispatch}
-        />
+        <ElapsingButtons {...ElapsingButtonsProps} />
       )}
       <AddTimerDialog
         open={isModalOpen}
