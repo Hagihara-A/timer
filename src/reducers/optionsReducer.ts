@@ -9,6 +9,10 @@ export const optionsReducer = produce((options: Options, action: Action) => {
       options.isDragEnabled = !options.isDragEnabled;
       break;
     }
+    case AT.SET_USER: {
+      options.user = action.payload.user;
+      break;
+    }
     default: {
       break;
     }

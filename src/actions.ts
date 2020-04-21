@@ -4,6 +4,7 @@ import {
   TreeSourcePosition,
 } from "@atlaskit/tree";
 import { EditableSectionData, EditableTimerData } from "./types";
+import { User } from "firebase";
 
 export const actionTypes = {
   ADD_TIMER: "ADD_TIMER",
@@ -16,6 +17,7 @@ export const actionTypes = {
   RESET_TIMER: "RESET_TIMER",
   CLEANSE_TREE: "CLEANSE_TREE",
   TOGGLE_IS_DRAG_ENABLED: "TOGGLE_IS_DRAG_ENABLED",
+  SET_USER: "SET_USER",
 } as const;
 
 export const addTime = () => {
@@ -108,5 +110,14 @@ export const resetTimer = () => {
 export const cleanseTree = () => {
   return {
     type: actionTypes.CLEANSE_TREE,
+  };
+};
+
+export const setUser = (user: User) => {
+  return {
+    type: actionTypes.SET_USER,
+    payload: {
+      user,
+    },
   };
 };
