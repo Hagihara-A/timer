@@ -4,6 +4,7 @@ import {
   TreeItem as AtlasTreeItem,
 } from "@atlaskit/tree";
 import * as actionCreator from "./actions";
+import { User } from "firebase";
 
 export type State = Readonly<MutableState>;
 export interface MutableState {
@@ -12,6 +13,7 @@ export interface MutableState {
 }
 export interface Options {
   isDragEnabled: boolean;
+  user: User | null;
 }
 export interface TreeData extends AtlasTreeData {
   items: Record<ItemId, TreeItem>;

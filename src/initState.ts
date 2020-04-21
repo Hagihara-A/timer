@@ -3,6 +3,7 @@ import { State } from "./types";
 export const initState: State = {
   options: {
     isDragEnabled: true,
+    user: null,
   },
   tree: {
     rootId: "root",
