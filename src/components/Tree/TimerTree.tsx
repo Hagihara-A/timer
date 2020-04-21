@@ -28,7 +28,7 @@ const rgb = ({ powerPerFTP }: { powerPerFTP: number | undefined }) => {
   return "#7d7c78";
 };
 const TreeContainer = styled.div`
-  max-width: 20%;
+  max-width: 450px;
   margin: auto;
 `;
 
