@@ -21,7 +21,7 @@ export const AddTimerDialog = ({
 }: {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: EditableTimerData) => void;
+  onSubmit: (timeLimit: number, power: number) => void;
 }) => {
   const classes = useStyles();
   const [timeLimit, setTimeLimit] = useState(0);
@@ -29,7 +29,7 @@ export const AddTimerDialog = ({
 
   const onClickOK = () => {
     if (timeLimit > 0 && power > 0) {
-      onSubmit({ power, timeLimit, comment: "" });
+      onSubmit(timeLimit, power);
     }
     onClose();
   };
