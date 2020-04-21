@@ -18,4 +18,6 @@ export const isTimer = (data: TreeItemData): data is TimerTreeItemData => {
   else return false;
 };
 
-export const useAppState = (fn: (state: State) => any) => useSelector(fn);
+export const useAppState = <T extends (state: State) => any>(
+  fn: T
+): ReturnType<T> => useSelector(fn);
